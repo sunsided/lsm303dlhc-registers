@@ -20,6 +20,7 @@ extern crate embedded_hal as hal;
 
 use core::marker::Unsize;
 use core::mem;
+use core::cell::RefCell;
 
 use cast::u16;
 use hal::blocking::i2c::{Write, WriteRead};
@@ -28,16 +29,16 @@ mod accel;
 mod mag;
 
 /// LSM303DLHC driver
-pub struct Lsm303dlhc<I2C> {
-    i2c: I2C,
+pub struct Lsm303dlhc<'a, I2C: 'a> {
+    i2c: &'a RefCell<I2C>,
 }
 
-impl<I2C, E> Lsm303dlhc<I2C>
+impl <'a, I2C, E> Lsm303dlhc<'a, I2C>
 where
     I2C: WriteRead<Error = E> + Write<Error = E>,
 {
     /// Creates a new driver from a I2C peripheral
-    pub fn new(i2c: I2C) -> Result<Self, E> {
+    pub fn new(i2c: &'a RefCell<I2C>) -> Result<Self, E> {
         let mut lsm303dlhc = Lsm303dlhc { i2c };
 
         // TODO reset all the registers / the device
@@ -136,8 +137,8 @@ where
             let buffer: &mut [u8] = &mut buffer;
 
             const MULTI: u8 = 1 << 7;
-            self.i2c
-                .write_read(accel::ADDRESS, &[reg.addr() | MULTI], buffer)?;
+            self.i2c.
+                borrow_mut().write_read(accel::ADDRESS, &[reg.addr() | MULTI], buffer)?;
         }
 
         Ok(buffer)
@@ -162,18 +163,18 @@ where
         {
             let buffer: &mut [u8] = &mut buffer;
 
-            self.i2c.write_read(mag::ADDRESS, &[reg.addr()], buffer)?;
+            self.i2c.borrow_mut().write_read(mag::ADDRESS, &[reg.addr()], buffer)?;
         }
 
         Ok(buffer)
     }
 
     fn write_accel_register(&mut self, reg: accel::Register, byte: u8) -> Result<(), E> {
-        self.i2c.write(accel::ADDRESS, &[reg.addr(), byte])
+        self.i2c.borrow_mut().write(accel::ADDRESS, &[reg.addr(), byte])
     }
 
     fn write_mag_register(&mut self, reg: mag::Register, byte: u8) -> Result<(), E> {
-        self.i2c.write(mag::ADDRESS, &[reg.addr(), byte])
+        self.i2c.borrow_mut().write(mag::ADDRESS, &[reg.addr(), byte])
     }
 }
 
