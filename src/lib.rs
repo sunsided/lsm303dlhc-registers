@@ -19,26 +19,34 @@ extern crate embedded_hal as hal;
 extern crate generic_array;
 
 use cast::u16;
-use core::cell::RefCell;
 use generic_array::typenum::consts::*;
 use generic_array::{ArrayLength, GenericArray};
 use hal::blocking::i2c::{Write, WriteRead};
 
 mod accel;
 mod mag;
+pub mod wrapper;
 
-/// LSM303DLHC driver
-pub struct Lsm303dlhc<'a, I2C: 'a> {
-    i2c: &'a RefCell<I2C>,
+/// LSM303DLHC driver.
+#[deprecated(since = "0.3.0", note = "Please use `LSM303DLHC` instead")]
+pub type Lsm303dlhc<I2C> = LSM303DLHC<I2C>;
+
+/// LSM303DLHC driver.
+#[allow(non_snake_case)]
+pub struct LSM303DLHC<I2C> {
+    i2c: I2C,
 }
 
-impl<'a, I2C, E> Lsm303dlhc<'a, I2C>
+impl<I2C, E> LSM303DLHC<I2C>
 where
     I2C: WriteRead<Error = E> + Write<Error = E>,
 {
     /// Creates a new driver from a I2C peripheral
-    pub fn new(i2c: &'a RefCell<I2C>) -> Result<Self, E> {
-        let mut lsm303dlhc = Lsm303dlhc { i2c };
+    ///
+    /// ## Shared use of the I2C bus
+    /// To use the I2C bus with multiple devices, consider using [`RefCellI2C::from`].
+    pub fn new(i2c: I2C) -> Result<Self, E> {
+        let mut lsm303dlhc = Self { i2c };
 
         // TODO reset all the registers / the device
 
@@ -140,7 +148,6 @@ where
 
             const MULTI: u8 = 1 << 7;
             self.i2c
-                .borrow_mut()
                 .write_read(accel::ADDRESS, &[reg.addr() | MULTI], buffer)?;
         }
 
@@ -171,9 +178,7 @@ where
                 core::slice::from_raw_parts_mut(buffer.as_mut_ptr() as *mut u8, N::USIZE)
             };
 
-            self.i2c
-                .borrow_mut()
-                .write_read(mag::ADDRESS, &[reg.addr()], buffer)?;
+            self.i2c.write_read(mag::ADDRESS, &[reg.addr()], buffer)?;
         }
 
         // SAFETY: TODO: Ensure we do not have any uninitialized elements.
@@ -183,15 +188,11 @@ where
     }
 
     fn write_accel_register(&mut self, reg: accel::Register, byte: u8) -> Result<(), E> {
-        self.i2c
-            .borrow_mut()
-            .write(accel::ADDRESS, &[reg.addr(), byte])
+        self.i2c.write(accel::ADDRESS, &[reg.addr(), byte])
     }
 
     fn write_mag_register(&mut self, reg: mag::Register, byte: u8) -> Result<(), E> {
-        self.i2c
-            .borrow_mut()
-            .write(mag::ADDRESS, &[reg.addr(), byte])
+        self.i2c.write(mag::ADDRESS, &[reg.addr(), byte])
     }
 }
 
