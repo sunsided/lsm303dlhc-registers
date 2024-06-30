@@ -1,24 +1,12 @@
 # `lsm303dlhc`
 
-> A platform-agnostic driver to interface with the LSM303DLHC (accelerometer + compass)
+> A platform-agnostic driver to interface with the (now discontinued) LSM303DLHC (accelerometer + compass)
 
 ## What works
 
 - Reading the accelerometer
 - Reading the compass and temperature sensor
-
-## TODO
-
-- [ ] Make sure this works with the `i2cdev` crate (i.e. with the Raspberry Pi)
-- [ ] Configuration. e.g. selecting the accelerometer / compass sensing range / sensitivity.
-- [ ] How to make the API compatible with device specific features like DMA and interrupts?
-- ???
-
-## Examples
-
-You should find at least one example in the [f3] crate.
-
-[f3]: https://docs.rs/f3/~0.5
+- Direct access to interesting
 
 ## License
 
