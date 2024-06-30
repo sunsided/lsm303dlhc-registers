@@ -5,8 +5,8 @@ use bitfield_struct::bitfield;
 use registers::accel::AccelerometerRegister;
 use registers::mag::MagnetometerRegister;
 pub use registers::register::{Register, WritableRegister};
-use {FifoMode, MagOdr};
 use MagGain;
+use {FifoMode, MagOdr};
 
 pub mod accel;
 pub mod mag;
@@ -60,7 +60,7 @@ impl WritableRegister for ControlRegister1A {}
 pub struct ControlRegister2A {
     /// High-pass filter mode selection.
     #[bits(2, access = RW)]
-    pub hpm: u8, // TODO: Add enum
+    pub hpm: HighpassFilterMode,
 
     /// High-pass filter Cutoff frequency selection
     #[bits(2, access = RW)]

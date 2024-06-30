@@ -435,6 +435,39 @@ impl AccelOdr {
     }
 }
 
+/// High-Pass Filter Mode
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
+#[repr(u8)]
+pub enum HighpassFilterMode {
+    /// Normal mode (`0b00`)
+    ///
+    /// Reset reading `HP_RESET_FILTER`.
+    NormalWithReset = 0b00,
+    /// Reference signal for filtering (`0b01`)
+    ReferenceSignal = 0b01,
+    /// Normal mode (`0b10`)
+    Normal = 0b10,
+    /// Autoreset on interrupt event (`0b11`)
+    AutoresetOnInterrupt = 0b11,
+}
+
+impl HighpassFilterMode {
+    const fn into_bits(self) -> u8 {
+        self as u8
+    }
+
+    const fn from_bits(value: u8) -> Self {
+        match value {
+            0b00 => HighpassFilterMode::NormalWithReset,
+            0b01 => HighpassFilterMode::ReferenceSignal,
+            0b10 => HighpassFilterMode::Normal,
+            0b11 => HighpassFilterMode::AutoresetOnInterrupt,
+            _ => unreachable!(),
+        }
+    }
+}
+
 /// Magnetometer Output Data Rate
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
