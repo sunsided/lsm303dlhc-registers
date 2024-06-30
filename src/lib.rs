@@ -18,6 +18,7 @@
 
 #[cfg(feature = "accelerometer")]
 extern crate accelerometer;
+extern crate bitfield_struct;
 extern crate cast;
 extern crate embedded_hal as hal;
 extern crate generic_array;
@@ -262,6 +263,8 @@ pub struct I16x3 {
 }
 
 /// Accelerometer Output Data Rate
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[repr(u8)]
 pub enum AccelOdr {
     /// 1 Hz
     Hz1 = 0b0001,
@@ -280,6 +283,8 @@ pub enum AccelOdr {
 }
 
 /// Magnetometer Output Data Rate
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[repr(u8)]
 pub enum MagOdr {
     /// 0.75 Hz
     Hz0_75 = 0b000,
@@ -300,7 +305,8 @@ pub enum MagOdr {
 }
 
 /// Acceleration sensitivity (full scale selection).
-#[derive(Clone, Copy)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[repr(u8)]
 pub enum Sensitivity {
     /// Range: [-2g, +2g]. Sensitivity ~ 1 g / (1 << 14) LSB
     G1 = 0b00,
@@ -315,5 +321,19 @@ pub enum Sensitivity {
 impl Sensitivity {
     fn value(&self) -> u8 {
         *self as u8
+    }
+
+    const fn into_bits(self) -> u8 {
+        self as u8
+    }
+
+    const fn from_bits(value: u8) -> Self {
+        match value {
+            0b00 => Sensitivity::G1,
+            0b01 => Sensitivity::G2,
+            0b10 => Sensitivity::G4,
+            0b11 => Sensitivity::G12,
+            _ => unreachable!(),
+        }
     }
 }
