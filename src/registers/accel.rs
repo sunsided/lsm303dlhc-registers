@@ -10,13 +10,20 @@ pub const ADDRESS: u8 = 0b0011001;
 #[derive(Copy, Clone, PartialEq, Eq)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub enum Register {
+    /// See [`ControlRegister1A`].
     CTRL_REG1_A = 0x20,
+    /// See [`ControlRegister2A`].
     CTRL_REG2_A = 0x21,
+    /// See [`ControlRegister3A`].
     CTRL_REG3_A = 0x22,
+    /// See [`ControlRegister4A`].
     CTRL_REG4_A = 0x23,
+    /// See [`ControlRegister5A`].
     CTRL_REG5_A = 0x24,
+    /// See [`ControlRegister6A`].
     CTRL_REG6_A = 0x25,
     REFERENCE_A = 0x26,
+    /// See [`StatusRegisterA`].
     STATUS_REG_A = 0x27,
     OUT_X_L_A = 0x28,
     OUT_X_H_A = 0x29,
