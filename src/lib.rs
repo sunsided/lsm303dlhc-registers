@@ -1,4 +1,4 @@
-//! A platform agnostic driver to interface with the LSM303DLHC (accelerometer + compass)
+//! A platform-agnostic driver to interface with the LSM303DLHC (accelerometer + compass)
 //!
 //! This driver was built using [`embedded-hal`] traits.
 //!
@@ -17,8 +17,6 @@
 extern crate cast;
 extern crate embedded_hal as hal;
 extern crate generic_array;
-
-use core::mem;
 
 use cast::u16;
 use generic_array::typenum::consts::*;
@@ -44,6 +42,7 @@ where
         // TODO reset all the registers / the device
 
         // configure the accelerometer to operate at 400 Hz
+        #[allow(clippy::unusual_byte_groupings)]
         lsm303dlhc.write_accel_register(accel::Register::CTRL_REG1_A, 0b0111_0_111)?;
 
         // configure the magnetometer to operate in continuous mode
@@ -129,18 +128,22 @@ where
 
     fn read_accel_registers<N>(&mut self, reg: accel::Register) -> Result<GenericArray<u8, N>, E>
     where
-        N: ArrayLength<u8>,
+        N: ArrayLength,
     {
-        let mut buffer: GenericArray<u8, N> =
-            unsafe { mem::MaybeUninit::<GenericArray<u8, N>>::uninit().assume_init() };
+        let mut buffer = GenericArray::<u8, N>::uninit();
 
         {
-            let buffer: &mut [u8] = &mut buffer;
+            let buffer: &mut [u8] = unsafe {
+                core::slice::from_raw_parts_mut(buffer.as_mut_ptr() as *mut u8, N::USIZE)
+            };
 
             const MULTI: u8 = 1 << 7;
             self.i2c
                 .write_read(accel::ADDRESS, &[reg.addr() | MULTI], buffer)?;
         }
+
+        // SAFETY: The write_read function has filled the entire buffer.
+        let buffer = unsafe { GenericArray::assume_init(buffer) };
 
         Ok(buffer)
     }
@@ -157,16 +160,20 @@ where
     // NOTE has weird address increment semantics; use only with `OUT_X_H_M`
     fn read_mag_registers<N>(&mut self, reg: mag::Register) -> Result<GenericArray<u8, N>, E>
     where
-        N: ArrayLength<u8>,
+        N: ArrayLength,
     {
-        let mut buffer: GenericArray<u8, N> =
-            unsafe { mem::MaybeUninit::<GenericArray<u8, N>>::uninit().assume_init() };
+        let mut buffer = GenericArray::<u8, N>::uninit();
 
         {
-            let buffer: &mut [u8] = &mut buffer;
+            let buffer: &mut [u8] = unsafe {
+                core::slice::from_raw_parts_mut(buffer.as_mut_ptr() as *mut u8, N::USIZE)
+            };
 
             self.i2c.write_read(mag::ADDRESS, &[reg.addr()], buffer)?;
         }
+
+        // SAFETY: TODO: Ensure we do not have any uninitialized elements.
+        let buffer = unsafe { GenericArray::assume_init(buffer) };
 
         Ok(buffer)
     }
