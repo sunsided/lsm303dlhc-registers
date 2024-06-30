@@ -31,7 +31,8 @@ use generic_array::{ArrayLength, GenericArray};
 use hal::blocking::i2c::{Write, WriteRead};
 use registers::{
     accel, mag, ControlRegister1A, ControlRegister2A, ControlRegister3A, ControlRegister4A,
-    ControlRegister5A, ControlRegister6A, CraRegisterM, MrRegisterM, Register, WritableRegister,
+    ControlRegister5A, ControlRegister6A, CraRegisterM, IRARegisterM, IRBRegisterM, IRCRegisterM,
+    ModeRegisterM, Register, WritableRegister,
 };
 
 #[cfg(feature = "accelerometer")]
@@ -84,7 +85,7 @@ where
 
         // configure the magnetometer to operate in continuous mode
         sensor.write_register(
-            MrRegisterM::new()
+            ModeRegisterM::new()
                 .with_sleep_mode(false)
                 .with_single_conversion(false),
         )?;
@@ -97,6 +98,16 @@ where
         )?;
 
         Ok(sensor)
+    }
+
+    /// Attempt to identify the sensor using control registers `IRA_REG_M`, `IRB_REG_M`
+    /// and `IRC_REG_M`.
+    pub fn identify(&mut self) -> Result<bool, E> {
+        let ira: IRARegisterM = self.read_register()?;
+        let irb: IRBRegisterM = self.read_register()?;
+        let irc: IRCRegisterM = self.read_register()?;
+
+        Ok(ira.value() == 0b01001000 && irb.value() == 0b00110100 && irc.value() == 0b00110011)
     }
 
     /// Accelerometer measurements

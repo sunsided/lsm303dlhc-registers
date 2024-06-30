@@ -1070,7 +1070,7 @@ impl Register for ClickTimeWindowRegisterA {
 
 impl WritableRegister for ClickTimeWindowRegisterA {}
 
-/// [`CRA_REG_M`](mag::MagnetometerRegister::CRA_REG_M) (09h)
+/// [`CRA_REG_M`](mag::MagnetometerRegister::CRA_REG_M) (00h)
 #[bitfield(u8, order = Msb)]
 #[derive(PartialEq, Eq)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
@@ -1108,11 +1108,44 @@ impl Register for CraRegisterM {
 
 impl WritableRegister for CraRegisterM {}
 
+/// Magnetometer gain configuration.
+///
+/// [`CRB_REG_M`](mag::MagnetometerRegister::CRB_REG_M) (01h)
+#[bitfield(u8, order = Msb)]
+#[derive(PartialEq, Eq)]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
+pub struct CrbRegisterM {
+    /// Gain configuration.
+    #[bits(3, access = RW)]
+    pub gain: u8, // TODO: Make enum!
+
+    /// Must be zero for correct operation of the device.
+    #[bits(5, default = 0)]
+    zeros_04: u8,
+}
+
+impl Register for CrbRegisterM {
+    const DEV_ADDRESS: u8 = mag::ADDRESS;
+    const REG_ADDRESS: u8 = MagnetometerRegister::CRB_REG_M.addr();
+
+    fn from_bits(bits: u8) -> Self {
+        Self::from_bits(bits)
+    }
+
+    fn to_bits(&self) -> u8 {
+        self.into_bits()
+    }
+}
+
+impl WritableRegister for CrbRegisterM {}
+
+/// Magnetometer mode select.
+///
 /// [`MR_REG_M`](mag::MagnetometerRegister::MR_REG_M) (09h)
 #[bitfield(u8, order = Msb)]
 #[derive(PartialEq, Eq)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
-pub struct MrRegisterM {
+pub struct ModeRegisterM {
     /// Must be zero for correct operation of the device.
     #[bits(6, default = 0)]
     zeros_27: u8,
@@ -1129,7 +1162,7 @@ pub struct MrRegisterM {
     pub single_conversion: bool,
 }
 
-impl Register for MrRegisterM {
+impl Register for ModeRegisterM {
     const DEV_ADDRESS: u8 = mag::ADDRESS;
     const REG_ADDRESS: u8 = MagnetometerRegister::MR_REG_M.addr();
 
@@ -1142,7 +1175,7 @@ impl Register for MrRegisterM {
     }
 }
 
-impl WritableRegister for MrRegisterM {}
+impl WritableRegister for ModeRegisterM {}
 
 /// [`SR_REG_M`](mag::MagnetometerRegister::SR_REG_M) (09h)
 #[bitfield(u8, order = Msb)]
@@ -1165,6 +1198,72 @@ pub struct StatusRegisterM {
 impl Register for StatusRegisterM {
     const DEV_ADDRESS: u8 = mag::ADDRESS;
     const REG_ADDRESS: u8 = MagnetometerRegister::SR_REG_M.addr();
+
+    fn from_bits(bits: u8) -> Self {
+        Self::from_bits(bits)
+    }
+
+    fn to_bits(&self) -> u8 {
+        self.into_bits()
+    }
+}
+
+/// [`IRA_REG_M`](mag::MagnetometerRegister::IRA_REG_M) (0Ah)
+#[bitfield(u8, order = Msb)]
+#[derive(PartialEq, Eq)]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
+pub struct IRARegisterM {
+    #[bits(8, access = RO)]
+    pub value: u8,
+}
+
+impl Register for IRARegisterM {
+    const DEV_ADDRESS: u8 = mag::ADDRESS;
+    const REG_ADDRESS: u8 = MagnetometerRegister::IRA_REG_M.addr();
+
+    fn from_bits(bits: u8) -> Self {
+        Self::from_bits(bits)
+    }
+
+    fn to_bits(&self) -> u8 {
+        self.into_bits()
+    }
+}
+
+/// [`IRB_REG_M`](mag::MagnetometerRegister::IRB_REG_M) (0Bh)
+#[bitfield(u8, order = Msb)]
+#[derive(PartialEq, Eq)]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
+pub struct IRBRegisterM {
+    #[bits(8, access = RO)]
+    pub value: u8,
+}
+
+impl Register for IRBRegisterM {
+    const DEV_ADDRESS: u8 = mag::ADDRESS;
+    const REG_ADDRESS: u8 = MagnetometerRegister::IRB_REG_M.addr();
+
+    fn from_bits(bits: u8) -> Self {
+        Self::from_bits(bits)
+    }
+
+    fn to_bits(&self) -> u8 {
+        self.into_bits()
+    }
+}
+
+/// [`IRC_REG_M`](mag::MagnetometerRegister::IRC_REG_M) (0Ch)
+#[bitfield(u8, order = Msb)]
+#[derive(PartialEq, Eq)]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
+pub struct IRCRegisterM {
+    #[bits(8, access = RO)]
+    pub value: u8,
+}
+
+impl Register for IRCRegisterM {
+    const DEV_ADDRESS: u8 = mag::ADDRESS;
+    const REG_ADDRESS: u8 = MagnetometerRegister::IRC_REG_M.addr();
 
     fn from_bits(bits: u8) -> Self {
         Self::from_bits(bits)

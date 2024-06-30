@@ -18,8 +18,9 @@ pub const ADDRESS: u8 = 0b0011110;
 pub enum MagnetometerRegister {
     /// See [`CraRegisterM`](super::CraRegisterM).
     CRA_REG_M = 0x00,
+    /// See [`CrbRegisterM`](super::CrbRegisterM).
     CRB_REG_M = 0x01,
-    /// See [`MrRegisterM`](super::MrRegisterM).
+    /// See [`ModeRegisterM`](super::ModeRegisterM).
     MR_REG_M = 0x02,
     OUT_X_H_M = 0x03,
     OUT_X_L_M = 0x04,
@@ -29,8 +30,11 @@ pub enum MagnetometerRegister {
     OUT_Y_L_M = 0x08,
     /// See [`StatusRegisterM`](super::StatusRegisterM).
     SR_REG_M = 0x09,
+    /// See [`IRARegisterM`](super::IRARegisterM).
     IRA_REG_M = 0x0A,
+    /// See [`IRBRegisterM`](super::IRBRegisterM).
     IRB_REG_M = 0x0B,
+    /// See [`IRCRegisterM`](super::IRCRegisterM).
     IRC_REG_M = 0x0C,
     TEMP_OUT_H_M = 0x31,
     TEMP_OUT_L_M = 0x32,
