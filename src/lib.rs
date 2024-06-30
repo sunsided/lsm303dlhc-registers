@@ -112,14 +112,14 @@ where
 
     /// Accelerometer measurements
     pub fn accel(&mut self) -> Result<I16x3, E> {
-        let buffer: GenericArray<u8, U7> =
+        let buffer: GenericArray<u8, U6> =
             self.read_accel_registers(accel::AccelerometerRegister::OUT_X_L_A)?;
 
         Ok(I16x3 {
             // Registers come in X, Y, Z order of low, then high.
-            x: (u16(buffer[1]) + (u16(buffer[2]) << 8)) as i16,
-            y: (u16(buffer[3]) + (u16(buffer[4]) << 8)) as i16,
-            z: (u16(buffer[5]) + (u16(buffer[6]) << 8)) as i16,
+            x: (u16(buffer[0]) + (u16(buffer[1]) << 8)) as i16,
+            y: (u16(buffer[2]) + (u16(buffer[3]) << 8)) as i16,
+            z: (u16(buffer[4]) + (u16(buffer[5]) << 8)) as i16,
         })
     }
 
@@ -130,7 +130,7 @@ where
 
     /// Magnetometer measurements
     pub fn mag(&mut self) -> Result<I16x3, E> {
-        let buffer: GenericArray<u8, U7> =
+        let buffer: GenericArray<u8, U6> =
             self.read_mag_registers(mag::MagnetometerRegister::OUT_X_H_M)?;
 
         Ok(I16x3 {
