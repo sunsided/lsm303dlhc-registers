@@ -178,11 +178,11 @@ where
     /// Modifies a single register.
     pub fn modify_register<F, R>(&mut self, f: F) -> Result<(), E>
     where
-        F: FnOnce(&mut R),
+        F: FnOnce(R) -> R,
         R: WritableRegister,
     {
-        let mut register: R = self.read_register()?;
-        f(&mut register);
+        let register: R = self.read_register()?;
+        let register = f(register);
         self.write_register(register)
     }
 
