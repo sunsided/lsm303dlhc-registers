@@ -36,6 +36,7 @@ mod accel;
 #[cfg_attr(docsrs, doc(cfg(feature = "accelerometer")))]
 mod accelerometer_impl;
 mod mag;
+pub mod registers;
 pub mod wrapper;
 
 /// LSM303DLHC driver.
