@@ -267,6 +267,8 @@ pub struct I16x3 {
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 #[repr(u8)]
 pub enum AccelOdr {
+    /// Power-down mode
+    Disabled = 0b0000,
     /// 1 Hz
     Hz1 = 0b0001,
     /// 10 Hz
@@ -281,6 +283,32 @@ pub enum AccelOdr {
     Hz200 = 0b0110,
     /// 400 Hz
     Hz400 = 0b0111,
+    /// 1.620 kHz when in Low-Power mode
+    LpHz1620 = 0b1000,
+    /// 5.376 kHz when in normal mode, 1.344 kHz when in normal mode
+    LpHz1620NormalHz5376 = 0b1001,
+}
+
+impl AccelOdr {
+    const fn into_bits(self) -> u8 {
+        self as u8
+    }
+
+    const fn from_bits(value: u8) -> Self {
+        match value {
+            0b0000 => AccelOdr::Disabled,
+            0b0001 => AccelOdr::Hz1,
+            0b0010 => AccelOdr::Hz10,
+            0b0011 => AccelOdr::Hz25,
+            0b0100 => AccelOdr::Hz50,
+            0b0101 => AccelOdr::Hz100,
+            0b0110 => AccelOdr::Hz200,
+            0b0111 => AccelOdr::Hz400,
+            0b1000 => AccelOdr::LpHz1620,
+            0b1001 => AccelOdr::LpHz1620NormalHz5376,
+            _ => unreachable!(),
+        }
+    }
 }
 
 /// Magnetometer Output Data Rate

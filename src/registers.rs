@@ -1,10 +1,31 @@
 //! Contains register mappings.
 
+use super::{AccelOdr, Sensitivity};
 use bitfield_struct::bitfield;
-use Sensitivity;
 
 pub mod accel;
 pub mod mag;
+
+/// `CTRL_REG1_A` (20h)
+#[bitfield(u8, order = Msb)]
+#[derive(PartialEq, Eq)]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
+pub struct ControlRegister1A {
+    #[bits(4, access = RW)]
+    output_data_rate: AccelOdr,
+
+    #[bits(1, access = RW)]
+    low_power_enable: bool,
+
+    #[bits(1, access = RW)]
+    z_enable: bool,
+
+    #[bits(1, access = RW)]
+    y_enable: bool,
+
+    #[bits(1, access = RW)]
+    x_enable: bool,
+}
 
 /// `CTRL_REG4_A` (23h)
 #[bitfield(u8, order = Msb)]
