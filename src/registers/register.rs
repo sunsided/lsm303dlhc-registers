@@ -12,3 +12,6 @@ pub trait Register {
     /// Converts the register instance into bit values.
     fn to_bits(&self) -> u8;
 }
+
+/// A register that can be written to.
+pub trait WritableRegister: Register {}

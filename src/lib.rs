@@ -29,7 +29,9 @@ use cast::u16;
 use generic_array::typenum::consts::*;
 use generic_array::{ArrayLength, GenericArray};
 use hal::blocking::i2c::{Write, WriteRead};
-use registers::{accel, mag, Register};
+use registers::{
+    accel, mag, ControlRegister1A, CraRegisterM, MrRegisterM, Register, WritableRegister,
+};
 
 #[cfg(feature = "accelerometer")]
 #[cfg_attr(docsrs, doc(cfg(feature = "accelerometer")))]
@@ -56,27 +58,36 @@ where
     /// ## Shared use of the I2C bus
     /// To use the I2C bus with multiple devices, consider using [`RefCellI2C::into`](wrapper::refcell::RefCellI2C).
     pub fn new(i2c: I2C) -> Result<Self, E> {
-        let mut lsm303dlhc = Self { i2c };
+        let mut sensor = Self { i2c };
 
         // TODO reset all the registers / the device
 
         // configure the accelerometer to operate at 400 Hz
         #[allow(clippy::unusual_byte_groupings)]
-        lsm303dlhc.write_accel_register_unchecked(
-            accel::AccelerometerRegister::CTRL_REG1_A,
-            0b0111_0_111,
+        sensor.write_register(
+            ControlRegister1A::new()
+                .with_output_data_rate(AccelOdr::Hz400)
+                .with_low_power_enable(false)
+                .with_x_enable(true)
+                .with_y_enable(true)
+                .with_z_enable(true),
         )?;
 
         // configure the magnetometer to operate in continuous mode
-        lsm303dlhc.write_mag_register_unchecked(mag::MagnetometerRegister::MR_REG_M, 0b00)?;
-
-        // enable the temperature sensor
-        lsm303dlhc.write_mag_register_unchecked(
-            mag::MagnetometerRegister::CRA_REG_M,
-            0b0001000 | (1 << 7),
+        sensor.write_register(
+            MrRegisterM::new()
+                .with_sleep_mode(false)
+                .with_single_conversion(false),
         )?;
 
-        Ok(lsm303dlhc)
+        // enable the temperature sensor
+        sensor.write_register(
+            CraRegisterM::new()
+                .with_temp_en(true)
+                .with_data_output_rate(MagOdr::Hz75),
+        )?;
+
+        Ok(sensor)
     }
 
     /// Accelerometer measurements
@@ -157,11 +168,22 @@ where
     pub fn write_register<B, R>(&mut self, register: B) -> Result<(), E>
     where
         B: core::borrow::Borrow<R>,
-        R: Register
+        R: WritableRegister,
     {
         let byte = register.borrow().to_bits();
         self.i2c.write(R::DEV_ADDRESS, &[R::REG_ADDRESS, byte])?;
         Ok(())
+    }
+
+    /// Modifies a single register.
+    pub fn modify_register<F, R>(&mut self, f: F) -> Result<(), E>
+    where
+        F: FnOnce(&mut R),
+        R: WritableRegister,
+    {
+        let mut register: R = self.read_register()?;
+        f(&mut register);
+        self.write_register(register)
     }
 
     /// Reads an accelerometer register.
@@ -353,25 +375,25 @@ pub struct I16x3 {
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 #[repr(u8)]
 pub enum AccelOdr {
-    /// Power-down mode
+    /// Power-down mode (`0b0000`)
     Disabled = 0b0000,
-    /// 1 Hz
+    /// 1 Hz (`0b0001`)
     Hz1 = 0b0001,
-    /// 10 Hz
+    /// 10 Hz (`0b0010`)
     Hz10 = 0b0010,
-    /// 25 Hz
+    /// 25 Hz (`0b0011`)
     Hz25 = 0b0011,
-    /// 50 Hz
+    /// 50 Hz (`0b0100`)
     Hz50 = 0b0100,
-    /// 100 Hz
+    /// 100 Hz (`0b0101`)
     Hz100 = 0b0101,
-    /// 200 Hz
+    /// 200 Hz (`0b0110`)
     Hz200 = 0b0110,
-    /// 400 Hz
+    /// 400 Hz (`0b0111`)
     Hz400 = 0b0111,
-    /// 1.620 kHz when in Low-Power mode
+    /// 1.620 kHz when in Low-Power mode (`0b1000`)
     LpHz1620 = 0b1000,
-    /// 5.376 kHz when in normal mode, 1.344 kHz when in normal mode
+    /// 5.376 kHz when in normal mode, 1.344 kHz when in normal mode (`0b1001`)
     LpHz1620NormalHz5376 = 0b1001,
 }
 
@@ -402,21 +424,21 @@ impl AccelOdr {
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 #[repr(u8)]
 pub enum MagOdr {
-    /// 0.75 Hz
+    /// 0.75 Hz (`0b000`)
     Hz0_75 = 0b000,
-    /// 1.5 Hz
+    /// 1.5 Hz(`0b001`)
     Hz1_5 = 0b001,
-    /// 3 Hz
+    /// 3 Hz(`0b010`)
     Hz3 = 0b010,
-    /// 7.5 Hz
+    /// 7.5 Hz(`0b011`)
     Hz7_5 = 0b011,
-    /// 15 Hz
+    /// 15 Hz(`0b100`)
     Hz15 = 0b100,
-    /// 30 Hz
+    /// 30 Hz(`0b101`)
     Hz30 = 0b101,
-    /// 75 Hz
+    /// 75 Hz(`0b110`)
     Hz75 = 0b110,
-    /// 220 Hz
+    /// 220 Hz(`0b111`)
     Hz220 = 0b111,
 }
 
@@ -446,13 +468,13 @@ impl MagOdr {
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 #[repr(u8)]
 pub enum Sensitivity {
-    /// Range: [-2g, +2g]. Sensitivity ~ 1 g / (1 << 14) LSB
+    /// Range: [-2g, +2g]. Sensitivity ~ 1 g / (1 << 14) LSB (`0b00`)
     G1 = 0b00,
-    /// Range: [-4g, +4g]. Sensitivity ~ 2 g / (1 << 14) LSB
+    /// Range: [-4g, +4g]. Sensitivity ~ 2 g / (1 << 14) LSB (`0b01`)
     G2 = 0b01,
-    /// Range: [-8g, +8g]. Sensitivity ~ 4 g / (1 << 14) LSB
+    /// Range: [-8g, +8g]. Sensitivity ~ 4 g / (1 << 14) LSB (`0b10`)
     G4 = 0b10,
-    /// Range: [-16g, +16g]. Sensitivity ~ 12 g / (1 << 14) LSB
+    /// Range: [-16g, +16g]. Sensitivity ~ 12 g / (1 << 14) LSB (`0b11`)
     G12 = 0b11,
 }
 

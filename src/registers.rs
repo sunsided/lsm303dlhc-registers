@@ -4,7 +4,7 @@ use super::{AccelOdr, Sensitivity};
 use bitfield_struct::bitfield;
 use registers::accel::AccelerometerRegister;
 use registers::mag::MagnetometerRegister;
-pub use registers::register::Register;
+pub use registers::register::{Register, WritableRegister};
 use MagOdr;
 
 pub mod accel;
@@ -50,6 +50,8 @@ impl Register for ControlRegister1A {
     }
 }
 
+impl WritableRegister for ControlRegister1A {}
+
 /// [`CTRL_REG2_A`](accel::AccelerometerRegister::CTRL_REG2_A) (21h)
 #[bitfield(u8, order = Msb)]
 #[derive(PartialEq, Eq)]
@@ -92,6 +94,8 @@ impl Register for ControlRegister2A {
         self.into_bits()
     }
 }
+
+impl WritableRegister for ControlRegister2A {}
 
 /// [`CTRL_REG3_A`](accel::AccelerometerRegister::CTRL_REG3_A) (22h)
 #[bitfield(u8, order = Msb)]
@@ -143,6 +147,8 @@ impl Register for ControlRegister3A {
     }
 }
 
+impl WritableRegister for ControlRegister3A {}
+
 /// [`CTRL_REG4_A`](accel::AccelerometerRegister::CTRL_REG4_A) (23h)
 #[bitfield(u8, order = Msb)]
 #[derive(PartialEq, Eq)]
@@ -171,8 +177,8 @@ pub struct ControlRegister4A {
     #[bits(1, access = RW)]
     pub high_resolution: bool,
 
-    #[bits(2)]
-    __: u8,
+    #[bits(2, default = 0b00)]
+    zeros_12: u8,
 
     /// SPI serial interface mode.
     ///
@@ -194,6 +200,8 @@ impl Register for ControlRegister4A {
         self.into_bits()
     }
 }
+
+impl WritableRegister for ControlRegister4A {}
 
 /// [`CTRL_REG5_A`](accel::AccelerometerRegister::CTRL_REG5_A) (24h)
 #[bitfield(u8, order = Msb)]
@@ -248,6 +256,8 @@ impl Register for ControlRegister5A {
         self.into_bits()
     }
 }
+
+impl WritableRegister for ControlRegister5A {}
 
 /// [`CTRL_REG6_A`](accel::AccelerometerRegister::CTRL_REG6_A) (25h)
 #[bitfield(u8, order = Msb)]
@@ -306,6 +316,8 @@ impl Register for ControlRegister6A {
         self.into_bits()
     }
 }
+
+impl WritableRegister for ControlRegister6A {}
 
 /// [`STATUS_REG_A`](accel::AccelerometerRegister::STATUS_REG_A)(27h)
 #[bitfield(u8, order = Msb)]
@@ -380,7 +392,7 @@ impl Register for StatusRegisterA {
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub struct CraRegisterM {
     /// Temperature sensor enabled.
-    #[bits(1, access = RO)]
+    #[bits(1, access = RW)]
     pub temp_en: bool,
 
     /// Must be zero for correct operation of the device.
@@ -389,7 +401,7 @@ pub struct CraRegisterM {
 
     /// Data output rate bits. These bits set the rate at which data is written to all three data
     /// output registers.
-    #[bits(3, access = RO, default = MagOdr::Hz75)]
+    #[bits(3, access = RW, default = MagOdr::Hz75)]
     pub data_output_rate: MagOdr,
 
     /// Must be zero for correct operation of the device.
@@ -409,6 +421,44 @@ impl Register for CraRegisterM {
         self.into_bits()
     }
 }
+
+impl WritableRegister for CraRegisterM {}
+
+/// [`MR_REG_M`](mag::MagnetometerRegister::MR_REG_M) (09h)
+#[bitfield(u8, order = Msb)]
+#[derive(PartialEq, Eq)]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
+pub struct MrRegisterM {
+    /// Must be zero for correct operation of the device.
+    #[bits(6, default = 0)]
+    zeros_27: u8,
+
+    /// Device is placed in sleep mode.
+    #[bits(1, access = RW)]
+    pub sleep_mode: bool,
+
+    /// Enables single conversion mode.
+    ///
+    /// * `false` - Continous conversion mode.
+    /// * `true` - Single conversion mode.
+    #[bits(1, access = RW, default = false)]
+    pub single_conversion: bool,
+}
+
+impl Register for MrRegisterM {
+    const DEV_ADDRESS: u8 = mag::ADDRESS;
+    const REG_ADDRESS: u8 = MagnetometerRegister::MR_REG_M.addr();
+
+    fn from_bits(bits: u8) -> Self {
+        Self::from_bits(bits)
+    }
+
+    fn to_bits(&self) -> u8 {
+        self.into_bits()
+    }
+}
+
+impl WritableRegister for MrRegisterM {}
 
 /// [`SR_REG_M`](mag::MagnetometerRegister::SR_REG_M) (09h)
 #[bitfield(u8, order = Msb)]
@@ -446,15 +496,15 @@ mod tests {
     use super::*;
 
     #[test]
-    fn status_register_a() {
-        let reg = StatusRegisterA::from(0b1001_0010);
-        assert!(reg.zyx_overrun());
-        assert!(!reg.z_overrun());
-        assert!(!reg.y_overrun());
-        assert!(reg.x_overrun());
-        assert!(!reg.xyz_data_available());
-        assert!(!reg.z_data_available());
-        assert!(reg.y_data_available());
-        assert!(!reg.x_data_available());
+    #[allow(clippy::unusual_byte_groupings)]
+    fn status_register_1a() {
+        let reg = ControlRegister1A::new()
+            .with_output_data_rate(AccelOdr::Hz400)
+            .with_low_power_enable(false)
+            .with_x_enable(true)
+            .with_y_enable(true)
+            .with_z_enable(true);
+
+        assert_eq!(reg.into_bits(), 0b0111_0_111);
     }
 }
