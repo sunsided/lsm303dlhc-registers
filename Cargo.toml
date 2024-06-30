@@ -10,9 +10,6 @@ repository = "https://github.com/sunsided/lsm303dlhc"
 version = "0.2.0"
 
 [dependencies]
+cast = { version = "0.3.0", default-features = false }
 embedded-hal = "0.2.7"
 generic-array = "1.0.0"
-
-[dependencies.cast]
-default-features = false
-version = "0.3.0"

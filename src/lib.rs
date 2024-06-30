@@ -44,7 +44,7 @@ where
     /// Creates a new driver from a I2C peripheral
     ///
     /// ## Shared use of the I2C bus
-    /// To use the I2C bus with multiple devices, consider using [`RefCellI2C::from`].
+    /// To use the I2C bus with multiple devices, consider using [`RefCellI2C::into`](wrapper::refcell::RefCellI2C).
     pub fn new(i2c: I2C) -> Result<Self, E> {
         let mut lsm303dlhc = Self { i2c };
 
