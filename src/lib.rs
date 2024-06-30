@@ -1,4 +1,4 @@
-//! A platform agnostic driver to interface with the LSM303DLHC (accelerometer + compass)
+//! A platform-agnostic driver to interface with the LSM303DLHC (accelerometer + compass)
 //!
 //! This driver was built using [`embedded-hal`] traits.
 //!
@@ -44,6 +44,7 @@ where
         // TODO reset all the registers / the device
 
         // configure the accelerometer to operate at 400 Hz
+        #[allow(clippy::unusual_byte_groupings)]
         lsm303dlhc.write_accel_register(accel::Register::CTRL_REG1_A, 0b0111_0_111)?;
 
         // configure the magnetometer to operate in continuous mode
