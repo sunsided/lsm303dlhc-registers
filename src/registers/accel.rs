@@ -7,7 +7,8 @@ pub const ADDRESS: u8 = 0b0011001;
 #[allow(dead_code)]
 #[allow(non_camel_case_types)]
 #[allow(missing_docs)]
-#[derive(Copy, Clone)]
+#[derive(Copy, Clone, PartialEq, Eq)]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub enum Register {
     CTRL_REG1_A = 0x20,
     CTRL_REG2_A = 0x21,

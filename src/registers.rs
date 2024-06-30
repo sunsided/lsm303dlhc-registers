@@ -8,6 +8,8 @@ pub mod mag;
 
 /// `CTRL_REG4_A` (23h)
 #[bitfield(u8, order = Msb)]
+#[derive(PartialEq, Eq)]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub struct ControlRegister4A {
     #[bits(1, access = RW)]
     block_data_update: bool,
@@ -30,6 +32,8 @@ pub struct ControlRegister4A {
 
 /// `STATUS_REG_A` (27h)
 #[bitfield(u8, order = Msb)]
+#[derive(PartialEq, Eq)]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub struct StatusRegisterA {
     /// X-, Y-, and Z-axis data overrun.
     /// * `false` - no overrun has occurred

@@ -251,7 +251,8 @@ where
 }
 
 /// XYZ triple
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Copy, Clone, PartialEq, Eq)]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub struct I16x3 {
     /// X component
     pub x: i16,
@@ -263,6 +264,7 @@ pub struct I16x3 {
 
 /// Accelerometer Output Data Rate
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
 #[repr(u8)]
 pub enum AccelOdr {
     /// 1 Hz
@@ -283,6 +285,7 @@ pub enum AccelOdr {
 
 /// Magnetometer Output Data Rate
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
 #[repr(u8)]
 pub enum MagOdr {
     /// 0.75 Hz
@@ -305,6 +308,7 @@ pub enum MagOdr {
 
 /// Acceleration sensitivity (full scale selection).
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
 #[repr(u8)]
 pub enum Sensitivity {
     /// Range: [-2g, +2g]. Sensitivity ~ 1 g / (1 << 14) LSB
