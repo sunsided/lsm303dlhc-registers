@@ -1157,7 +1157,7 @@ pub struct ModeRegisterM {
 
     /// Enables single conversion mode.
     ///
-    /// * `false` - Continous conversion mode.
+    /// * `false` - Continuous conversion mode.
     /// * `true` - Single conversion mode.
     #[bits(1, access = RW, default = false)]
     pub single_conversion: bool,
