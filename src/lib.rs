@@ -62,13 +62,13 @@ where
 
         // configure the accelerometer to operate at 400 Hz
         #[allow(clippy::unusual_byte_groupings)]
-        lsm303dlhc.write_accel_register(accel::Register::CTRL_REG1_A, 0b0111_0_111)?;
+        lsm303dlhc.write_accel_register_unchecked(accel::Register::CTRL_REG1_A, 0b0111_0_111)?;
 
         // configure the magnetometer to operate in continuous mode
-        lsm303dlhc.write_mag_register(mag::Register::MR_REG_M, 0b00)?;
+        lsm303dlhc.write_mag_register_unchecked(mag::Register::MR_REG_M, 0b00)?;
 
         // enable the temperature sensor
-        lsm303dlhc.write_mag_register(mag::Register::CRA_REG_M, 0b0001000 | (1 << 7))?;
+        lsm303dlhc.write_mag_register_unchecked(mag::Register::CRA_REG_M, 0b0001000 | (1 << 7))?;
 
         Ok(lsm303dlhc)
     }
@@ -86,7 +86,7 @@ where
 
     /// Sets the accelerometer output data rate
     pub fn accel_odr(&mut self, odr: AccelOdr) -> Result<(), E> {
-        self.modify_accel_register(accel::Register::CTRL_REG1_A, |r| {
+        self.modify_accel_register_unchecked(accel::Register::CTRL_REG1_A, |r| {
             r & !(0b1111 << 4) | ((odr as u8) << 4)
         })
     }
@@ -104,7 +104,7 @@ where
 
     /// Sets the magnetometer output data rate
     pub fn mag_odr(&mut self, odr: MagOdr) -> Result<(), E> {
-        self.modify_mag_register(mag::Register::CRA_REG_M, |r| {
+        self.modify_mag_register_unchecked(mag::Register::CRA_REG_M, |r| {
             r & !(0b111 << 2) | ((odr as u8) << 2)
         })
     }
@@ -126,27 +126,14 @@ where
 
     /// Changes the `sensitivity` of the accelerometer
     pub fn set_accel_sensitivity(&mut self, sensitivity: Sensitivity) -> Result<(), E> {
-        self.modify_accel_register(accel::Register::CTRL_REG4_A, |r| {
+        self.modify_accel_register_unchecked(accel::Register::CTRL_REG4_A, |r| {
             r & !(0b11 << 4) | (sensitivity.value() << 4)
         })
     }
 
-    fn modify_accel_register<F>(&mut self, reg: accel::Register, f: F) -> Result<(), E>
-    where
-        F: FnOnce(u8) -> u8,
-    {
-        let r = self.read_accel_register(reg)?;
-        self.write_accel_register(reg, f(r))?;
-        Ok(())
-    }
-
-    fn modify_mag_register<F>(&mut self, reg: mag::Register, f: F) -> Result<(), E>
-    where
-        F: FnOnce(u8) -> u8,
-    {
-        let r = self.read_mag_register(reg)?;
-        self.write_mag_register(reg, f(r))?;
-        Ok(())
+    /// Reads an accelerometer register.
+    pub fn read_accel_register(&mut self, reg: accel::Register) -> Result<u8, E> {
+        self.read_accel_registers::<U1>(reg).map(|b| b[0])
     }
 
     fn read_accel_registers<N>(&mut self, reg: accel::Register) -> Result<GenericArray<u8, N>, E>
@@ -171,11 +158,40 @@ where
         Ok(buffer)
     }
 
-    fn read_accel_register(&mut self, reg: accel::Register) -> Result<u8, E> {
-        self.read_accel_registers::<U1>(reg).map(|b| b[0])
+    /// Writes an accelerometer register.
+    ///
+    /// ## Safety
+    /// This function does not validate any inputs.
+    pub unsafe fn write_accel_register(&mut self, reg: accel::Register, byte: u8) -> Result<(), E> {
+        self.write_accel_register_unchecked(reg, byte)
     }
 
-    fn read_mag_register(&mut self, reg: mag::Register) -> Result<u8, E> {
+    fn write_accel_register_unchecked(&mut self, reg: accel::Register, byte: u8) -> Result<(), E> {
+        self.i2c.write(accel::ADDRESS, &[reg.addr(), byte])
+    }
+
+    /// Modifies an accelerometer register.
+    ///
+    /// ## Safety
+    /// This function does not validate any inputs.
+    pub unsafe fn modify_accel_register<F>(&mut self, reg: accel::Register, f: F) -> Result<(), E>
+    where
+        F: FnOnce(u8) -> u8,
+    {
+        self.modify_accel_register_unchecked(reg, f)
+    }
+
+    fn modify_accel_register_unchecked<F>(&mut self, reg: accel::Register, f: F) -> Result<(), E>
+    where
+        F: FnOnce(u8) -> u8,
+    {
+        let r = self.read_accel_register(reg)?;
+        self.write_accel_register_unchecked(reg, f(r))?;
+        Ok(())
+    }
+
+    /// Reads a magnetometer register.
+    pub fn read_mag_register(&mut self, reg: mag::Register) -> Result<u8, E> {
         let buffer: GenericArray<u8, U1> = self.read_mag_registers(reg)?;
         Ok(buffer[0])
     }
@@ -201,12 +217,36 @@ where
         Ok(buffer)
     }
 
-    fn write_accel_register(&mut self, reg: accel::Register, byte: u8) -> Result<(), E> {
-        self.i2c.write(accel::ADDRESS, &[reg.addr(), byte])
+    /// Writes a magnetometer register.
+    ///
+    /// ## Safety
+    /// This function does not validate any inputs.
+    pub unsafe fn write_mag_register(&mut self, reg: mag::Register, byte: u8) -> Result<(), E> {
+        self.write_mag_register_unchecked(reg, byte)
     }
 
-    fn write_mag_register(&mut self, reg: mag::Register, byte: u8) -> Result<(), E> {
+    fn write_mag_register_unchecked(&mut self, reg: mag::Register, byte: u8) -> Result<(), E> {
         self.i2c.write(mag::ADDRESS, &[reg.addr(), byte])
+    }
+
+    /// Modifies a magnetometer register.
+    ///
+    /// ## Safety
+    /// This function does not validate any inputs.
+    pub unsafe fn modify_mag_register<F>(&mut self, reg: mag::Register, f: F) -> Result<(), E>
+    where
+        F: FnOnce(u8) -> u8,
+    {
+        self.modify_mag_register_unchecked(reg, f)
+    }
+
+    fn modify_mag_register_unchecked<F>(&mut self, reg: mag::Register, f: F) -> Result<(), E>
+    where
+        F: FnOnce(u8) -> u8,
+    {
+        let r = self.read_mag_register(reg)?;
+        self.write_mag_register_unchecked(reg, f(r))?;
+        Ok(())
     }
 }
 
