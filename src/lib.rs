@@ -29,7 +29,7 @@ use cast::u16;
 use generic_array::typenum::consts::*;
 use generic_array::{ArrayLength, GenericArray};
 use hal::blocking::i2c::{Write, WriteRead};
-use registers::{accel, mag};
+use registers::{accel, mag, StatusRegisterA, StatusRegisterM};
 
 #[cfg(feature = "accelerometer")]
 #[cfg_attr(docsrs, doc(cfg(feature = "accelerometer")))]
@@ -74,14 +74,22 @@ where
     }
 
     /// Accelerometer measurements
-    pub fn accel(&mut self) -> Result<I16x3, E> {
-        let buffer: GenericArray<u8, U6> = self.read_accel_registers(accel::Register::OUT_X_L_A)?;
+    pub fn accel(&mut self) -> Result<(I16x3, StatusRegisterA), E> {
+        let buffer: GenericArray<u8, U7> = self.read_accel_registers(accel::Register::OUT_X_L_A)?;
 
-        Ok(I16x3 {
-            x: (u16(buffer[0]) + (u16(buffer[1]) << 8)) as i16,
-            y: (u16(buffer[2]) + (u16(buffer[3]) << 8)) as i16,
-            z: (u16(buffer[4]) + (u16(buffer[5]) << 8)) as i16,
-        })
+        // The status register is at the start of the read.
+        // We might use this to stop the read early.
+        let status = StatusRegisterA::from_bits(buffer[0]);
+
+        Ok((
+            I16x3 {
+                // Registers come in X, Y, Z order of low, then high.
+                x: (u16(buffer[1]) + (u16(buffer[2]) << 8)) as i16,
+                y: (u16(buffer[3]) + (u16(buffer[4]) << 8)) as i16,
+                z: (u16(buffer[5]) + (u16(buffer[6]) << 8)) as i16,
+            },
+            status,
+        ))
     }
 
     /// Sets the accelerometer output data rate
@@ -92,14 +100,22 @@ where
     }
 
     /// Magnetometer measurements
-    pub fn mag(&mut self) -> Result<I16x3, E> {
-        let buffer: GenericArray<u8, U6> = self.read_mag_registers(mag::Register::OUT_X_H_M)?;
+    pub fn mag(&mut self) -> Result<(I16x3, StatusRegisterM), E> {
+        let buffer: GenericArray<u8, U7> = self.read_mag_registers(mag::Register::OUT_X_H_M)?;
 
-        Ok(I16x3 {
-            x: (u16(buffer[1]) + (u16(buffer[0]) << 8)) as i16,
-            y: (u16(buffer[5]) + (u16(buffer[4]) << 8)) as i16,
-            z: (u16(buffer[3]) + (u16(buffer[2]) << 8)) as i16,
-        })
+        // The status register is at the end of the read.
+        let status = StatusRegisterM::from_bits(buffer[6]);
+
+        Ok((
+            I16x3 {
+                // Note that the register is different from the accelerometer.
+                // We read an X, Z, Y sequence of high, then low each.
+                x: (u16(buffer[1]) + (u16(buffer[0]) << 8)) as i16,
+                y: (u16(buffer[5]) + (u16(buffer[4]) << 8)) as i16,
+                z: (u16(buffer[3]) + (u16(buffer[2]) << 8)) as i16,
+            },
+            status,
+        ))
     }
 
     /// Sets the magnetometer output data rate

@@ -15,7 +15,9 @@ where
     type Error = E;
 
     fn accel_raw(&mut self) -> Result<accelerometer::vector::I16x3, Error<Self::Error>> {
-        self.accel().map(Into::into).map_err(Into::into)
+        self.accel()
+            .map(|result| result.0.into())
+            .map_err(Into::into)
     }
 }
 
