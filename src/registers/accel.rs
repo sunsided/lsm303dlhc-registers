@@ -60,11 +60,17 @@ pub enum AccelerometerRegister {
     INT2_THS_A = 0x36,
     /// See [`Int2DurationRegisterA`](super::Int2DurationRegisterA).
     INT2_DURATION_A = 0x37,
+    /// See [`ClickConfigurationRegisterA`](super::ClickConfigurationRegisterA).
     CLICK_CFG_A = 0x38,
+    /// See [`ClickSourceRegisterA`](super::ClickSourceRegisterA).
     CLICK_SRC_A = 0x39,
+    /// See [`ClickThresholdRegisterA`](super::ClickThresholdRegisterA).
     CLICK_THS_A = 0x3A,
+    /// See [`TimeLimitRegisterA`](super::ClickTimeLimitRegisterA).
     TIME_LIMIT_A = 0x3B,
+    /// See [`ClickTimeLatencyRegisterA`](super::ClickTimeLatencyRegisterA).
     TIME_LATENCY_A = 0x3C,
+    /// See [`ClickTimeWindowRegisterA`](super::ClickTimeWindowRegisterA).
     TIME_WINDOW_A = 0x3D,
 }
 

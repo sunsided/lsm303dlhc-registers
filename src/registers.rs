@@ -767,7 +767,7 @@ pub struct Int2ThresholdRegisterA {
     #[bits(1, default = false)]
     zero: bool,
 
-    /// Interrupt 1 threshold.
+    /// Interrupt 2 threshold.
     #[bits(7, access = RW, default = 0)]
     pub threshold: u8,
 }
@@ -815,6 +815,260 @@ impl Register for Int2DurationRegisterA {
 }
 
 impl WritableRegister for Int2DurationRegisterA {}
+
+/// [`CLICK_CFG_A`](accel::AccelerometerRegister::CLICK_CFG_A) (38h)
+#[bitfield(u8, order = Msb)]
+#[derive(PartialEq, Eq)]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
+pub struct ClickConfigurationRegisterA {
+    #[bits(2)]
+    __: u8,
+
+    /// Enable interrupt double-click in Z-axis.
+    ///
+    /// * `false` - disable interrupt request
+    /// * `true` - enable interrupt request on measured accel. value higher than preset threshold
+    #[bits(1, access = RW)]
+    pub zd: bool,
+
+    /// Enable interrupt single-click in Z-axis.
+    ///
+    /// * `false` - disable interrupt request
+    /// * `true` - enable interrupt request on measured accel. value higher than preset threshold
+    #[bits(1, access = RW)]
+    pub zs: bool,
+
+    /// Enable interrupt double-click in Y-axis.
+    ///
+    /// * `false` - disable interrupt request
+    /// * `true` - enable interrupt request on measured accel. value higher than preset threshold
+    #[bits(1, access = RW)]
+    pub yd: bool,
+
+    /// Enable interrupt single-click in Y-axis.
+    ///
+    /// * `false` - disable interrupt request
+    /// * `true` - enable interrupt request on measured accel. value higher than preset threshold
+    #[bits(1, access = RW)]
+    pub ys: bool,
+
+    /// Enable interrupt double-click in X-axis.
+    ///
+    /// * `false` - disable interrupt request
+    /// * `true` - enable interrupt request on measured accel. value higher than preset threshold
+    #[bits(1, access = RW)]
+    pub xd: bool,
+
+    /// Enable interrupt single-click in X-axis.
+    ///
+    /// * `false` - disable interrupt request
+    /// * `true` - enable interrupt request on measured accel. value higher than preset threshold
+    #[bits(1, access = RW)]
+    pub xs: bool,
+}
+
+impl Register for ClickConfigurationRegisterA {
+    const DEV_ADDRESS: u8 = accel::ADDRESS;
+    const REG_ADDRESS: u8 = AccelerometerRegister::CLICK_CFG_A.addr();
+
+    fn from_bits(bits: u8) -> Self {
+        Self::from_bits(bits)
+    }
+
+    fn to_bits(&self) -> u8 {
+        self.into_bits()
+    }
+}
+
+impl WritableRegister for ClickConfigurationRegisterA {}
+
+/// [`CLICK_SRC_A`](accel::AccelerometerRegister::CLICK_SRC_A) (39h)
+#[bitfield(u8, order = Msb)]
+#[derive(PartialEq, Eq)]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
+pub struct ClickSourceRegisterA {
+    #[bits(1)]
+    __: bool,
+
+    /// Interrupt active.
+    #[bits(1, access = RO)]
+    pub ia: bool,
+
+    /// Double-click enable.
+    ///
+    /// * `false` - double-click detection disable
+    /// * `true` - double-click detection enable
+    #[bits(1, access = RO)]
+    pub dclick: bool,
+
+    /// Single-click enable.
+    ///
+    /// * `false` - single-click detection disable
+    /// * `true` - signle-click detection enable
+    #[bits(1, access = RO)]
+    pub sclick: bool,
+
+    /// Click sign.
+    #[bits(1, access = RO)]
+    pub sign_negative: bool,
+
+    /// Z-click detection
+    ///
+    /// * `false` - no interrupt
+    /// * `true` - Z high event has occurred
+    #[bits(1, access = RO)]
+    pub z: bool,
+
+    /// Y-click detection
+    ///
+    /// * `false` - no interrupt
+    /// * `true` - Y high event has occurred
+    #[bits(1, access = RO)]
+    pub y: bool,
+
+    /// X-click detection
+    ///
+    /// * `false` - no interrupt
+    /// * `true` - X high event has occurred
+    #[bits(1, access = RO)]
+    pub x: bool,
+}
+
+impl Register for ClickSourceRegisterA {
+    const DEV_ADDRESS: u8 = accel::ADDRESS;
+    const REG_ADDRESS: u8 = AccelerometerRegister::CLICK_SRC_A.addr();
+
+    fn from_bits(bits: u8) -> Self {
+        Self::from_bits(bits)
+    }
+
+    fn to_bits(&self) -> u8 {
+        self.into_bits()
+    }
+}
+
+/// [`CLICK_THS_A`](accel::AccelerometerRegister::CLICK_THS_A) (3Ah)
+#[bitfield(u8, order = Msb)]
+#[derive(PartialEq, Eq)]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
+pub struct ClickThresholdRegisterA {
+    #[bits(1, default = false)]
+    zero: bool,
+
+    /// Click threshold.
+    ///
+    /// 1 LSB = full-scale / 128.
+    /// Ths6 through Ths0 define the threshold which is used by the system to start the
+    /// click-detection procedure. The threshold value is expressed over 7 bits
+    /// as an unsigned number.
+    #[bits(7, access = RW, default = 0)]
+    pub threshold: u8,
+}
+
+impl Register for ClickThresholdRegisterA {
+    const DEV_ADDRESS: u8 = accel::ADDRESS;
+    const REG_ADDRESS: u8 = AccelerometerRegister::CLICK_THS_A.addr();
+
+    fn from_bits(bits: u8) -> Self {
+        Self::from_bits(bits)
+    }
+
+    fn to_bits(&self) -> u8 {
+        self.into_bits()
+    }
+}
+
+impl WritableRegister for ClickThresholdRegisterA {}
+
+/// [`TIME_LIMIT_A`](accel::AccelerometerRegister::TIME_LIMIT_A) (3Bh)
+#[bitfield(u8, order = Msb)]
+#[derive(PartialEq, Eq)]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
+pub struct ClickTimeLimitRegisterA {
+    #[bits(1, default = false)]
+    zero: bool,
+
+    /// Click time limit.
+    ///
+    /// 1 LSB = 1/ODR. TLI6 through TLI0 define the maximum time interval that can elapse
+    /// between the start of the click-detection procedure (the acceleration on the selected channel
+    /// exceeds the programmed threshold) and when the acceleration falls below the threshold.
+    #[bits(7, access = RW, default = 0)]
+    pub time_limit: u8,
+}
+
+impl Register for ClickTimeLimitRegisterA {
+    const DEV_ADDRESS: u8 = accel::ADDRESS;
+    const REG_ADDRESS: u8 = AccelerometerRegister::TIME_LIMIT_A.addr();
+
+    fn from_bits(bits: u8) -> Self {
+        Self::from_bits(bits)
+    }
+
+    fn to_bits(&self) -> u8 {
+        self.into_bits()
+    }
+}
+
+impl WritableRegister for ClickTimeLimitRegisterA {}
+
+/// [`TIME_LATENCY_A`](accel::AccelerometerRegister::TIME_LATENCY_A) (3Ch)
+#[bitfield(u8, order = Msb)]
+#[derive(PartialEq, Eq)]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
+pub struct ClickTimeLatencyRegisterA {
+    /// Double-click time latency.
+    ///
+    /// 1 LSB = 1/ODR. TLA7 through TLA0 define the time interval that starts after the first click
+    /// detection where the click-detection procedure is disabled, in cases where the device is
+    /// configured for double-click detection.
+    #[bits(8, access = RW, default = 0)]
+    pub time_latency: u8,
+}
+
+impl Register for ClickTimeLatencyRegisterA {
+    const DEV_ADDRESS: u8 = accel::ADDRESS;
+    const REG_ADDRESS: u8 = AccelerometerRegister::TIME_LATENCY_A.addr();
+
+    fn from_bits(bits: u8) -> Self {
+        Self::from_bits(bits)
+    }
+
+    fn to_bits(&self) -> u8 {
+        self.into_bits()
+    }
+}
+
+impl WritableRegister for ClickTimeLatencyRegisterA {}
+
+/// [`TIME_WINDOW_A`](accel::AccelerometerRegister::TIME_WINDOW_A) (3Dh)
+#[bitfield(u8, order = Msb)]
+#[derive(PartialEq, Eq)]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
+pub struct ClickTimeWindowRegisterA {
+    /// Double-click time window.
+    ///
+    /// 1 LSB = 1/ODR. TW7 through TW0 define the maximum interval of time that can elapse
+    /// after the end of the latency interval in which the click detection procedure can start, in cases
+    /// where the device is configured for double-click detection.
+    #[bits(8, access = RW, default = 0)]
+    pub time_window: u8,
+}
+
+impl Register for ClickTimeWindowRegisterA {
+    const DEV_ADDRESS: u8 = accel::ADDRESS;
+    const REG_ADDRESS: u8 = AccelerometerRegister::TIME_WINDOW_A.addr();
+
+    fn from_bits(bits: u8) -> Self {
+        Self::from_bits(bits)
+    }
+
+    fn to_bits(&self) -> u8 {
+        self.into_bits()
+    }
+}
+
+impl WritableRegister for ClickTimeWindowRegisterA {}
 
 /// [`CRA_REG_M`](mag::MagnetometerRegister::CRA_REG_M) (09h)
 #[bitfield(u8, order = Msb)]
