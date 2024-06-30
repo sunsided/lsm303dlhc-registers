@@ -5,8 +5,8 @@ use bitfield_struct::bitfield;
 use registers::accel::AccelerometerRegister;
 use registers::mag::MagnetometerRegister;
 pub use registers::register::{Register, WritableRegister};
-use MagGain;
 use {FifoMode, MagOdr};
+use {HighpassFilterMode, MagGain};
 
 pub mod accel;
 pub mod mag;
