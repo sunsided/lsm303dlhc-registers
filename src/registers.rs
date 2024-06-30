@@ -12,19 +12,19 @@ pub mod mag;
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub struct ControlRegister1A {
     #[bits(4, access = RW)]
-    output_data_rate: AccelOdr,
+    pub output_data_rate: AccelOdr,
 
     #[bits(1, access = RW)]
-    low_power_enable: bool,
+    pub low_power_enable: bool,
 
     #[bits(1, access = RW)]
-    z_enable: bool,
+    pub z_enable: bool,
 
     #[bits(1, access = RW)]
-    y_enable: bool,
+    pub y_enable: bool,
 
     #[bits(1, access = RW)]
-    x_enable: bool,
+    pub x_enable: bool,
 }
 
 /// `CTRL_REG4_A` (23h)
@@ -33,22 +33,22 @@ pub struct ControlRegister1A {
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub struct ControlRegister4A {
     #[bits(1, access = RW)]
-    block_data_update: bool,
+    pub block_data_update: bool,
 
     #[bits(1, access = RW)]
-    big_little_endian: bool,
+    pub big_little_endian: bool,
 
     #[bits(2, access = RW)]
-    full_scale: Sensitivity,
+    pub full_scale: Sensitivity,
 
     #[bits(1, access = RW)]
-    high_resolution: bool,
+    pub high_resolution: bool,
 
     #[bits(2)]
     __: u8,
 
     #[bits(1, access = RW)]
-    spi_serial_interface_mode: bool,
+    pub spi_serial_interface_mode: bool,
 }
 
 /// `STATUS_REG_A` (27h)
@@ -60,49 +60,49 @@ pub struct StatusRegisterA {
     /// * `false` - no overrun has occurred
     /// * `true` - a new set of data has overwritten the previous data
     #[bits(1, access = RO)]
-    zyx_overrun: bool,
+    pub zyx_overrun: bool,
 
     /// Z-axis data overrun.
     /// * `false` - no overrun has occurred
     /// * `true` - new data for the Z-axis has overwritten the previous data
     #[bits(1, access = RO)]
-    z_overrun: bool,
+    pub z_overrun: bool,
 
     /// Y-axis data overrun.
     /// * `false` - no overrun has occurred
     /// * `true` - new data for the Y-axis has overwritten the previous data
     #[bits(1, access = RO)]
-    y_overrun: bool,
+    pub y_overrun: bool,
 
     /// X-axis data overrun.
     /// * `false` - no overrun has occurred
     /// * `true` - new data for the X-axis has overwritten the previous data
     #[bits(1, access = RO)]
-    x_overrun: bool,
+    pub x_overrun: bool,
 
     ///  X-, Y-, and Z-axis new data available.
     /// * `false` - a new set of data is not yet available
     /// * `true` - a new set of data is available
     #[bits(1, access = RO)]
-    xyz_data_available: bool,
+    pub xyz_data_available: bool,
 
     /// Z-axis new data available.
     /// * `false` - new data for the Z-axis is not yet available
     /// * `true` - new data for the Z-axis is available
     #[bits(1, access = RO)]
-    z_data_available: bool,
+    pub z_data_available: bool,
 
     /// Y-axis new data available.
     /// * `false` - new data for the Y-axis is not yet available
     /// * `true` - new data for the Y-axis is available
     #[bits(1, access = RO)]
-    y_data_available: bool,
+    pub y_data_available: bool,
 
     /// X-axis new data available.
     /// * `false` - new data for the X-axis is not yet available
     /// * `true` - new data for the X-axis is available
     #[bits(1, access = RO)]
-    x_data_available: bool,
+    pub x_data_available: bool,
 }
 
 #[cfg(test)]
