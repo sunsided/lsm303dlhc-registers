@@ -131,7 +131,8 @@ where
     where
         N: ArrayLength<u8>,
     {
-        let mut buffer: GenericArray<u8, N> = unsafe { mem::uninitialized() };
+        let mut buffer: GenericArray<u8, N> =
+            unsafe { mem::MaybeUninit::<GenericArray<u8, N>>::uninit().assume_init() };
 
         {
             let buffer: &mut [u8] = &mut buffer;
@@ -158,7 +159,8 @@ where
     where
         N: ArrayLength<u8>,
     {
-        let mut buffer: GenericArray<u8, N> = unsafe { mem::uninitialized() };
+        let mut buffer: GenericArray<u8, N> =
+            unsafe { mem::MaybeUninit::<GenericArray<u8, N>>::uninit().assume_init() };
 
         {
             let buffer: &mut [u8] = &mut buffer;
