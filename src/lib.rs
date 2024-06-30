@@ -13,10 +13,16 @@
 #![deny(missing_docs)]
 #![deny(warnings)]
 #![no_std]
+// Enables the `doc_cfg` feature when the `docsrs` configuration attribute is defined.
+#![cfg_attr(docsrs, feature(doc_cfg))]
 
+#[cfg(feature = "accelerometer")]
+extern crate accelerometer;
 extern crate cast;
 extern crate embedded_hal as hal;
 extern crate generic_array;
+
+use core::fmt::Debug;
 
 use cast::u16;
 use generic_array::typenum::consts::*;
@@ -24,6 +30,10 @@ use generic_array::{ArrayLength, GenericArray};
 use hal::blocking::i2c::{Write, WriteRead};
 
 mod accel;
+
+#[cfg(feature = "accelerometer")]
+#[cfg_attr(docsrs, doc(cfg(feature = "accelerometer")))]
+mod accelerometer_impl;
 mod mag;
 pub mod wrapper;
 
