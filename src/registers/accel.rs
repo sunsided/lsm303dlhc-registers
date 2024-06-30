@@ -52,9 +52,13 @@ pub enum AccelerometerRegister {
     INT1_THS_A = 0x32,
     /// See [`Int1DurationRegisterA`](super::Int1DurationRegisterA).
     INT1_DURATION_A = 0x33,
+    /// See [`Int1ConfigurationRegisterA`](super::Int1ConfigurationRegisterA).
     INT2_CFG_A = 0x34,
+    /// See [`Int2SourceRegisterA`](super::Int2SourceRegisterA).
     INT2_SRC_A = 0x35,
+    /// See [`Int2ThresholdRegisterA`](super::Int2ThresholdRegisterA).
     INT2_THS_A = 0x36,
+    /// See [`Int2DurationRegisterA`](super::Int2DurationRegisterA).
     INT2_DURATION_A = 0x37,
     CLICK_CFG_A = 0x38,
     CLICK_SRC_A = 0x39,

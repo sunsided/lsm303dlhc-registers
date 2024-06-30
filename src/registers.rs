@@ -638,6 +638,184 @@ impl Register for Int1DurationRegisterA {
 
 impl WritableRegister for Int1DurationRegisterA {}
 
+/// [`INT2_CFG_A`](accel::AccelerometerRegister::INT2_CFG_A) (34h)
+#[bitfield(u8, order = Msb)]
+#[derive(PartialEq, Eq)]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
+pub struct Int2ConfigurationRegisterA {
+    /// AND/OR combination of interrupt events.
+    #[bits(1, access = RW, default = false)]
+    pub aoi: bool,
+
+    /// 6-direction detection function enabled
+    #[bits(1, access = RW, default = false)]
+    pub six_d: bool,
+
+    /// Enable interrupt generation on Z high event
+    ///
+    /// * `false` - disable interrupt request
+    /// * `true` - enable interrupt request on measured accel. value higher than preset threshold
+    #[bits(1, access = RW, default = false)]
+    pub zhie: bool,
+
+    /// Enable interrupt generation on Z low event
+    ///
+    /// * `false` - disable interrupt request
+    /// * `true` - enable interrupt request on measured accel. value lower than preset threshold
+    #[bits(1, access = RW, default = false)]
+    pub zlie: bool,
+
+    /// Enable interrupt generation on Y high event
+    ///
+    /// * `false` - disable interrupt request
+    /// * `true` - enable interrupt request on measured accel. value higher than preset threshold
+    #[bits(1, access = RW, default = false)]
+    pub yhie: bool,
+
+    /// Enable interrupt generation on Y low event
+    ///
+    /// * `false` - disable interrupt request
+    /// * `true` - enable interrupt request on measured accel. value lower than preset threshold
+    #[bits(1, access = RW, default = false)]
+    pub ylie: bool,
+
+    /// Enable interrupt generation on X high event
+    ///
+    /// * `false` - disable interrupt request
+    /// * `true` - enable interrupt request on measured accel. value higher than preset threshold
+    #[bits(1, access = RW, default = false)]
+    pub xhie: bool,
+
+    /// Enable interrupt generation on X low event
+    ///
+    /// * `false` - disable interrupt request
+    /// * `true` - enable interrupt request on measured accel. value lower than preset threshold
+    #[bits(1, access = RW, default = false)]
+    pub xlie: bool,
+}
+
+impl Register for Int2ConfigurationRegisterA {
+    const DEV_ADDRESS: u8 = accel::ADDRESS;
+    const REG_ADDRESS: u8 = AccelerometerRegister::INT2_CFG_A.addr();
+
+    fn from_bits(bits: u8) -> Self {
+        Self::from_bits(bits)
+    }
+
+    fn to_bits(&self) -> u8 {
+        self.into_bits()
+    }
+}
+
+impl WritableRegister for Int2ConfigurationRegisterA {}
+
+/// [`INT2_SRC_A`](accel::AccelerometerRegister::INT2_SRC_A) (35h)
+#[bitfield(u8, order = Msb)]
+#[derive(PartialEq, Eq)]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
+pub struct Int2SourceRegisterA {
+    #[bits(1, default = false)]
+    zero: bool,
+
+    /// Interrupt active.
+    #[bits(1, access = RO)]
+    pub ia: bool,
+
+    /// Z high.
+    #[bits(1, access = RO)]
+    pub z_high: bool,
+
+    /// Z low.
+    #[bits(1, access = RO)]
+    pub z_low: bool,
+
+    /// Y high.
+    #[bits(1, access = RO)]
+    pub y_high: bool,
+
+    /// Y low.
+    #[bits(1, access = RO)]
+    pub y_low: bool,
+
+    /// X high.
+    #[bits(1, access = RO)]
+    pub x_high: bool,
+
+    /// X low.
+    #[bits(1, access = RO)]
+    pub x_low: bool,
+}
+
+impl Register for Int2SourceRegisterA {
+    const DEV_ADDRESS: u8 = accel::ADDRESS;
+    const REG_ADDRESS: u8 = AccelerometerRegister::INT2_SRC_A.addr();
+
+    fn from_bits(bits: u8) -> Self {
+        Self::from_bits(bits)
+    }
+
+    fn to_bits(&self) -> u8 {
+        self.into_bits()
+    }
+}
+
+/// [`INT2_SRC_A`](accel::AccelerometerRegister::INT2_THS_A) (36h)
+#[bitfield(u8, order = Msb)]
+#[derive(PartialEq, Eq)]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
+pub struct Int2ThresholdRegisterA {
+    #[bits(1, default = false)]
+    zero: bool,
+
+    /// Interrupt 1 threshold.
+    #[bits(7, access = RW, default = 0)]
+    pub threshold: u8,
+}
+
+impl Register for Int2ThresholdRegisterA {
+    const DEV_ADDRESS: u8 = accel::ADDRESS;
+    const REG_ADDRESS: u8 = AccelerometerRegister::INT2_THS_A.addr();
+
+    fn from_bits(bits: u8) -> Self {
+        Self::from_bits(bits)
+    }
+
+    fn to_bits(&self) -> u8 {
+        self.into_bits()
+    }
+}
+
+impl WritableRegister for Int2ThresholdRegisterA {}
+
+/// [`INT2_DURATION_A`](accel::AccelerometerRegister::INT2_DURATION_A) (37h)
+#[bitfield(u8, order = Msb)]
+#[derive(PartialEq, Eq)]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
+pub struct Int2DurationRegisterA {
+    #[bits(1, default = false)]
+    zero: bool,
+
+    /// The minimum duration of the Interrupt 1 event to be recognized. Duration
+    /// steps and maximum values depend on the ODR chosen.
+    #[bits(7, access = RW, default = 0)]
+    pub duration: u8,
+}
+
+impl Register for Int2DurationRegisterA {
+    const DEV_ADDRESS: u8 = accel::ADDRESS;
+    const REG_ADDRESS: u8 = AccelerometerRegister::INT2_DURATION_A.addr();
+
+    fn from_bits(bits: u8) -> Self {
+        Self::from_bits(bits)
+    }
+
+    fn to_bits(&self) -> u8 {
+        self.into_bits()
+    }
+}
+
+impl WritableRegister for Int2DurationRegisterA {}
+
 /// [`CRA_REG_M`](mag::MagnetometerRegister::CRA_REG_M) (09h)
 #[bitfield(u8, order = Msb)]
 #[derive(PartialEq, Eq)]
