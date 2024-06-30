@@ -30,7 +30,8 @@ use generic_array::typenum::consts::*;
 use generic_array::{ArrayLength, GenericArray};
 use hal::blocking::i2c::{Write, WriteRead};
 use registers::{
-    accel, mag, ControlRegister1A, CraRegisterM, MrRegisterM, Register, WritableRegister,
+    accel, mag, ControlRegister1A, ControlRegister2A, ControlRegister3A, ControlRegister4A,
+    ControlRegister5A, ControlRegister6A, CraRegisterM, MrRegisterM, Register, WritableRegister,
 };
 
 #[cfg(feature = "accelerometer")]
@@ -73,6 +74,14 @@ where
                 .with_z_enable(true),
         )?;
 
+        // Reset other accelerometer control register.
+        // This could be optimized with a bulk write.
+        sensor.write_register(ControlRegister2A::new())?;
+        sensor.write_register(ControlRegister3A::new())?;
+        sensor.write_register(ControlRegister4A::new())?;
+        sensor.write_register(ControlRegister5A::new())?;
+        sensor.write_register(ControlRegister6A::new())?;
+
         // configure the magnetometer to operate in continuous mode
         sensor.write_register(
             MrRegisterM::new()
@@ -105,9 +114,7 @@ where
 
     /// Sets the accelerometer output data rate
     pub fn accel_odr(&mut self, odr: AccelOdr) -> Result<(), E> {
-        self.modify_accel_register_unchecked(accel::AccelerometerRegister::CTRL_REG1_A, |r| {
-            r & !(0b1111 << 4) | ((odr as u8) << 4)
-        })
+        self.modify_register(|reg: ControlRegister1A| reg.with_output_data_rate(odr))
     }
 
     /// Magnetometer measurements
@@ -126,9 +133,7 @@ where
 
     /// Sets the magnetometer output data rate
     pub fn mag_odr(&mut self, odr: MagOdr) -> Result<(), E> {
-        self.modify_mag_register_unchecked(mag::MagnetometerRegister::CRA_REG_M, |r| {
-            r & !(0b111 << 2) | ((odr as u8) << 2)
-        })
+        self.modify_register(|reg: CraRegisterM| reg.with_data_output_rate(odr))
     }
 
     /// Temperature sensor measurement
@@ -493,6 +498,38 @@ impl Sensitivity {
             0b01 => Sensitivity::G2,
             0b10 => Sensitivity::G4,
             0b11 => Sensitivity::G12,
+            _ => unreachable!(),
+        }
+    }
+}
+
+/// FIFO mode configuration.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
+#[repr(u8)]
+pub enum FifoMode {
+    /// Bypass mode
+    Bypass = 0b00,
+    /// FIFO mode
+    FIFO = 0b01,
+    /// Stream mode
+    Stream = 0b10,
+    /// Trigger mode
+    Trigger = 0b11,
+}
+
+impl FifoMode {
+    #[allow(unused)]
+    const fn into_bits(self) -> u8 {
+        self as u8
+    }
+
+    const fn from_bits(value: u8) -> Self {
+        match value {
+            0b00 => FifoMode::Bypass,
+            0b01 => FifoMode::FIFO,
+            0b10 => FifoMode::Stream,
+            0b11 => FifoMode::Trigger,
             _ => unreachable!(),
         }
     }

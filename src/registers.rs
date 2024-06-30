@@ -5,7 +5,7 @@ use bitfield_struct::bitfield;
 use registers::accel::AccelerometerRegister;
 use registers::mag::MagnetometerRegister;
 pub use registers::register::{Register, WritableRegister};
-use MagOdr;
+use {FifoMode, MagOdr};
 
 pub mod accel;
 pub mod mag;
@@ -319,7 +319,32 @@ impl Register for ControlRegister6A {
 
 impl WritableRegister for ControlRegister6A {}
 
-/// [`STATUS_REG_A`](accel::AccelerometerRegister::STATUS_REG_A)(27h)
+/// [`REFERENCE_A`](accel::AccelerometerRegister::REFERENCE_A)(27h)
+#[bitfield(u8, order = Msb)]
+#[derive(PartialEq, Eq)]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
+pub struct ReferenceRegisterA {
+    /// Reference value for interrupt generation.
+    #[bits(8, access = RO)]
+    pub reference: u8,
+}
+
+impl Register for ReferenceRegisterA {
+    const DEV_ADDRESS: u8 = accel::ADDRESS;
+    const REG_ADDRESS: u8 = AccelerometerRegister::REFERENCE_A.addr();
+
+    fn from_bits(bits: u8) -> Self {
+        Self::from_bits(bits)
+    }
+
+    fn to_bits(&self) -> u8 {
+        self.into_bits()
+    }
+}
+
+impl WritableRegister for ReferenceRegisterA {}
+
+/// [`STATUS_REG_A`](accel::AccelerometerRegister::STATUS_REG_A) (27h)
 #[bitfield(u8, order = Msb)]
 #[derive(PartialEq, Eq)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
@@ -385,6 +410,233 @@ impl Register for StatusRegisterA {
         self.into_bits()
     }
 }
+
+/// [`FIFO_CTRL_REG_A`](accel::AccelerometerRegister::FIFO_CTRL_REG_A) (2Eh)
+#[bitfield(u8, order = Msb)]
+#[derive(PartialEq, Eq)]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
+pub struct FifoControlRegisterA {
+    /// FIFO mode selection
+    #[bits(2, access = RO, default = FifoMode::Bypass)]
+    pub fifo_mode: FifoMode,
+
+    /// Trigger selection
+    ///
+    /// * `false` - Trigger event linked to trigger signal on INT1
+    /// * `true` - Trigger event linked to trigger signal on INT1
+    #[bits(1, access = RO)]
+    pub trigger_on_int2: bool,
+
+    // TODO: document
+    #[bits(5, access = RO)]
+    pub fth: u8,
+}
+
+impl Register for FifoControlRegisterA {
+    const DEV_ADDRESS: u8 = accel::ADDRESS;
+    const REG_ADDRESS: u8 = AccelerometerRegister::FIFO_CTRL_REG_A.addr();
+
+    fn from_bits(bits: u8) -> Self {
+        Self::from_bits(bits)
+    }
+
+    fn to_bits(&self) -> u8 {
+        self.into_bits()
+    }
+}
+
+impl WritableRegister for FifoControlRegisterA {}
+
+/// [`FIFO_CTRL_REG_A`](accel::AccelerometerRegister::FIFO_SRC_REG_A) (2Fh)
+#[bitfield(u8, order = Msb)]
+#[derive(PartialEq, Eq)]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
+pub struct FifoSourceRegisterA {
+    #[bits(1, access = RO)]
+    pub wtm: bool,
+
+    #[bits(1, access = RO)]
+    pub ovrn_fifo: bool,
+
+    #[bits(1, access = RO)]
+    pub empty: bool,
+
+    #[bits(5, access = RO)]
+    pub fss: u8,
+}
+
+impl Register for FifoSourceRegisterA {
+    const DEV_ADDRESS: u8 = accel::ADDRESS;
+    const REG_ADDRESS: u8 = AccelerometerRegister::FIFO_SRC_REG_A.addr();
+
+    fn from_bits(bits: u8) -> Self {
+        Self::from_bits(bits)
+    }
+
+    fn to_bits(&self) -> u8 {
+        self.into_bits()
+    }
+}
+
+/// [`INT1_CFG_A`](accel::AccelerometerRegister::INT1_CFG_A) (2Fh)
+#[bitfield(u8, order = Msb)]
+#[derive(PartialEq, Eq)]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
+pub struct Int1ConfigurationRegisterA {
+    /// AND/OR combination of interrupt events.
+    #[bits(1, access = RW)]
+    pub aoi: bool,
+
+    /// 6-direction detection function enabled.
+    #[bits(1, access = RW)]
+    pub six_d: bool,
+
+    /// Enable interrupt generation on Z high event or on direction recognition.
+    #[bits(1, access = RW)]
+    pub zhie_zupe: bool,
+
+    /// Enable interrupt generation on Z low event or on direction recognition.
+    #[bits(1, access = RW)]
+    pub zlie_zdowne: bool,
+
+    /// Enable interrupt generation on Y high event or on direction recognition.
+    #[bits(1, access = RW)]
+    pub yhie_yupe: bool,
+
+    /// Enable interrupt generation on Y low event or on direction recognition.
+    #[bits(1, access = RW)]
+    pub ylie_ydowne: bool,
+
+    /// Enable interrupt generation on X high event or on direction recognition.
+    #[bits(1, access = RW)]
+    pub xhie_xupe: bool,
+
+    /// Enable interrupt generation on X low event or on direction recognition.
+    #[bits(1, access = RW)]
+    pub xlie_xdowne: bool,
+}
+
+impl Register for Int1ConfigurationRegisterA {
+    const DEV_ADDRESS: u8 = accel::ADDRESS;
+    const REG_ADDRESS: u8 = AccelerometerRegister::INT1_CFG_A.addr();
+
+    fn from_bits(bits: u8) -> Self {
+        Self::from_bits(bits)
+    }
+
+    fn to_bits(&self) -> u8 {
+        self.into_bits()
+    }
+}
+
+impl WritableRegister for Int1ConfigurationRegisterA {}
+
+/// [`INT1_SRC_A`](accel::AccelerometerRegister::INT1_SRC_A) (31h)
+#[bitfield(u8, order = Msb)]
+#[derive(PartialEq, Eq)]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
+pub struct Int1SourceRegisterA {
+    #[bits(1, default = false)]
+    zero: bool,
+
+    /// Interrupt active.
+    #[bits(1, access = RO)]
+    pub ia: bool,
+
+    /// Z high.
+    #[bits(1, access = RO)]
+    pub z_high: bool,
+
+    /// Z low.
+    #[bits(1, access = RO)]
+    pub z_low: bool,
+
+    /// Y high.
+    #[bits(1, access = RO)]
+    pub y_high: bool,
+
+    /// Y low.
+    #[bits(1, access = RO)]
+    pub y_low: bool,
+
+    /// X high.
+    #[bits(1, access = RO)]
+    pub x_high: bool,
+
+    /// X low.
+    #[bits(1, access = RO)]
+    pub x_low: bool,
+}
+
+impl Register for Int1SourceRegisterA {
+    const DEV_ADDRESS: u8 = accel::ADDRESS;
+    const REG_ADDRESS: u8 = AccelerometerRegister::INT1_SRC_A.addr();
+
+    fn from_bits(bits: u8) -> Self {
+        Self::from_bits(bits)
+    }
+
+    fn to_bits(&self) -> u8 {
+        self.into_bits()
+    }
+}
+
+/// [`INT1_SRC_A`](accel::AccelerometerRegister::INT1_THS_A) (32h)
+#[bitfield(u8, order = Msb)]
+#[derive(PartialEq, Eq)]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
+pub struct Int1ThresholdRegisterA {
+    #[bits(1, default = false)]
+    zero: bool,
+
+    /// Interrupt 1 threshold.
+    #[bits(7, access = RW, default = 0)]
+    pub threshold: u8,
+}
+
+impl Register for Int1ThresholdRegisterA {
+    const DEV_ADDRESS: u8 = accel::ADDRESS;
+    const REG_ADDRESS: u8 = AccelerometerRegister::INT1_THS_A.addr();
+
+    fn from_bits(bits: u8) -> Self {
+        Self::from_bits(bits)
+    }
+
+    fn to_bits(&self) -> u8 {
+        self.into_bits()
+    }
+}
+
+impl WritableRegister for Int1ThresholdRegisterA {}
+
+/// [`INT1_DURATION_A`](accel::AccelerometerRegister::INT1_DURATION_A) (33h)
+#[bitfield(u8, order = Msb)]
+#[derive(PartialEq, Eq)]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
+pub struct Int1DurationRegisterA {
+    #[bits(1, default = false)]
+    zero: bool,
+
+    /// The minimum duration of the Interrupt 1 event to be recognized. Duration
+    /// steps and maximum values depend on the ODR chosen.
+    #[bits(7, access = RW, default = 0)]
+    pub duration: u8,
+}
+
+impl Register for Int1DurationRegisterA {
+    const DEV_ADDRESS: u8 = accel::ADDRESS;
+    const REG_ADDRESS: u8 = AccelerometerRegister::INT1_DURATION_A.addr();
+
+    fn from_bits(bits: u8) -> Self {
+        Self::from_bits(bits)
+    }
+
+    fn to_bits(&self) -> u8 {
+        self.into_bits()
+    }
+}
+
+impl WritableRegister for Int1DurationRegisterA {}
 
 /// [`CRA_REG_M`](mag::MagnetometerRegister::CRA_REG_M) (09h)
 #[bitfield(u8, order = Msb)]

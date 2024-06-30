@@ -18,20 +18,21 @@ pub const ADDRESS: u8 = 0b0011001;
 #[derive(Copy, Clone, PartialEq, Eq)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub enum AccelerometerRegister {
-    /// See [`ControlRegister1A`].
+    /// See [`ControlRegister1A`](super::ControlRegister1A).
     CTRL_REG1_A = 0x20,
-    /// See [`ControlRegister2A`].
+    /// See [`ControlRegister2A`](super::ControlRegister2A).
     CTRL_REG2_A = 0x21,
-    /// See [`ControlRegister3A`].
+    /// See [`ControlRegister3A`](super::ControlRegister3A).
     CTRL_REG3_A = 0x22,
-    /// See [`ControlRegister4A`].
+    /// See [`ControlRegister4A`](super::ControlRegister4A).
     CTRL_REG4_A = 0x23,
-    /// See [`ControlRegister5A`].
+    /// See [`ControlRegister5A`](super::ControlRegister5A).
     CTRL_REG5_A = 0x24,
-    /// See [`ControlRegister6A`].
+    /// See [`ControlRegister6A`](super::ControlRegister6A).
     CTRL_REG6_A = 0x25,
+    /// See [`ReferenceRegisterA`](super::ReferenceRegisterA).
     REFERENCE_A = 0x26,
-    /// See [`StatusRegisterA`].
+    /// See [`StatusRegisterA`](super::StatusRegisterA).
     STATUS_REG_A = 0x27,
     OUT_X_L_A = 0x28,
     OUT_X_H_A = 0x29,
@@ -39,11 +40,17 @@ pub enum AccelerometerRegister {
     OUT_Y_H_A = 0x2B,
     OUT_Z_L_A = 0x2C,
     OUT_Z_H_A = 0x2D,
+    /// See [`FifoControlRegisterA`](super::FifoControlRegisterA).
     FIFO_CTRL_REG_A = 0x2E,
+    /// See [`FifoSourceRegisterA`](super::FifoSourceRegisterA).
     FIFO_SRC_REG_A = 0x2F,
+    /// See [`Int1ConfigurationRegisterA`](super::Int1ConfigurationRegisterA).
     INT1_CFG_A = 0x30,
+    /// See [`Int1SourceRegisterA`](super::Int1SourceRegisterA).
     INT1_SRC_A = 0x31,
+    /// See [`Int1ThresholdRegisterA`](super::Int1ThresholdRegisterA).
     INT1_THS_A = 0x32,
+    /// See [`Int1DurationRegisterA`](super::Int1DurationRegisterA).
     INT1_DURATION_A = 0x33,
     INT2_CFG_A = 0x34,
     INT2_SRC_A = 0x35,
