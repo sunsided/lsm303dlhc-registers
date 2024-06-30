@@ -16,6 +16,7 @@
 // Enables the `doc_cfg` feature when the `docsrs` configuration attribute is defined.
 #![cfg_attr(docsrs, feature(doc_cfg))]
 
+#[cfg(feature = "accelerometer")]
 extern crate accelerometer;
 extern crate cast;
 extern crate embedded_hal as hal;

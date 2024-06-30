@@ -63,7 +63,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        features: [ [ ], [ "--all-features" ] ]
+        features: [ [ ], [ "--all-features" ], [ "--no-default-features" ] ]
     steps:
       - uses: actions/checkout@v4
       - name: Clippy
