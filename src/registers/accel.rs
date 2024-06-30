@@ -1,6 +1,14 @@
 //! Accelerometer specific register addresses.
 
 /// The I2C bus address.
+///
+/// For linear acceleration the default (factory) 7-bit slave address is `0011001b`.
+///
+/// The slave address is completed with a Read/Write bit. If the bit is `1` (read), a repeated
+/// `START` (`SR`) condition must be issued after the two sub-address bytes; if the bit is `0` (write)
+/// the master transmits to the slave with the direction unchanged.
+///
+/// When the MSB is set to `1`, multiple bytes can be read.
 pub const ADDRESS: u8 = 0b0011001;
 
 /// Accelerometer specific register addresses.
@@ -9,7 +17,7 @@ pub const ADDRESS: u8 = 0b0011001;
 #[allow(missing_docs)]
 #[derive(Copy, Clone, PartialEq, Eq)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
-pub enum Register {
+pub enum AccelerometerRegister {
     /// See [`ControlRegister1A`].
     CTRL_REG1_A = 0x20,
     /// See [`ControlRegister2A`].
@@ -49,9 +57,9 @@ pub enum Register {
     TIME_WINDOW_A = 0x3D,
 }
 
-impl Register {
+impl AccelerometerRegister {
     /// Returns the address of a register.
-    pub fn addr(&self) -> u8 {
+    pub const fn addr(&self) -> u8 {
         *self as u8
     }
 }

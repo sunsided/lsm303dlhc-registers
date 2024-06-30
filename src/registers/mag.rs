@@ -1,6 +1,12 @@
 //! Magnetometer specific register addresses.
 
 /// The I2C bus address.
+///
+/// For magnetic sensors the default (factory) 7-bit slave address is 0011110xb.
+///
+/// The slave address is completed with a Read/Write bit. If the bit is `1` (read), a repeated
+/// `START` (`SR`) condition must be issued after the two sub-address bytes. If the bit is `0` (write)
+/// the master transmits to the slave with the direction unchanged.
 pub const ADDRESS: u8 = 0b0011110;
 
 // Magnetometer specific register addresses.
@@ -9,7 +15,7 @@ pub const ADDRESS: u8 = 0b0011110;
 #[allow(missing_docs)]
 #[derive(Copy, Clone, PartialEq, Eq)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
-pub enum Register {
+pub enum MagnetometerRegister {
     CRA_REG_M = 0x00,
     CRB_REG_M = 0x01,
     MR_REG_M = 0x02,
@@ -28,9 +34,9 @@ pub enum Register {
     TEMP_OUT_L_M = 0x32,
 }
 
-impl Register {
+impl MagnetometerRegister {
     /// Returns the address of a register.
-    pub fn addr(&self) -> u8 {
+    pub const fn addr(&self) -> u8 {
         *self as u8
     }
 }

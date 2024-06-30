@@ -2,12 +2,16 @@
 
 use super::{AccelOdr, Sensitivity};
 use bitfield_struct::bitfield;
+use registers::accel::AccelerometerRegister;
+use registers::mag::MagnetometerRegister;
+pub use registers::register::Register;
 use MagOdr;
 
 pub mod accel;
 pub mod mag;
+mod register;
 
-/// [`CTRL_REG1_A`](accel::Register::CTRL_REG1_A) (20h)
+/// [`CTRL_REG1_A`](accel::AccelerometerRegister::CTRL_REG1_A) (20h)
 #[bitfield(u8, order = Msb)]
 #[derive(PartialEq, Eq)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
@@ -33,7 +37,20 @@ pub struct ControlRegister1A {
     pub x_enable: bool,
 }
 
-/// [`CTRL_REG2_A`](accel::Register::CTRL_REG2_A) (21h)
+impl Register for ControlRegister1A {
+    const DEV_ADDRESS: u8 = accel::ADDRESS;
+    const REG_ADDRESS: u8 = AccelerometerRegister::CTRL_REG1_A.addr();
+
+    fn from_bits(bits: u8) -> Self {
+        Self::from_bits(bits)
+    }
+
+    fn to_bits(&self) -> u8 {
+        self.into_bits()
+    }
+}
+
+/// [`CTRL_REG2_A`](accel::AccelerometerRegister::CTRL_REG2_A) (21h)
 #[bitfield(u8, order = Msb)]
 #[derive(PartialEq, Eq)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
@@ -63,7 +80,20 @@ pub struct ControlRegister2A {
     pub hpis1: bool,
 }
 
-/// [`CTRL_REG3_A`](accel::Register::CTRL_REG3_A) (22h)
+impl Register for ControlRegister2A {
+    const DEV_ADDRESS: u8 = accel::ADDRESS;
+    const REG_ADDRESS: u8 = AccelerometerRegister::CTRL_REG2_A.addr();
+
+    fn from_bits(bits: u8) -> Self {
+        Self::from_bits(bits)
+    }
+
+    fn to_bits(&self) -> u8 {
+        self.into_bits()
+    }
+}
+
+/// [`CTRL_REG3_A`](accel::AccelerometerRegister::CTRL_REG3_A) (22h)
 #[bitfield(u8, order = Msb)]
 #[derive(PartialEq, Eq)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
@@ -100,7 +130,20 @@ pub struct ControlRegister3A {
     __: bool,
 }
 
-/// [`CTRL_REG4_A`](accel::Register::CTRL_REG4_A) (23h)
+impl Register for ControlRegister3A {
+    const DEV_ADDRESS: u8 = accel::ADDRESS;
+    const REG_ADDRESS: u8 = AccelerometerRegister::CTRL_REG3_A.addr();
+
+    fn from_bits(bits: u8) -> Self {
+        Self::from_bits(bits)
+    }
+
+    fn to_bits(&self) -> u8 {
+        self.into_bits()
+    }
+}
+
+/// [`CTRL_REG4_A`](accel::AccelerometerRegister::CTRL_REG4_A) (23h)
 #[bitfield(u8, order = Msb)]
 #[derive(PartialEq, Eq)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
@@ -139,7 +182,20 @@ pub struct ControlRegister4A {
     pub spi_serial_3wire: bool,
 }
 
-/// [`CTRL_REG5_A`](accel::Register::CTRL_REG5_A) (24h)
+impl Register for ControlRegister4A {
+    const DEV_ADDRESS: u8 = accel::ADDRESS;
+    const REG_ADDRESS: u8 = AccelerometerRegister::CTRL_REG4_A.addr();
+
+    fn from_bits(bits: u8) -> Self {
+        Self::from_bits(bits)
+    }
+
+    fn to_bits(&self) -> u8 {
+        self.into_bits()
+    }
+}
+
+/// [`CTRL_REG5_A`](accel::AccelerometerRegister::CTRL_REG5_A) (24h)
 #[bitfield(u8, order = Msb)]
 #[derive(PartialEq, Eq)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
@@ -180,7 +236,20 @@ pub struct ControlRegister5A {
     pub d4d_int2: bool,
 }
 
-/// [`CTRL_REG6_A`](accel::Register::CTRL_REG6_A) (25h)
+impl Register for ControlRegister5A {
+    const DEV_ADDRESS: u8 = accel::ADDRESS;
+    const REG_ADDRESS: u8 = AccelerometerRegister::CTRL_REG5_A.addr();
+
+    fn from_bits(bits: u8) -> Self {
+        Self::from_bits(bits)
+    }
+
+    fn to_bits(&self) -> u8 {
+        self.into_bits()
+    }
+}
+
+/// [`CTRL_REG6_A`](accel::AccelerometerRegister::CTRL_REG6_A) (25h)
 #[bitfield(u8, order = Msb)]
 #[derive(PartialEq, Eq)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
@@ -225,7 +294,20 @@ pub struct ControlRegister6A {
     __: u8,
 }
 
-/// [`STATUS_REG_A`](accel::Register::STATUS_REG_A)(27h)
+impl Register for ControlRegister6A {
+    const DEV_ADDRESS: u8 = accel::ADDRESS;
+    const REG_ADDRESS: u8 = AccelerometerRegister::CTRL_REG6_A.addr();
+
+    fn from_bits(bits: u8) -> Self {
+        Self::from_bits(bits)
+    }
+
+    fn to_bits(&self) -> u8 {
+        self.into_bits()
+    }
+}
+
+/// [`STATUS_REG_A`](accel::AccelerometerRegister::STATUS_REG_A)(27h)
 #[bitfield(u8, order = Msb)]
 #[derive(PartialEq, Eq)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
@@ -279,7 +361,20 @@ pub struct StatusRegisterA {
     pub x_data_available: bool,
 }
 
-/// [`CRA_REG_M`](mag::Register::CRA_REG_M) (09h)
+impl Register for StatusRegisterA {
+    const DEV_ADDRESS: u8 = accel::ADDRESS;
+    const REG_ADDRESS: u8 = AccelerometerRegister::STATUS_REG_A.addr();
+
+    fn from_bits(bits: u8) -> Self {
+        Self::from_bits(bits)
+    }
+
+    fn to_bits(&self) -> u8 {
+        self.into_bits()
+    }
+}
+
+/// [`CRA_REG_M`](mag::MagnetometerRegister::CRA_REG_M) (09h)
 #[bitfield(u8, order = Msb)]
 #[derive(PartialEq, Eq)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
@@ -302,7 +397,20 @@ pub struct CraRegisterM {
     zeros_01: u8,
 }
 
-/// [`SR_REG_M`](mag::Register::SR_REG_M) (09h)
+impl Register for CraRegisterM {
+    const DEV_ADDRESS: u8 = mag::ADDRESS;
+    const REG_ADDRESS: u8 = MagnetometerRegister::CRA_REG_M.addr();
+
+    fn from_bits(bits: u8) -> Self {
+        Self::from_bits(bits)
+    }
+
+    fn to_bits(&self) -> u8 {
+        self.into_bits()
+    }
+}
+
+/// [`SR_REG_M`](mag::MagnetometerRegister::SR_REG_M) (09h)
 #[bitfield(u8, order = Msb)]
 #[derive(PartialEq, Eq)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
@@ -318,6 +426,19 @@ pub struct StatusRegisterM {
     /// Data-ready bit. This bit is when a new set of measurements is available.
     #[bits(1, access = RO)]
     pub data_ready: bool,
+}
+
+impl Register for StatusRegisterM {
+    const DEV_ADDRESS: u8 = mag::ADDRESS;
+    const REG_ADDRESS: u8 = MagnetometerRegister::SR_REG_M.addr();
+
+    fn from_bits(bits: u8) -> Self {
+        Self::from_bits(bits)
+    }
+
+    fn to_bits(&self) -> u8 {
+        self.into_bits()
+    }
 }
 
 #[cfg(test)]

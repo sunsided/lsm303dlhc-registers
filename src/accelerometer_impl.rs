@@ -15,9 +15,7 @@ where
     type Error = E;
 
     fn accel_raw(&mut self) -> Result<accelerometer::vector::I16x3, Error<Self::Error>> {
-        self.accel()
-            .map(|result| result.0.into())
-            .map_err(Into::into)
+        self.accel().map(Into::into).map_err(Into::into)
     }
 }
 
@@ -70,7 +68,7 @@ where
     }
 
     fn sample_rate(&mut self) -> Result<f32, Error<Self::Error>> {
-        let register = self.read_accel_register(accel::Register::CTRL_REG1_A)?;
+        let register = self.read_accel_register(accel::AccelerometerRegister::CTRL_REG1_A)?;
         let odr = ((register & 0b1111_0000) >> 4) & 0b0000_1111;
         let lpen = (register & 0b0000_1000) >> 3;
         match odr {
