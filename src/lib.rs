@@ -130,16 +130,20 @@ where
     where
         N: ArrayLength,
     {
-        let mut buffer = GenericArray::<u8, N>::default();
+        let mut buffer = GenericArray::<u8, N>::uninit();
 
         {
-            let buffer: &mut [u8] = &mut buffer;
-            debug_assert_eq!(buffer.len(), N::USIZE);
+            let buffer: &mut [u8] = unsafe {
+                core::slice::from_raw_parts_mut(buffer.as_mut_ptr() as *mut u8, N::USIZE)
+            };
 
             const MULTI: u8 = 1 << 7;
             self.i2c
                 .write_read(accel::ADDRESS, &[reg.addr() | MULTI], buffer)?;
         }
+
+        // SAFETY: The write_read function has filled the entire buffer.
+        let buffer = unsafe { GenericArray::assume_init(buffer) };
 
         Ok(buffer)
     }
@@ -158,14 +162,18 @@ where
     where
         N: ArrayLength,
     {
-        let mut buffer = GenericArray::<u8, N>::default();
+        let mut buffer = GenericArray::<u8, N>::uninit();
 
         {
-            let buffer: &mut [u8] = &mut buffer;
-            debug_assert_eq!(buffer.len(), N::USIZE);
+            let buffer: &mut [u8] = unsafe {
+                core::slice::from_raw_parts_mut(buffer.as_mut_ptr() as *mut u8, N::USIZE)
+            };
 
             self.i2c.write_read(mag::ADDRESS, &[reg.addr()], buffer)?;
         }
+
+        // SAFETY: TODO: Ensure we do not have any uninitialized elements.
+        let buffer = unsafe { GenericArray::assume_init(buffer) };
 
         Ok(buffer)
     }
