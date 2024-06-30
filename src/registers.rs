@@ -6,6 +6,7 @@ use registers::accel::AccelerometerRegister;
 use registers::mag::MagnetometerRegister;
 pub use registers::register::{Register, WritableRegister};
 use {FifoMode, MagOdr};
+use MagGain;
 
 pub mod accel;
 pub mod mag;
@@ -1117,7 +1118,7 @@ impl WritableRegister for CraRegisterM {}
 pub struct CrbRegisterM {
     /// Gain configuration.
     #[bits(3, access = RW)]
-    pub gain: u8, // TODO: Make enum!
+    pub gain: MagGain,
 
     /// Must be zero for correct operation of the device.
     #[bits(5, default = 0)]
