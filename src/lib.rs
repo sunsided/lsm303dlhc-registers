@@ -334,6 +334,27 @@ pub enum MagOdr {
     Hz220 = 0b111,
 }
 
+impl MagOdr {
+    #[allow(unused)]
+    const fn into_bits(self) -> u8 {
+        self as u8
+    }
+
+    const fn from_bits(value: u8) -> Self {
+        match value {
+            0b000 => MagOdr::Hz0_75,
+            0b001 => MagOdr::Hz1_5,
+            0b010 => MagOdr::Hz3,
+            0b011 => MagOdr::Hz7_5,
+            0b100 => MagOdr::Hz15,
+            0b101 => MagOdr::Hz30,
+            0b110 => MagOdr::Hz75,
+            0b111 => MagOdr::Hz220,
+            _ => unreachable!(),
+        }
+    }
+}
+
 /// Acceleration sensitivity (full scale selection).
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]

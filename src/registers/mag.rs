@@ -19,6 +19,7 @@ pub enum Register {
     OUT_Z_L_M = 0x06,
     OUT_Y_H_M = 0x07,
     OUT_Y_L_M = 0x08,
+    /// See [`StatusRegisterM`].
     SR_REG_M = 0x09,
     IRA_REG_M = 0x0A,
     IRB_REG_M = 0x0B,

@@ -2,6 +2,7 @@
 
 use super::{AccelOdr, Sensitivity};
 use bitfield_struct::bitfield;
+use MagOdr;
 
 pub mod accel;
 pub mod mag;
@@ -20,15 +21,15 @@ pub struct ControlRegister1A {
     pub low_power_enable: bool,
 
     /// Z-axis enable.
-    #[bits(1, access = RW)]
+    #[bits(1, access = RW, default = true)]
     pub z_enable: bool,
 
     /// Y-axis enable.
-    #[bits(1, access = RW)]
+    #[bits(1, access = RW, default = true)]
     pub y_enable: bool,
 
     /// X-axis enable.
-    #[bits(1, access = RW)]
+    #[bits(1, access = RW, default = true)]
     pub x_enable: bool,
 }
 
@@ -276,6 +277,47 @@ pub struct StatusRegisterA {
     /// * `true` - new data for the X-axis is available
     #[bits(1, access = RO)]
     pub x_data_available: bool,
+}
+
+/// [`CRA_REG_M`](mag::Register::CRA_REG_M) (09h)
+#[bitfield(u8, order = Msb)]
+#[derive(PartialEq, Eq)]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
+pub struct CraRegisterM {
+    /// Temperature sensor enabled.
+    #[bits(1, access = RO)]
+    pub temp_en: bool,
+
+    /// Must be zero for correct operation of the device.
+    #[bits(2, default = 0)]
+    zeros_56: u8,
+
+    /// Data output rate bits. These bits set the rate at which data is written to all three data
+    /// output registers.
+    #[bits(3, access = RO, default = MagOdr::Hz75)]
+    pub data_output_rate: MagOdr,
+
+    /// Must be zero for correct operation of the device.
+    #[bits(2, default = 0)]
+    zeros_01: u8,
+}
+
+/// [`SR_REG_M`](mag::Register::SR_REG_M) (09h)
+#[bitfield(u8, order = Msb)]
+#[derive(PartialEq, Eq)]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
+pub struct StatusRegisterM {
+    #[bits(6)]
+    __: u8,
+
+    /// Data output register lock. Once a new set of measurements is available, this bit is
+    /// set when the first magnetic file data register has been read.
+    #[bits(1, access = RO)]
+    pub lock: bool,
+
+    /// Data-ready bit. This bit is when a new set of measurements is available.
+    #[bits(1, access = RO)]
+    pub data_ready: bool,
 }
 
 #[cfg(test)]
