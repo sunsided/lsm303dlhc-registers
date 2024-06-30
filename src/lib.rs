@@ -29,13 +29,11 @@ use cast::u16;
 use generic_array::typenum::consts::*;
 use generic_array::{ArrayLength, GenericArray};
 use hal::blocking::i2c::{Write, WriteRead};
-
-mod accel;
+use registers::{accel, mag};
 
 #[cfg(feature = "accelerometer")]
 #[cfg_attr(docsrs, doc(cfg(feature = "accelerometer")))]
 mod accelerometer_impl;
-mod mag;
 pub mod registers;
 pub mod wrapper;
 

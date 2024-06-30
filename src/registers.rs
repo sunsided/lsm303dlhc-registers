@@ -3,6 +3,9 @@
 use bitfield_struct::bitfield;
 use Sensitivity;
 
+pub mod accel;
+pub mod mag;
+
 /// `CTRL_REG4_A` (23h)
 #[bitfield(u8, order = Msb)]
 pub struct ControlRegister4A {

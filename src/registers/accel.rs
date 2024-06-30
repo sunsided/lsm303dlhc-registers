@@ -1,7 +1,12 @@
+//! Accelerometer specific register addresses.
+
+/// The I2C bus address.
 pub const ADDRESS: u8 = 0b0011001;
 
+/// Accelerometer specific register addresses.
 #[allow(dead_code)]
 #[allow(non_camel_case_types)]
+#[allow(missing_docs)]
 #[derive(Copy, Clone)]
 pub enum Register {
     CTRL_REG1_A = 0x20,
@@ -37,6 +42,7 @@ pub enum Register {
 }
 
 impl Register {
+    /// Returns the address of a register.
     pub fn addr(&self) -> u8 {
         *self as u8
     }

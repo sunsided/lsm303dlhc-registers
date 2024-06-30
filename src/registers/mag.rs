@@ -1,7 +1,12 @@
+//! Magnetometer specific register addresses.
+
+/// The I2C bus address.
 pub const ADDRESS: u8 = 0b0011110;
 
+// Magnetometer specific register addresses.
 #[allow(dead_code)]
 #[allow(non_camel_case_types)]
+#[allow(missing_docs)]
 #[derive(Copy, Clone)]
 pub enum Register {
     CRA_REG_M = 0x00,
@@ -22,6 +27,7 @@ pub enum Register {
 }
 
 impl Register {
+    /// Returns the address of a register.
     pub fn addr(&self) -> u8 {
         *self as u8
     }

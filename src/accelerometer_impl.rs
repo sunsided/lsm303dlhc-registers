@@ -1,10 +1,10 @@
 //! Provides support for the `accelerometer` crate.
 
-use accel;
 use accelerometer::vector::F32x3;
 use accelerometer::{Accelerometer, Error, RawAccelerometer};
 use core::fmt::Debug;
 use hal::blocking::i2c::{Write, WriteRead};
+use registers::accel;
 use {I16x3, LSM303DLHC};
 
 impl<I2C, E> RawAccelerometer<accelerometer::vector::I16x3> for LSM303DLHC<I2C>
