@@ -113,6 +113,10 @@ where
     ///
     /// - Resolution: 12-bit
     /// - Range: [-40, +85]
+    /// - Output change vs. temperature: 8 LSB/°C
+    ///
+    /// The temperature reading is relative to an unspecified reference temperature,
+    /// most likely 25 °C.
     pub fn temp(&mut self) -> Result<i16, E> {
         let temp_out_l = self.read_mag_register(mag::Register::TEMP_OUT_L_M)?;
         let temp_out_h = self.read_mag_register(mag::Register::TEMP_OUT_H_M)?;
@@ -207,7 +211,7 @@ where
 }
 
 /// XYZ triple
-#[derive(Debug)]
+#[derive(Debug, Copy, Clone)]
 pub struct I16x3 {
     /// X component
     pub x: i16,
@@ -255,17 +259,17 @@ pub enum MagOdr {
     Hz220 = 0b111,
 }
 
-/// Acceleration sensitivity
+/// Acceleration sensitivity (full scale selection).
 #[derive(Clone, Copy)]
 pub enum Sensitivity {
     /// Range: [-2g, +2g]. Sensitivity ~ 1 g / (1 << 14) LSB
-    G1,
+    G1 = 0b00,
     /// Range: [-4g, +4g]. Sensitivity ~ 2 g / (1 << 14) LSB
-    G2,
+    G2 = 0b01,
     /// Range: [-8g, +8g]. Sensitivity ~ 4 g / (1 << 14) LSB
-    G4,
+    G4 = 0b10,
     /// Range: [-16g, +16g]. Sensitivity ~ 12 g / (1 << 14) LSB
-    G12,
+    G12 = 0b11,
 }
 
 impl Sensitivity {
