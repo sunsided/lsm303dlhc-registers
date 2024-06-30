@@ -471,7 +471,7 @@ pub struct StatusRegisterM {
     /// Data output register lock. Once a new set of measurements is available, this bit is
     /// set when the first magnetic file data register has been read.
     #[bits(1, access = RO)]
-    pub lock: bool,
+    pub do_lock: bool,
 
     /// Data-ready bit. This bit is when a new set of measurements is available.
     #[bits(1, access = RO)]
