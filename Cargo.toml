@@ -10,6 +10,7 @@ repository = "https://github.com/sunsided/lsm303dlhc"
 version = "0.2.0"
 
 [dependencies]
+accelerometer = "0.5"
 cast = { version = "0.3.0", default-features = false }
 embedded-hal = "0.2.7"
 generic-array = "1.0.0"
