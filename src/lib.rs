@@ -18,8 +18,6 @@ extern crate cast;
 extern crate embedded_hal as hal;
 extern crate generic_array;
 
-use core::mem;
-
 use cast::u16;
 use generic_array::typenum::consts::*;
 use generic_array::{ArrayLength, GenericArray};
@@ -130,13 +128,13 @@ where
 
     fn read_accel_registers<N>(&mut self, reg: accel::Register) -> Result<GenericArray<u8, N>, E>
     where
-        N: ArrayLength<u8>,
+        N: ArrayLength,
     {
-        let mut buffer: GenericArray<u8, N> =
-            unsafe { mem::MaybeUninit::<GenericArray<u8, N>>::uninit().assume_init() };
+        let mut buffer = GenericArray::<u8, N>::default();
 
         {
             let buffer: &mut [u8] = &mut buffer;
+            debug_assert_eq!(buffer.len(), N::USIZE);
 
             const MULTI: u8 = 1 << 7;
             self.i2c
@@ -158,13 +156,13 @@ where
     // NOTE has weird address increment semantics; use only with `OUT_X_H_M`
     fn read_mag_registers<N>(&mut self, reg: mag::Register) -> Result<GenericArray<u8, N>, E>
     where
-        N: ArrayLength<u8>,
+        N: ArrayLength,
     {
-        let mut buffer: GenericArray<u8, N> =
-            unsafe { mem::MaybeUninit::<GenericArray<u8, N>>::uninit().assume_init() };
+        let mut buffer = GenericArray::<u8, N>::default();
 
         {
             let buffer: &mut [u8] = &mut buffer;
+            debug_assert_eq!(buffer.len(), N::USIZE);
 
             self.i2c.write_read(mag::ADDRESS, &[reg.addr()], buffer)?;
         }
