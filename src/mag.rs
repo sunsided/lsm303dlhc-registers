@@ -1,5 +1,8 @@
 //! Magnetometer and Temperature registers.
 
+// Resolves a code-generation issue with the bitfield macro.
+#![allow(clippy::unnecessary_cast)]
+
 mod types;
 
 use bitfield_struct::bitfield;
@@ -49,7 +52,9 @@ pub enum RegisterAddress {
     IRB_REG_M = 0x0B,
     /// See [`IRCRegisterM`].
     IRC_REG_M = 0x0C,
+    /// See [`TemperatureOutHighM`].
     TEMP_OUT_H_M = 0x31,
+    /// See [`TemperatureOutLowM`].
     TEMP_OUT_L_M = 0x32,
 }
 
@@ -61,7 +66,7 @@ impl RegisterAddress {
 }
 
 impl From<RegisterAddress> for u8 {
-    fn from(value: crate::accel::RegisterAddress) -> Self {
+    fn from(value: RegisterAddress) -> Self {
         value.addr()
     }
 }
@@ -315,7 +320,8 @@ readable_register!(StatusRegisterM, RegisterAddress::SR_REG_M);
 #[derive(PartialEq, Eq)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub struct IRARegisterM {
-    #[bits(8, access = RO)]
+    /// Undocumented. Always `01001000`.
+    #[bits(8, access = RO, default = 0b01001000_u8)]
     pub value: u8,
 }
 
@@ -326,7 +332,8 @@ readable_register!(IRARegisterM, RegisterAddress::IRA_REG_M);
 #[derive(PartialEq, Eq)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub struct IRBRegisterM {
-    #[bits(8, access = RO)]
+    /// Undocumented. Always `00110100`.
+    #[bits(8, access = RO, default = 0b000110100_u8)]
     pub value: u8,
 }
 
@@ -337,8 +344,46 @@ readable_register!(IRBRegisterM, RegisterAddress::IRB_REG_M);
 #[derive(PartialEq, Eq)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub struct IRCRegisterM {
-    #[bits(8, access = RO)]
+    /// Undocumented. Always `00110011`.
+    #[bits(8, access = RO, default = 0b00110011_u8)]
     pub value: u8,
 }
 
 readable_register!(IRCRegisterM, RegisterAddress::IRC_REG_M);
+
+/// [`TEMP_OUT_H_M`](RegisterAddress::TEMP_OUT_H_M) (0Ch)
+///
+/// High byte of the 12-bit temperature reading.
+///
+/// Together with [`TemperatureOutLowM`], the value is expressed as two's complement with
+/// 8 LSB/deg at 12-bit resolution.
+#[bitfield(u8, order = Msb)]
+#[derive(PartialEq, Eq)]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
+pub struct TemperatureOutHighM {
+    /// The upper
+    #[bits(8, access = RO)]
+    pub value: u8,
+}
+
+readable_register!(TemperatureOutHighM, RegisterAddress::TEMP_OUT_H_M);
+
+/// [`TEMP_OUT_L_M`](RegisterAddress::TEMP_OUT_L_M) (0Ch)
+///
+/// Low byte of the 12-bit temperature reading.
+///
+/// Together with [`TemperatureOutLowM`], the value is expressed as two's complement with
+/// 8 LSB/deg at 12-bit resolution.
+#[bitfield(u8, order = Msb)]
+#[derive(PartialEq, Eq)]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
+pub struct TemperatureOutLowM {
+    /// The lower nibble of the temperature reading.
+    #[bits(4, access = RO)]
+    pub value: u8,
+
+    #[bits(4)]
+    __: u8,
+}
+
+readable_register!(TemperatureOutLowM, RegisterAddress::TEMP_OUT_L_M);
