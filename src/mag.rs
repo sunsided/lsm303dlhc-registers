@@ -26,9 +26,9 @@ pub const DEFAULT_DEVICE_ADDRESS: u8 = 0b0011110;
 #[derive(Copy, Clone, PartialEq, Eq)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub enum RegisterAddress {
-    /// See [`CraRegisterM`].
+    /// See [`ConfigurationARegisterM`].
     CRA_REG_M = 0x00,
-    /// See [`CrbRegisterM`].
+    /// See [`ConfigurationBRegisterM`].
     CRB_REG_M = 0x01,
     /// See [`ModeRegisterM`].
     MR_REG_M = 0x02,
@@ -75,7 +75,7 @@ impl From<RegisterAddress> for u8 {
 #[bitfield(u8, order = Msb)]
 #[derive(PartialEq, Eq)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
-pub struct CraRegisterM {
+pub struct ConfigurationARegisterM {
     /// Temperature sensor enabled.
     #[bits(1, access = RW)]
     pub temp_en: bool,
@@ -94,7 +94,7 @@ pub struct CraRegisterM {
     zeros_01: u8,
 }
 
-writable_register!(CraRegisterM, RegisterAddress::CRA_REG_M);
+writable_register!(ConfigurationARegisterM, RegisterAddress::CRA_REG_M);
 
 /// Magnetometer gain configuration.
 ///
@@ -102,7 +102,7 @@ writable_register!(CraRegisterM, RegisterAddress::CRA_REG_M);
 #[bitfield(u8, order = Msb)]
 #[derive(PartialEq, Eq)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
-pub struct CrbRegisterM {
+pub struct ConfigurationBRegisterM {
     /// Gain configuration.
     #[bits(3, access = RW)]
     pub gain: MagGain,
@@ -112,7 +112,7 @@ pub struct CrbRegisterM {
     zeros_04: u8,
 }
 
-writable_register!(CrbRegisterM, RegisterAddress::CRB_REG_M);
+writable_register!(ConfigurationBRegisterM, RegisterAddress::CRB_REG_M);
 
 /// Magnetometer mode select.
 ///

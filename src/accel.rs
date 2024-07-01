@@ -207,6 +207,13 @@ writable_register!(ControlRegister3A, RegisterAddress::CTRL_REG3_A);
 pub struct ControlRegister4A {
     /// Block data update.
     ///
+    /// The BDU bit is used to inhibit output register updates between the reading of the upper and
+    /// lower register parts. In default mode (BDU = `0`), the lower and upper register parts are
+    /// updated continuously. If it is not certain to read faster than output data rate, it is
+    /// recommended to set BDU bit to `1`. In this way, after the reading of the lower (upper) register
+    /// part, the content of that output register is not updated until the upper (lower) part is read
+    /// also. This feature avoids reading LSB and MSB related to different samples.
+    ///
     /// * `false` - continuous update
     /// * `true` - output registers not updated until MSB and LSB
     // have been read
@@ -331,6 +338,9 @@ pub struct ControlRegister6A {
 
 writable_register!(ControlRegister6A, RegisterAddress::CTRL_REG6_A);
 
+/// This register sets the acceleration value taken as a reference for the high-pass filter output.
+/// (See Doc ID 16941 Rev 1. for the LSM303DLH, non -C version)
+///
 /// [`REFERENCE_A`](RegisterAddress::REFERENCE_A) (26h)
 #[bitfield(u8, order = Msb)]
 #[derive(PartialEq, Eq)]
