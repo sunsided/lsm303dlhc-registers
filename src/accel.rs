@@ -4,8 +4,8 @@ mod types;
 
 pub use types::*;
 
-use bitfield_struct::bitfield;
 use crate::{Register, WritableRegister};
+use bitfield_struct::bitfield;
 
 /// The I2C bus address.
 ///
@@ -18,13 +18,15 @@ use crate::{Register, WritableRegister};
 /// When the MSB is set to `1`, multiple bytes can be read.
 pub const DEFAULT_DEVICE_ADDRESS: u8 = 0b0011001;
 
-/// Accelerometer specific register addresses.
+/// Register addresses specific to the accelerometer sensor.
+///
+/// See also [`DEFAULT_DEVICE_ADDRESS`].
 #[allow(dead_code)]
 #[allow(non_camel_case_types)]
 #[allow(missing_docs)]
 #[derive(Copy, Clone, PartialEq, Eq)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
-pub enum AccelerometerRegister {
+pub enum RegisterAddress {
     /// See [`ControlRegister1A`](super::ControlRegister1A).
     CTRL_REG1_A = 0x20,
     /// See [`ControlRegister2A`](super::ControlRegister2A).
@@ -81,7 +83,7 @@ pub enum AccelerometerRegister {
     TIME_WINDOW_A = 0x3D,
 }
 
-impl AccelerometerRegister {
+impl RegisterAddress {
     /// Returns the address of a register.
     pub const fn addr(&self) -> u8 {
         *self as u8
@@ -116,7 +118,7 @@ pub struct ControlRegister1A {
 
 impl Register for ControlRegister1A {
     const DEV_ADDRESS: u8 = DEFAULT_DEVICE_ADDRESS;
-    const REG_ADDRESS: u8 = AccelerometerRegister::CTRL_REG1_A.addr();
+    const REG_ADDRESS: u8 = RegisterAddress::CTRL_REG1_A.addr();
 
     fn from_bits(bits: u8) -> Self {
         Self::from_bits(bits)
@@ -161,7 +163,7 @@ pub struct ControlRegister2A {
 
 impl Register for ControlRegister2A {
     const DEV_ADDRESS: u8 = DEFAULT_DEVICE_ADDRESS;
-    const REG_ADDRESS: u8 = AccelerometerRegister::CTRL_REG2_A.addr();
+    const REG_ADDRESS: u8 = RegisterAddress::CTRL_REG2_A.addr();
 
     fn from_bits(bits: u8) -> Self {
         Self::from_bits(bits)
@@ -213,7 +215,7 @@ pub struct ControlRegister3A {
 
 impl Register for ControlRegister3A {
     const DEV_ADDRESS: u8 = DEFAULT_DEVICE_ADDRESS;
-    const REG_ADDRESS: u8 = AccelerometerRegister::CTRL_REG3_A.addr();
+    const REG_ADDRESS: u8 = RegisterAddress::CTRL_REG3_A.addr();
 
     fn from_bits(bits: u8) -> Self {
         Self::from_bits(bits)
@@ -267,7 +269,7 @@ pub struct ControlRegister4A {
 
 impl Register for ControlRegister4A {
     const DEV_ADDRESS: u8 = DEFAULT_DEVICE_ADDRESS;
-    const REG_ADDRESS: u8 = AccelerometerRegister::CTRL_REG4_A.addr();
+    const REG_ADDRESS: u8 = RegisterAddress::CTRL_REG4_A.addr();
 
     fn from_bits(bits: u8) -> Self {
         Self::from_bits(bits)
@@ -323,7 +325,7 @@ pub struct ControlRegister5A {
 
 impl Register for ControlRegister5A {
     const DEV_ADDRESS: u8 = DEFAULT_DEVICE_ADDRESS;
-    const REG_ADDRESS: u8 = AccelerometerRegister::CTRL_REG5_A.addr();
+    const REG_ADDRESS: u8 = RegisterAddress::CTRL_REG5_A.addr();
 
     fn from_bits(bits: u8) -> Self {
         Self::from_bits(bits)
@@ -383,7 +385,7 @@ pub struct ControlRegister6A {
 
 impl Register for ControlRegister6A {
     const DEV_ADDRESS: u8 = DEFAULT_DEVICE_ADDRESS;
-    const REG_ADDRESS: u8 = AccelerometerRegister::CTRL_REG6_A.addr();
+    const REG_ADDRESS: u8 = RegisterAddress::CTRL_REG6_A.addr();
 
     fn from_bits(bits: u8) -> Self {
         Self::from_bits(bits)
@@ -408,7 +410,7 @@ pub struct ReferenceRegisterA {
 
 impl Register for ReferenceRegisterA {
     const DEV_ADDRESS: u8 = DEFAULT_DEVICE_ADDRESS;
-    const REG_ADDRESS: u8 = AccelerometerRegister::REFERENCE_A.addr();
+    const REG_ADDRESS: u8 = RegisterAddress::REFERENCE_A.addr();
 
     fn from_bits(bits: u8) -> Self {
         Self::from_bits(bits)
@@ -477,7 +479,7 @@ pub struct StatusRegisterA {
 
 impl Register for StatusRegisterA {
     const DEV_ADDRESS: u8 = DEFAULT_DEVICE_ADDRESS;
-    const REG_ADDRESS: u8 = AccelerometerRegister::STATUS_REG_A.addr();
+    const REG_ADDRESS: u8 = RegisterAddress::STATUS_REG_A.addr();
 
     fn from_bits(bits: u8) -> Self {
         Self::from_bits(bits)
@@ -511,7 +513,7 @@ pub struct FifoControlRegisterA {
 
 impl Register for FifoControlRegisterA {
     const DEV_ADDRESS: u8 = DEFAULT_DEVICE_ADDRESS;
-    const REG_ADDRESS: u8 = AccelerometerRegister::FIFO_CTRL_REG_A.addr();
+    const REG_ADDRESS: u8 = RegisterAddress::FIFO_CTRL_REG_A.addr();
 
     fn from_bits(bits: u8) -> Self {
         Self::from_bits(bits)
@@ -544,7 +546,7 @@ pub struct FifoSourceRegisterA {
 
 impl Register for FifoSourceRegisterA {
     const DEV_ADDRESS: u8 = DEFAULT_DEVICE_ADDRESS;
-    const REG_ADDRESS: u8 = AccelerometerRegister::FIFO_SRC_REG_A.addr();
+    const REG_ADDRESS: u8 = RegisterAddress::FIFO_SRC_REG_A.addr();
 
     fn from_bits(bits: u8) -> Self {
         Self::from_bits(bits)
@@ -595,7 +597,7 @@ pub struct Int1ConfigurationRegisterA {
 
 impl Register for Int1ConfigurationRegisterA {
     const DEV_ADDRESS: u8 = DEFAULT_DEVICE_ADDRESS;
-    const REG_ADDRESS: u8 = AccelerometerRegister::INT1_CFG_A.addr();
+    const REG_ADDRESS: u8 = RegisterAddress::INT1_CFG_A.addr();
 
     fn from_bits(bits: u8) -> Self {
         Self::from_bits(bits)
@@ -647,7 +649,7 @@ pub struct Int1SourceRegisterA {
 
 impl Register for Int1SourceRegisterA {
     const DEV_ADDRESS: u8 = DEFAULT_DEVICE_ADDRESS;
-    const REG_ADDRESS: u8 = AccelerometerRegister::INT1_SRC_A.addr();
+    const REG_ADDRESS: u8 = RegisterAddress::INT1_SRC_A.addr();
 
     fn from_bits(bits: u8) -> Self {
         Self::from_bits(bits)
@@ -673,7 +675,7 @@ pub struct Int1ThresholdRegisterA {
 
 impl Register for Int1ThresholdRegisterA {
     const DEV_ADDRESS: u8 = DEFAULT_DEVICE_ADDRESS;
-    const REG_ADDRESS: u8 = AccelerometerRegister::INT1_THS_A.addr();
+    const REG_ADDRESS: u8 = RegisterAddress::INT1_THS_A.addr();
 
     fn from_bits(bits: u8) -> Self {
         Self::from_bits(bits)
@@ -702,7 +704,7 @@ pub struct Int1DurationRegisterA {
 
 impl Register for Int1DurationRegisterA {
     const DEV_ADDRESS: u8 = DEFAULT_DEVICE_ADDRESS;
-    const REG_ADDRESS: u8 = AccelerometerRegister::INT1_DURATION_A.addr();
+    const REG_ADDRESS: u8 = RegisterAddress::INT1_DURATION_A.addr();
 
     fn from_bits(bits: u8) -> Self {
         Self::from_bits(bits)
@@ -773,7 +775,7 @@ pub struct Int2ConfigurationRegisterA {
 
 impl Register for Int2ConfigurationRegisterA {
     const DEV_ADDRESS: u8 = DEFAULT_DEVICE_ADDRESS;
-    const REG_ADDRESS: u8 = AccelerometerRegister::INT2_CFG_A.addr();
+    const REG_ADDRESS: u8 = RegisterAddress::INT2_CFG_A.addr();
 
     fn from_bits(bits: u8) -> Self {
         Self::from_bits(bits)
@@ -825,7 +827,7 @@ pub struct Int2SourceRegisterA {
 
 impl Register for Int2SourceRegisterA {
     const DEV_ADDRESS: u8 = DEFAULT_DEVICE_ADDRESS;
-    const REG_ADDRESS: u8 = AccelerometerRegister::INT2_SRC_A.addr();
+    const REG_ADDRESS: u8 = RegisterAddress::INT2_SRC_A.addr();
 
     fn from_bits(bits: u8) -> Self {
         Self::from_bits(bits)
@@ -851,7 +853,7 @@ pub struct Int2ThresholdRegisterA {
 
 impl Register for Int2ThresholdRegisterA {
     const DEV_ADDRESS: u8 = DEFAULT_DEVICE_ADDRESS;
-    const REG_ADDRESS: u8 = AccelerometerRegister::INT2_THS_A.addr();
+    const REG_ADDRESS: u8 = RegisterAddress::INT2_THS_A.addr();
 
     fn from_bits(bits: u8) -> Self {
         Self::from_bits(bits)
@@ -880,7 +882,7 @@ pub struct Int2DurationRegisterA {
 
 impl Register for Int2DurationRegisterA {
     const DEV_ADDRESS: u8 = DEFAULT_DEVICE_ADDRESS;
-    const REG_ADDRESS: u8 = AccelerometerRegister::INT2_DURATION_A.addr();
+    const REG_ADDRESS: u8 = RegisterAddress::INT2_DURATION_A.addr();
 
     fn from_bits(bits: u8) -> Self {
         Self::from_bits(bits)
@@ -946,7 +948,7 @@ pub struct ClickConfigurationRegisterA {
 
 impl Register for ClickConfigurationRegisterA {
     const DEV_ADDRESS: u8 = DEFAULT_DEVICE_ADDRESS;
-    const REG_ADDRESS: u8 = AccelerometerRegister::CLICK_CFG_A.addr();
+    const REG_ADDRESS: u8 = RegisterAddress::CLICK_CFG_A.addr();
 
     fn from_bits(bits: u8) -> Self {
         Self::from_bits(bits)
@@ -1013,7 +1015,7 @@ pub struct ClickSourceRegisterA {
 
 impl Register for ClickSourceRegisterA {
     const DEV_ADDRESS: u8 = DEFAULT_DEVICE_ADDRESS;
-    const REG_ADDRESS: u8 = AccelerometerRegister::CLICK_SRC_A.addr();
+    const REG_ADDRESS: u8 = RegisterAddress::CLICK_SRC_A.addr();
 
     fn from_bits(bits: u8) -> Self {
         Self::from_bits(bits)
@@ -1044,7 +1046,7 @@ pub struct ClickThresholdRegisterA {
 
 impl Register for ClickThresholdRegisterA {
     const DEV_ADDRESS: u8 = DEFAULT_DEVICE_ADDRESS;
-    const REG_ADDRESS: u8 = AccelerometerRegister::CLICK_THS_A.addr();
+    const REG_ADDRESS: u8 = RegisterAddress::CLICK_THS_A.addr();
 
     fn from_bits(bits: u8) -> Self {
         Self::from_bits(bits)
@@ -1076,7 +1078,7 @@ pub struct ClickTimeLimitRegisterA {
 
 impl Register for ClickTimeLimitRegisterA {
     const DEV_ADDRESS: u8 = DEFAULT_DEVICE_ADDRESS;
-    const REG_ADDRESS: u8 = AccelerometerRegister::TIME_LIMIT_A.addr();
+    const REG_ADDRESS: u8 = RegisterAddress::TIME_LIMIT_A.addr();
 
     fn from_bits(bits: u8) -> Self {
         Self::from_bits(bits)
@@ -1105,7 +1107,7 @@ pub struct ClickTimeLatencyRegisterA {
 
 impl Register for ClickTimeLatencyRegisterA {
     const DEV_ADDRESS: u8 = DEFAULT_DEVICE_ADDRESS;
-    const REG_ADDRESS: u8 = AccelerometerRegister::TIME_LATENCY_A.addr();
+    const REG_ADDRESS: u8 = RegisterAddress::TIME_LATENCY_A.addr();
 
     fn from_bits(bits: u8) -> Self {
         Self::from_bits(bits)
@@ -1134,7 +1136,7 @@ pub struct ClickTimeWindowRegisterA {
 
 impl Register for ClickTimeWindowRegisterA {
     const DEV_ADDRESS: u8 = DEFAULT_DEVICE_ADDRESS;
-    const REG_ADDRESS: u8 = AccelerometerRegister::TIME_WINDOW_A.addr();
+    const REG_ADDRESS: u8 = RegisterAddress::TIME_WINDOW_A.addr();
 
     fn from_bits(bits: u8) -> Self {
         Self::from_bits(bits)

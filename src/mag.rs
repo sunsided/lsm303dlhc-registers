@@ -15,13 +15,15 @@ pub use types::*;
 /// the master transmits to the slave with the direction unchanged.
 pub const DEFAULT_DEVICE_ADDRESS: u8 = 0b0011110;
 
-// Magnetometer specific register addresses.
+/// Register addresses specific to the magnetometer sensor.
+///
+/// See also [`DEFAULT_DEVICE_ADDRESS`].
 #[allow(dead_code)]
 #[allow(non_camel_case_types)]
 #[allow(missing_docs)]
 #[derive(Copy, Clone, PartialEq, Eq)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
-pub enum MagnetometerRegister {
+pub enum RegisterAddress {
     /// See [`CraRegisterM`](super::CraRegisterM).
     CRA_REG_M = 0x00,
     /// See [`CrbRegisterM`](super::CrbRegisterM).
@@ -46,7 +48,7 @@ pub enum MagnetometerRegister {
     TEMP_OUT_L_M = 0x32,
 }
 
-impl MagnetometerRegister {
+impl RegisterAddress {
     /// Returns the address of a register.
     pub const fn addr(&self) -> u8 {
         *self as u8
@@ -78,7 +80,7 @@ pub struct CraRegisterM {
 
 impl Register for CraRegisterM {
     const DEV_ADDRESS: u8 = DEFAULT_DEVICE_ADDRESS;
-    const REG_ADDRESS: u8 = MagnetometerRegister::CRA_REG_M.addr();
+    const REG_ADDRESS: u8 = RegisterAddress::CRA_REG_M.addr();
 
     fn from_bits(bits: u8) -> Self {
         Self::from_bits(bits)
@@ -109,7 +111,7 @@ pub struct CrbRegisterM {
 
 impl Register for CrbRegisterM {
     const DEV_ADDRESS: u8 = DEFAULT_DEVICE_ADDRESS;
-    const REG_ADDRESS: u8 = MagnetometerRegister::CRB_REG_M.addr();
+    const REG_ADDRESS: u8 = RegisterAddress::CRB_REG_M.addr();
 
     fn from_bits(bits: u8) -> Self {
         Self::from_bits(bits)
@@ -147,7 +149,7 @@ pub struct ModeRegisterM {
 
 impl Register for ModeRegisterM {
     const DEV_ADDRESS: u8 = DEFAULT_DEVICE_ADDRESS;
-    const REG_ADDRESS: u8 = MagnetometerRegister::MR_REG_M.addr();
+    const REG_ADDRESS: u8 = RegisterAddress::MR_REG_M.addr();
 
     fn from_bits(bits: u8) -> Self {
         Self::from_bits(bits)
@@ -180,7 +182,7 @@ pub struct StatusRegisterM {
 
 impl Register for StatusRegisterM {
     const DEV_ADDRESS: u8 = DEFAULT_DEVICE_ADDRESS;
-    const REG_ADDRESS: u8 = MagnetometerRegister::SR_REG_M.addr();
+    const REG_ADDRESS: u8 = RegisterAddress::SR_REG_M.addr();
 
     fn from_bits(bits: u8) -> Self {
         Self::from_bits(bits)
@@ -202,7 +204,7 @@ pub struct IRARegisterM {
 
 impl Register for IRARegisterM {
     const DEV_ADDRESS: u8 = DEFAULT_DEVICE_ADDRESS;
-    const REG_ADDRESS: u8 = MagnetometerRegister::IRA_REG_M.addr();
+    const REG_ADDRESS: u8 = RegisterAddress::IRA_REG_M.addr();
 
     fn from_bits(bits: u8) -> Self {
         Self::from_bits(bits)
@@ -224,7 +226,7 @@ pub struct IRBRegisterM {
 
 impl Register for IRBRegisterM {
     const DEV_ADDRESS: u8 = DEFAULT_DEVICE_ADDRESS;
-    const REG_ADDRESS: u8 = MagnetometerRegister::IRB_REG_M.addr();
+    const REG_ADDRESS: u8 = RegisterAddress::IRB_REG_M.addr();
 
     fn from_bits(bits: u8) -> Self {
         Self::from_bits(bits)
@@ -246,7 +248,7 @@ pub struct IRCRegisterM {
 
 impl Register for IRCRegisterM {
     const DEV_ADDRESS: u8 = DEFAULT_DEVICE_ADDRESS;
-    const REG_ADDRESS: u8 = MagnetometerRegister::IRC_REG_M.addr();
+    const REG_ADDRESS: u8 = RegisterAddress::IRC_REG_M.addr();
 
     fn from_bits(bits: u8) -> Self {
         Self::from_bits(bits)
