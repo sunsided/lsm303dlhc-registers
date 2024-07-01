@@ -1,5 +1,14 @@
 # STMicroelectronics LSM303DLHC E-Compass Registers
 
+[![Crates.io][crates-image]][crates-link]
+[![Docs][docs-image]][docs-link]
+[![Build Status][build-image]][build-link]
+[![Safety Dance][safety-image]][safety-link]
+![MSRV][msrv-image]
+[![EUPL 1.2 licensed][license-eupl-image]][license-eupl-link]
+[![Apache 2.0 licensed][license-apache-image]][license-apache-link]
+[![MIT licensed][license-mit-image]][license-mit-link]
+
 > A typed map of the LSM303DLHC's I²C registers.
 
 Provides functions and named fields to read and modify the sensor registers. For example:
@@ -56,5 +65,36 @@ Triple licensed under your choice of either of:
 
 This work includes parts of Jorge Aparicio's [lsm303dlhc](https://github.com/japaric/lsm303dlhc) crate,
 made available under MIT and Apache 2.0 licenses.
+
+
+[crates-image]: https://img.shields.io/crates/v/lsm303dlhc-registers
+
+[crates-link]: https://crates.io/crates/lsm303dlhc-registers
+
+[docs-image]: https://docs.rs/lsm303dlhc-registers/badge.svg
+
+[docs-link]: https://docs.rs/lsm303dlhc-registers/
+
+[build-image]: https://github.com/sunsided/lsm303dlhc-registers/workflows/Rust/badge.svg
+
+[build-link]: https://github.com/sunsided/lsm303dlhc-registers/actions
+
+[safety-image]: https://img.shields.io/badge/unsafe-forbidden-success.svg
+
+[safety-link]: https://github.com/rust-secure-code/safety-dance/
+
+[msrv-image]: https://img.shields.io/badge/rustc-1.64+-blue.svg
+
+[license-eupl-image]: https://img.shields.io/badge/license-EUPL_1.2-blue.svg
+
+[license-apache-image]: https://img.shields.io/badge/license-Apache_2.0-blue.svg
+
+[license-mit-image]: https://img.shields.io/badge/license-MIT-blue.svg
+
+[license-apache-link]: https://github.com/sunsided/lsm303dlhc-registers/blob/develop/LICENSE-APACHE
+
+[license-mit-link]: https://github.com/sunsided/lsm303dlhc-registers/blob/develop/LICENSE-MIT
+
+[license-eupl-link]: https://github.com/sunsided/lsm303dlhc-registers/blob/develop/LICENSE-EUPL
 
 [cc]: https://contributor-covenant.org
