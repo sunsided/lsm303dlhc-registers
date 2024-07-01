@@ -63,7 +63,9 @@ pub trait Register {
 }
 
 /// A writable sensor register.
-pub trait WritableRegister {}
+pub trait WritableRegister: Register {}
 
-impl<R> WritableRegister for R where R: hardware_registers::i2c::WritableI2CRegister8<DeviceAddress7>
-{}
+impl<R> WritableRegister for R where
+    R: hardware_registers::i2c::WritableI2CRegister8<DeviceAddress7> + Register
+{
+}
