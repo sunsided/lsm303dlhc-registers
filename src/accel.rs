@@ -498,18 +498,18 @@ readable_register!(StatusRegisterA);
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub struct FifoControlRegisterA {
     /// FIFO mode selection
-    #[bits(2, access = RO, default = FifoMode::Bypass)]
+    #[bits(2, access = RW, default = FifoMode::Bypass)]
     pub fifo_mode: FifoMode,
 
     /// Trigger selection
     ///
     /// * `false` - Trigger event linked to trigger signal on INT1
     /// * `true` - Trigger event linked to trigger signal on INT1
-    #[bits(1, access = RO)]
+    #[bits(1, access = RW)]
     pub trigger_on_int2: bool,
 
-    // TODO: document
-    #[bits(5, access = RO)]
+    /// The `fth` field.
+    #[bits(5, access = RW)]
     pub fth: u8,
 }
 

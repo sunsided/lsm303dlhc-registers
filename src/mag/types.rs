@@ -24,8 +24,8 @@ pub enum MagOdr {
 }
 
 impl MagOdr {
-    #[allow(unused)]
-    pub(crate) const fn into_bits(self) -> u8 {
+    /// Converts the value into an `u8`.
+    pub const fn into_bits(self) -> u8 {
         self as u8
     }
 
@@ -87,8 +87,8 @@ pub enum MagGain {
 }
 
 impl MagGain {
-    #[allow(unused)]
-    pub(crate) const fn into_bits(self) -> u8 {
+    /// Converts the value into an `u8`.
+    pub const fn into_bits(self) -> u8 {
         self as u8
     }
 

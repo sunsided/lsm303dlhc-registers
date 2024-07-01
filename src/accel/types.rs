@@ -28,7 +28,8 @@ pub enum AccelOdr {
 }
 
 impl AccelOdr {
-    pub(crate) const fn into_bits(self) -> u8 {
+    /// Converts the value into an `u8`.
+    pub const fn into_bits(self) -> u8 {
         self as u8
     }
 
@@ -65,7 +66,8 @@ pub enum Sensitivity {
 }
 
 impl Sensitivity {
-    pub(crate) const fn into_bits(self) -> u8 {
+    /// Converts the value into an `u8`.
+    pub const fn into_bits(self) -> u8 {
         self as u8
     }
 
@@ -97,8 +99,8 @@ pub enum FifoMode {
 }
 
 impl FifoMode {
-    #[allow(unused)]
-    pub(crate) const fn into_bits(self) -> u8 {
+    /// Converts the value into an `u8`.
+    pub const fn into_bits(self) -> u8 {
         self as u8
     }
 
@@ -131,7 +133,8 @@ pub enum HighpassFilterMode {
 }
 
 impl HighpassFilterMode {
-    pub(crate) const fn into_bits(self) -> u8 {
+    /// Converts the value into an `u8`.
+    pub const fn into_bits(self) -> u8 {
         self as u8
     }
 
