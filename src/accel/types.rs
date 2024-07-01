@@ -1,4 +1,4 @@
-//! Types used in the registers.
+//! Types used in the accelerometer registers.
 
 /// Accelerometer Output Data Rate
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]

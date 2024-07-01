@@ -1,8 +1,10 @@
+//! Magnetometer and Temperature registers.
+
 mod types;
 
+use crate::{Register, WritableRegister};
 use bitfield_struct::bitfield;
 pub use types::*;
-use crate::{Register, WritableRegister};
 
 /// The I2C bus address.
 ///

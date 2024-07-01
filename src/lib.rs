@@ -8,8 +8,8 @@
 // Enables the `doc_cfg` feature when the `docsrs` configuration attribute is defined.
 #![cfg_attr(docsrs, feature(doc_cfg))]
 
-mod accel;
-mod mag;
+pub mod accel;
+pub mod mag;
 
 /// A sensor register.
 pub trait Register {
