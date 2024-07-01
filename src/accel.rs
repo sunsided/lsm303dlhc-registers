@@ -95,9 +95,9 @@ impl RegisterAddress {
     }
 }
 
-impl Into<u8> for RegisterAddress {
-    fn into(self) -> u8 {
-        self.addr()
+impl From<RegisterAddress> for u8 {
+    fn from(value: RegisterAddress) -> Self {
+        value.addr()
     }
 }
 
