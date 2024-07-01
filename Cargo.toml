@@ -18,8 +18,7 @@ defmt = ["dep:defmt"]
 [dependencies]
 bitfield-struct = "0.8.0"
 defmt = { version = "0.3.8", optional = true }
-# hardware-registers = "0.1.0-alpha.1"
-hardware-registers = { git = "https://github.com/sunsided/hardware-registers", branch = "main" }
+hardware-registers = "0.1.0"
 
 [package.metadata.docs.rs]
 all-features = true
