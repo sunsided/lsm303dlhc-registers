@@ -2,7 +2,7 @@
 
 mod types;
 
-use crate::{Register, WritableRegister};
+use crate::Register;
 use bitfield_struct::bitfield;
 pub use types::*;
 
@@ -91,7 +91,7 @@ impl Register for CraRegisterM {
     }
 }
 
-impl WritableRegister for CraRegisterM {}
+writable_register!(CraRegisterM);
 
 /// Magnetometer gain configuration.
 ///
@@ -122,7 +122,7 @@ impl Register for CrbRegisterM {
     }
 }
 
-impl WritableRegister for CrbRegisterM {}
+writable_register!(CrbRegisterM);
 
 /// Magnetometer mode select.
 ///
@@ -160,7 +160,7 @@ impl Register for ModeRegisterM {
     }
 }
 
-impl WritableRegister for ModeRegisterM {}
+writable_register!(ModeRegisterM);
 
 /// [`SR_REG_M`](RegisterAddress::SR_REG_M) (09h)
 #[bitfield(u8, order = Msb)]
@@ -193,6 +193,8 @@ impl Register for StatusRegisterM {
     }
 }
 
+readable_register!(StatusRegisterM);
+
 /// [`IRA_REG_M`](RegisterAddress::IRA_REG_M) (0Ah)
 #[bitfield(u8, order = Msb)]
 #[derive(PartialEq, Eq)]
@@ -214,6 +216,8 @@ impl Register for IRARegisterM {
         self.into_bits()
     }
 }
+
+readable_register!(IRARegisterM);
 
 /// [`IRB_REG_M`](RegisterAddress::IRB_REG_M) (0Bh)
 #[bitfield(u8, order = Msb)]
@@ -237,6 +241,8 @@ impl Register for IRBRegisterM {
     }
 }
 
+readable_register!(IRBRegisterM);
+
 /// [`IRC_REG_M`](RegisterAddress::IRC_REG_M) (0Ch)
 #[bitfield(u8, order = Msb)]
 #[derive(PartialEq, Eq)]
@@ -258,3 +264,5 @@ impl Register for IRCRegisterM {
         self.into_bits()
     }
 }
+
+readable_register!(IRCRegisterM);

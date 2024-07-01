@@ -4,7 +4,7 @@ mod types;
 
 pub use types::*;
 
-use crate::{Register, WritableRegister};
+use crate::Register;
 use bitfield_struct::bitfield;
 
 /// The I2C bus address.
@@ -129,7 +129,7 @@ impl Register for ControlRegister1A {
     }
 }
 
-impl WritableRegister for ControlRegister1A {}
+writable_register!(ControlRegister1A);
 
 /// [`CTRL_REG2_A`](RegisterAddress::CTRL_REG2_A) (21h)
 #[bitfield(u8, order = Msb)]
@@ -174,7 +174,7 @@ impl Register for ControlRegister2A {
     }
 }
 
-impl WritableRegister for ControlRegister2A {}
+writable_register!(ControlRegister2A);
 
 /// [`CTRL_REG3_A`](RegisterAddress::CTRL_REG3_A) (22h)
 #[bitfield(u8, order = Msb)]
@@ -226,7 +226,7 @@ impl Register for ControlRegister3A {
     }
 }
 
-impl WritableRegister for ControlRegister3A {}
+writable_register!(ControlRegister3A);
 
 /// [`CTRL_REG4_A`](RegisterAddress::CTRL_REG4_A) (23h)
 #[bitfield(u8, order = Msb)]
@@ -280,7 +280,7 @@ impl Register for ControlRegister4A {
     }
 }
 
-impl WritableRegister for ControlRegister4A {}
+writable_register!(ControlRegister4A);
 
 /// [`CTRL_REG5_A`](RegisterAddress::CTRL_REG5_A) (24h)
 #[bitfield(u8, order = Msb)]
@@ -336,7 +336,7 @@ impl Register for ControlRegister5A {
     }
 }
 
-impl WritableRegister for ControlRegister5A {}
+writable_register!(ControlRegister5A);
 
 /// [`CTRL_REG6_A`](RegisterAddress::CTRL_REG6_A) (25h)
 #[bitfield(u8, order = Msb)]
@@ -396,7 +396,7 @@ impl Register for ControlRegister6A {
     }
 }
 
-impl WritableRegister for ControlRegister6A {}
+writable_register!(ControlRegister6A);
 
 /// [`REFERENCE_A`](RegisterAddress::REFERENCE_A)(27h)
 #[bitfield(u8, order = Msb)]
@@ -421,7 +421,7 @@ impl Register for ReferenceRegisterA {
     }
 }
 
-impl WritableRegister for ReferenceRegisterA {}
+writable_register!(ReferenceRegisterA);
 
 /// [`STATUS_REG_A`](RegisterAddress::STATUS_REG_A) (27h)
 #[bitfield(u8, order = Msb)]
@@ -490,6 +490,8 @@ impl Register for StatusRegisterA {
     }
 }
 
+readable_register!(StatusRegisterA);
+
 /// [`FIFO_CTRL_REG_A`](RegisterAddress::FIFO_CTRL_REG_A) (2Eh)
 #[bitfield(u8, order = Msb)]
 #[derive(PartialEq, Eq)]
@@ -524,7 +526,7 @@ impl Register for FifoControlRegisterA {
     }
 }
 
-impl WritableRegister for FifoControlRegisterA {}
+writable_register!(FifoControlRegisterA);
 
 /// [`FIFO_CTRL_REG_A`](RegisterAddress::FIFO_SRC_REG_A) (2Fh)
 #[bitfield(u8, order = Msb)]
@@ -556,6 +558,8 @@ impl Register for FifoSourceRegisterA {
         self.into_bits()
     }
 }
+
+readable_register!(FifoSourceRegisterA);
 
 /// [`INT1_CFG_A`](RegisterAddress::INT1_CFG_A) (2Fh)
 #[bitfield(u8, order = Msb)]
@@ -608,7 +612,7 @@ impl Register for Int1ConfigurationRegisterA {
     }
 }
 
-impl WritableRegister for Int1ConfigurationRegisterA {}
+writable_register!(Int1ConfigurationRegisterA);
 
 /// [`INT1_SRC_A`](RegisterAddress::INT1_SRC_A) (31h)
 #[bitfield(u8, order = Msb)]
@@ -660,6 +664,8 @@ impl Register for Int1SourceRegisterA {
     }
 }
 
+readable_register!(Int1SourceRegisterA);
+
 /// [`INT1_SRC_A`](RegisterAddress::INT1_THS_A) (32h)
 #[bitfield(u8, order = Msb)]
 #[derive(PartialEq, Eq)]
@@ -686,7 +692,7 @@ impl Register for Int1ThresholdRegisterA {
     }
 }
 
-impl WritableRegister for Int1ThresholdRegisterA {}
+writable_register!(Int1ThresholdRegisterA);
 
 /// [`INT1_DURATION_A`](RegisterAddress::INT1_DURATION_A) (33h)
 #[bitfield(u8, order = Msb)]
@@ -715,7 +721,7 @@ impl Register for Int1DurationRegisterA {
     }
 }
 
-impl WritableRegister for Int1DurationRegisterA {}
+writable_register!(Int1DurationRegisterA);
 
 /// [`INT2_CFG_A`](RegisterAddress::INT2_CFG_A) (34h)
 #[bitfield(u8, order = Msb)]
@@ -786,7 +792,7 @@ impl Register for Int2ConfigurationRegisterA {
     }
 }
 
-impl WritableRegister for Int2ConfigurationRegisterA {}
+writable_register!(Int2ConfigurationRegisterA);
 
 /// [`INT2_SRC_A`](RegisterAddress::INT2_SRC_A) (35h)
 #[bitfield(u8, order = Msb)]
@@ -838,6 +844,8 @@ impl Register for Int2SourceRegisterA {
     }
 }
 
+readable_register!(Int2SourceRegisterA);
+
 /// [`INT2_SRC_A`](RegisterAddress::INT2_THS_A) (36h)
 #[bitfield(u8, order = Msb)]
 #[derive(PartialEq, Eq)]
@@ -864,7 +872,7 @@ impl Register for Int2ThresholdRegisterA {
     }
 }
 
-impl WritableRegister for Int2ThresholdRegisterA {}
+writable_register!(Int2ThresholdRegisterA);
 
 /// [`INT2_DURATION_A`](RegisterAddress::INT2_DURATION_A) (37h)
 #[bitfield(u8, order = Msb)]
@@ -893,7 +901,7 @@ impl Register for Int2DurationRegisterA {
     }
 }
 
-impl WritableRegister for Int2DurationRegisterA {}
+writable_register!(Int2DurationRegisterA);
 
 /// [`CLICK_CFG_A`](RegisterAddress::CLICK_CFG_A) (38h)
 #[bitfield(u8, order = Msb)]
@@ -959,7 +967,7 @@ impl Register for ClickConfigurationRegisterA {
     }
 }
 
-impl WritableRegister for ClickConfigurationRegisterA {}
+writable_register!(ClickConfigurationRegisterA);
 
 /// [`CLICK_SRC_A`](RegisterAddress::CLICK_SRC_A) (39h)
 #[bitfield(u8, order = Msb)]
@@ -1026,6 +1034,8 @@ impl Register for ClickSourceRegisterA {
     }
 }
 
+readable_register!(ClickSourceRegisterA);
+
 /// [`CLICK_THS_A`](RegisterAddress::CLICK_THS_A) (3Ah)
 #[bitfield(u8, order = Msb)]
 #[derive(PartialEq, Eq)]
@@ -1057,7 +1067,7 @@ impl Register for ClickThresholdRegisterA {
     }
 }
 
-impl WritableRegister for ClickThresholdRegisterA {}
+writable_register!(ClickThresholdRegisterA);
 
 /// [`TIME_LIMIT_A`](RegisterAddress::TIME_LIMIT_A) (3Bh)
 #[bitfield(u8, order = Msb)]
@@ -1089,7 +1099,7 @@ impl Register for ClickTimeLimitRegisterA {
     }
 }
 
-impl WritableRegister for ClickTimeLimitRegisterA {}
+writable_register!(ClickTimeLimitRegisterA);
 
 /// [`TIME_LATENCY_A`](RegisterAddress::TIME_LATENCY_A) (3Ch)
 #[bitfield(u8, order = Msb)]
@@ -1118,7 +1128,7 @@ impl Register for ClickTimeLatencyRegisterA {
     }
 }
 
-impl WritableRegister for ClickTimeLatencyRegisterA {}
+writable_register!(ClickTimeLatencyRegisterA);
 
 /// [`TIME_WINDOW_A`](RegisterAddress::TIME_WINDOW_A) (3Dh)
 #[bitfield(u8, order = Msb)]
@@ -1147,7 +1157,7 @@ impl Register for ClickTimeWindowRegisterA {
     }
 }
 
-impl WritableRegister for ClickTimeWindowRegisterA {}
+writable_register!(ClickTimeWindowRegisterA);
 
 #[cfg(test)]
 mod tests {
