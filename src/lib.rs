@@ -71,7 +71,7 @@ pub mod accel;
 pub mod mag;
 
 /// A sensor register.
-pub trait Register: prelude::I2CRegister8<prelude::DeviceAddress7> {}
+pub trait Register: prelude::I2CRegister8<prelude::DeviceAddress7> + From<u8> + Into<u8> {}
 
 /// A writable sensor register.
 pub trait WritableRegister:
