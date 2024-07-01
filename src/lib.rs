@@ -16,7 +16,7 @@ pub mod prelude {
     pub use crate::{Register, WritableRegister};
     pub use hardware_registers::i2c::*;
     pub use hardware_registers::sizes::R1;
-    pub use hardware_registers::{HardwareRegister, WritableHardwareRegister};
+    pub use hardware_registers::{FromBits, HardwareRegister, ToBits, WritableHardwareRegister};
 }
 
 macro_rules! readable_register {
@@ -30,10 +30,32 @@ macro_rules! readable_register {
                 $crate::prelude::R1,
             > for $type
         {
+            type Backing = u8;
+
             const DEFAULT_DEVICE_ADDRESS: $crate::prelude::DeviceAddress7 =
                 $crate::prelude::DeviceAddress7::new($type::DEV_ADDRESS);
             const REGISTER_ADDRESS: $crate::prelude::RegisterAddress8 =
                 $crate::prelude::RegisterAddress8::new($type::REG_ADDRESS);
+        }
+
+        impl $crate::prelude::ToBits for $type {
+            type Target = u8;
+
+            #[inline]
+            fn to_bits(&self) -> Self::Target {
+                (*self).into()
+            }
+        }
+
+        impl $crate::prelude::FromBits<u8> for $type {
+            #[inline]
+            fn from_bits(value: u8) -> Self {
+                value.into()
+            }
+
+            fn from_bits_ref(value: &u8) -> Self {
+                (*value).into()
+            }
         }
     };
 }
