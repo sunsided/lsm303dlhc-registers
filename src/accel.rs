@@ -42,11 +42,17 @@ pub enum RegisterAddress {
     REFERENCE_A = 0x26,
     /// See [`StatusRegisterA`].
     STATUS_REG_A = 0x27,
+    /// See [`OutXLowA`].
     OUT_X_L_A = 0x28,
+    /// See [`OutXHighA`].
     OUT_X_H_A = 0x29,
+    /// See [`OutYLowA`].
     OUT_Y_L_A = 0x2A,
+    /// See [`OutYHighA`].
     OUT_Y_H_A = 0x2B,
+    /// See [`OutZLowA`].
     OUT_Z_L_A = 0x2C,
+    /// See [`OutZHighA`].
     OUT_Z_H_A = 0x2D,
     /// See [`FifoControlRegisterA`].
     FIFO_CTRL_REG_A = 0x2E,
@@ -325,7 +331,7 @@ pub struct ControlRegister6A {
 
 writable_register!(ControlRegister6A, RegisterAddress::CTRL_REG6_A);
 
-/// [`REFERENCE_A`](RegisterAddress::REFERENCE_A)(27h)
+/// [`REFERENCE_A`](RegisterAddress::REFERENCE_A) (26h)
 #[bitfield(u8, order = Msb)]
 #[derive(PartialEq, Eq)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
@@ -392,6 +398,100 @@ pub struct StatusRegisterA {
 }
 
 readable_register!(StatusRegisterA, RegisterAddress::STATUS_REG_A);
+
+/// [`OUT_X_L_A`](RegisterAddress::OUT_X_L_A) (28h)
+///
+/// Low byte of the 16-bit acceleration value. See [`OutXHighA`] for the high byte.
+#[bitfield(u8, order = Msb)]
+#[derive(PartialEq, Eq)]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
+pub struct OutXLowA {
+    /// Low byte of the X-axis value.
+    ///
+    /// Together with [`OutXHighA`] this forms a reading expressed in two's complement.
+    #[bits(8, access = RO)]
+    pub bits: u8,
+}
+
+readable_register!(OutXLowA, RegisterAddress::OUT_X_L_A);
+
+/// [`OUT_X_H_A`](RegisterAddress::OUT_X_H_A) (29h)
+///
+/// High byte of the 16-bit acceleration value. See [`OutXLowA`] for the low byte.
+#[bitfield(u8, order = Msb)]
+#[derive(PartialEq, Eq)]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
+pub struct OutXHighA {
+    /// High byte of the X-axis value.
+    ///
+    /// Together with [`OutXLowA`] this forms a reading expressed in two's complement.
+    #[bits(8, access = RO)]
+    pub bits: u8,
+}
+
+readable_register!(OutXHighA, RegisterAddress::OUT_X_H_A);
+
+/// [`OUT_Y_L_A`](RegisterAddress::OUT_Y_L_A) (2Ah)
+///
+/// Low byte of the 16-bit acceleration value. See [`OutYHighA`] for the high byte.
+#[bitfield(u8, order = Msb)]
+#[derive(PartialEq, Eq)]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
+pub struct OutYLowA {
+    /// Low byte of the Y-axis acceleration value.
+    ///
+    /// Together with [`crate::accel::OutYHighA`] this forms a reading expressed in two's complement.
+    #[bits(8, access = RO)]
+    pub bits: u8,
+}
+
+readable_register!(OutYLowA, RegisterAddress::OUT_Y_L_A);
+
+/// [`OUT_Y_H_A`](RegisterAddress::OUT_Y_H_A) (2Bh)
+///
+/// High byte of the 16-bit acceleration value. See [`OutYLowA`] for the low byte.
+#[bitfield(u8, order = Msb)]
+#[derive(PartialEq, Eq)]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
+pub struct OutYHighA {
+    /// High byte of the Y-axis acceleration value.
+    ///
+    /// Together with [`crate::accel::OutYLowA`] this forms a reading expressed in two's complement.
+    #[bits(8, access = RO)]
+    pub bits: u8,
+}
+
+readable_register!(OutYHighA, RegisterAddress::OUT_Y_H_A);
+
+/// [`OUT_Z_L_A`](RegisterAddress::OUT_Z_L_A) (2Ch)
+///
+/// High byte of the 16-bit acceleration value. See [`OutZLowA`] for the low byte.
+#[bitfield(u8, order = Msb)]
+#[derive(PartialEq, Eq)]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
+pub struct OutZLowA {
+    /// Low byte of the Z-axis acceleration value.
+    ///
+    /// Together with [`crate::accel::OutZHighA`] this forms a reading expressed in two's complement.
+    #[bits(8, access = RO)]
+    pub bits: u8,
+}
+
+readable_register!(OutZLowA, RegisterAddress::OUT_Z_L_A);
+
+/// [`OUT_Z_H_A`](RegisterAddress::OUT_Z_H_A) (2Dh)
+#[bitfield(u8, order = Msb)]
+#[derive(PartialEq, Eq)]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
+pub struct OutZHighA {
+    /// High byte of the Z-axis acceleration value.
+    ///
+    /// Together with [`crate::accel::OutZLowA`] this forms a reading expressed in two's complement.
+    #[bits(8, access = RO)]
+    pub bits: u8,
+}
+
+readable_register!(OutZHighA, RegisterAddress::OUT_Z_H_A);
 
 /// [`FIFO_CTRL_REG_A`](RegisterAddress::FIFO_CTRL_REG_A) (2Eh)
 #[bitfield(u8, order = Msb)]
