@@ -88,6 +88,7 @@ pub enum FifoMode {
     /// Bypass mode (`0b00`)
     Bypass = 0b00,
     /// FIFO mode (`0b01`)
+    #[allow(clippy::upper_case_acronyms)]
     FIFO = 0b01,
     /// Stream mode (`0b10`)
     Stream = 0b10,
