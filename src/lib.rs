@@ -9,6 +9,8 @@
 // Enables the `doc_cfg` feature when the `docsrs` configuration attribute is defined.
 #![cfg_attr(docsrs, feature(doc_cfg))]
 
+use hardware_registers::i2c::DeviceAddress7;
+
 // Re-exports to aid in macro implementation.
 mod hw {
     pub use hardware_registers::i2c::*;
@@ -59,3 +61,9 @@ pub trait Register {
     /// Converts the register instance into bit values.
     fn to_bits(&self) -> u8;
 }
+
+/// A writable sensor register.
+pub trait WritableRegister {}
+
+impl<R> WritableRegister for R where R: hardware_registers::i2c::WritableI2CRegister8<DeviceAddress7>
+{}
