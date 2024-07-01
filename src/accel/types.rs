@@ -88,6 +88,8 @@ impl Sensitivity {
 #[repr(u8)]
 pub enum FifoMode {
     /// Bypass mode (`0b00`)
+    ///
+    /// Bypass the FIFO and store data directly in the output registers.
     Bypass = 0b00,
     /// FIFO mode (`0b01`)
     #[allow(clippy::upper_case_acronyms)]

@@ -184,7 +184,7 @@ pub struct ControlRegister3A {
 
     /// Enable DRDY2 interrupt on INT1
     #[bits(1, access = RW)]
-    pub i1dry2: bool,
+    pub i1drdy2: bool,
 
     /// Enable FIFO watermark interrupt on INT1
     #[bits(1, access = RW)]
