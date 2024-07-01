@@ -11,8 +11,9 @@
 
 use hardware_registers::i2c::DeviceAddress7;
 
-// Re-exports to aid in macro implementation.
-mod hw {
+/// Exports commonly used traits.
+pub mod prelude {
+    pub use crate::{Register, WritableRegister};
     pub use hardware_registers::i2c::*;
     pub use hardware_registers::sizes::R1;
     pub use hardware_registers::{HardwareRegister, WritableHardwareRegister};
@@ -20,19 +21,19 @@ mod hw {
 
 macro_rules! readable_register {
     ($type:ident) => {
-        impl $crate::hw::HardwareRegister<$crate::hw::R1> for $type {}
+        impl $crate::prelude::HardwareRegister<$crate::prelude::R1> for $type {}
 
         impl
-            $crate::hw::I2CRegister<
-                $crate::hw::DeviceAddress7,
-                $crate::hw::RegisterAddress8,
-                $crate::hw::R1,
+            $crate::prelude::I2CRegister<
+                $crate::prelude::DeviceAddress7,
+                $crate::prelude::RegisterAddress8,
+                $crate::prelude::R1,
             > for $type
         {
-            const DEFAULT_DEVICE_ADDRESS: $crate::hw::DeviceAddress7 =
-                $crate::hw::DeviceAddress7::new($type::DEV_ADDRESS);
-            const REGISTER_ADDRESS: $crate::hw::RegisterAddress8 =
-                $crate::hw::RegisterAddress8::new($type::REG_ADDRESS);
+            const DEFAULT_DEVICE_ADDRESS: $crate::prelude::DeviceAddress7 =
+                $crate::prelude::DeviceAddress7::new($type::DEV_ADDRESS);
+            const REGISTER_ADDRESS: $crate::prelude::RegisterAddress8 =
+                $crate::prelude::RegisterAddress8::new($type::REG_ADDRESS);
         }
     };
 }
@@ -40,7 +41,7 @@ macro_rules! readable_register {
 macro_rules! writable_register {
     ($type:ident) => {
         readable_register!($type);
-        impl $crate::hw::WritableHardwareRegister<$crate::hw::R1> for $type {}
+        impl $crate::prelude::WritableHardwareRegister<$crate::prelude::R1> for $type {}
     };
 }
 
@@ -48,7 +49,7 @@ pub mod accel;
 pub mod mag;
 
 /// A sensor register.
-pub trait Register {
+pub trait Register: From<u8> + Into<u8> {
     /// The slave device address.
     const DEV_ADDRESS: u8;
 
