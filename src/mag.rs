@@ -24,11 +24,11 @@ pub const DEFAULT_DEVICE_ADDRESS: u8 = 0b0011110;
 #[derive(Copy, Clone, PartialEq, Eq)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub enum RegisterAddress {
-    /// See [`CraRegisterM`](super::CraRegisterM).
+    /// See [`CraRegisterM`].
     CRA_REG_M = 0x00,
-    /// See [`CrbRegisterM`](super::CrbRegisterM).
+    /// See [`CrbRegisterM`].
     CRB_REG_M = 0x01,
-    /// See [`ModeRegisterM`](super::ModeRegisterM).
+    /// See [`ModeRegisterM`].
     MR_REG_M = 0x02,
     OUT_X_H_M = 0x03,
     OUT_X_L_M = 0x04,
@@ -36,13 +36,13 @@ pub enum RegisterAddress {
     OUT_Z_L_M = 0x06,
     OUT_Y_H_M = 0x07,
     OUT_Y_L_M = 0x08,
-    /// See [`StatusRegisterM`](super::StatusRegisterM).
+    /// See [`StatusRegisterM`].
     SR_REG_M = 0x09,
-    /// See [`IRARegisterM`](super::IRARegisterM).
+    /// See [`IRARegisterM`].
     IRA_REG_M = 0x0A,
-    /// See [`IRBRegisterM`](super::IRBRegisterM).
+    /// See [`IRBRegisterM`].
     IRB_REG_M = 0x0B,
-    /// See [`IRCRegisterM`](super::IRCRegisterM).
+    /// See [`IRCRegisterM`].
     IRC_REG_M = 0x0C,
     TEMP_OUT_H_M = 0x31,
     TEMP_OUT_L_M = 0x32,
@@ -55,7 +55,7 @@ impl RegisterAddress {
     }
 }
 
-/// [`CRA_REG_M`](mag::MagnetometerRegister::CRA_REG_M) (00h)
+/// [`CRA_REG_M`](RegisterAddress::CRA_REG_M) (00h)
 #[bitfield(u8, order = Msb)]
 #[derive(PartialEq, Eq)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
@@ -95,7 +95,7 @@ impl WritableRegister for CraRegisterM {}
 
 /// Magnetometer gain configuration.
 ///
-/// [`CRB_REG_M`](mag::MagnetometerRegister::CRB_REG_M) (01h)
+/// [`CRB_REG_M`](RegisterAddress::CRB_REG_M) (01h)
 #[bitfield(u8, order = Msb)]
 #[derive(PartialEq, Eq)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
@@ -126,7 +126,7 @@ impl WritableRegister for CrbRegisterM {}
 
 /// Magnetometer mode select.
 ///
-/// [`MR_REG_M`](mag::MagnetometerRegister::MR_REG_M) (09h)
+/// [`MR_REG_M`](RegisterAddress::MR_REG_M) (09h)
 #[bitfield(u8, order = Msb)]
 #[derive(PartialEq, Eq)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
@@ -162,7 +162,7 @@ impl Register for ModeRegisterM {
 
 impl WritableRegister for ModeRegisterM {}
 
-/// [`SR_REG_M`](mag::MagnetometerRegister::SR_REG_M) (09h)
+/// [`SR_REG_M`](RegisterAddress::SR_REG_M) (09h)
 #[bitfield(u8, order = Msb)]
 #[derive(PartialEq, Eq)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
@@ -193,7 +193,7 @@ impl Register for StatusRegisterM {
     }
 }
 
-/// [`IRA_REG_M`](mag::MagnetometerRegister::IRA_REG_M) (0Ah)
+/// [`IRA_REG_M`](RegisterAddress::IRA_REG_M) (0Ah)
 #[bitfield(u8, order = Msb)]
 #[derive(PartialEq, Eq)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
@@ -215,7 +215,7 @@ impl Register for IRARegisterM {
     }
 }
 
-/// [`IRB_REG_M`](mag::MagnetometerRegister::IRB_REG_M) (0Bh)
+/// [`IRB_REG_M`](RegisterAddress::IRB_REG_M) (0Bh)
 #[bitfield(u8, order = Msb)]
 #[derive(PartialEq, Eq)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
@@ -237,7 +237,7 @@ impl Register for IRBRegisterM {
     }
 }
 
-/// [`IRC_REG_M`](mag::MagnetometerRegister::IRC_REG_M) (0Ch)
+/// [`IRC_REG_M`](RegisterAddress::IRC_REG_M) (0Ch)
 #[bitfield(u8, order = Msb)]
 #[derive(PartialEq, Eq)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
