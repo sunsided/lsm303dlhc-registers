@@ -4,7 +4,6 @@ mod types;
 
 pub use types::*;
 
-use crate::Register;
 use bitfield_struct::bitfield;
 
 /// The I2C bus address.
@@ -90,6 +89,12 @@ impl RegisterAddress {
     }
 }
 
+impl Into<u8> for RegisterAddress {
+    fn into(self) -> u8 {
+        self.addr()
+    }
+}
+
 /// [`CTRL_REG1_A`](RegisterAddress::CTRL_REG1_A) (20h)
 #[bitfield(u8, order = Msb)]
 #[derive(PartialEq, Eq)]
@@ -116,20 +121,7 @@ pub struct ControlRegister1A {
     pub x_enable: bool,
 }
 
-impl Register for ControlRegister1A {
-    const DEV_ADDRESS: u8 = DEFAULT_DEVICE_ADDRESS;
-    const REG_ADDRESS: u8 = RegisterAddress::CTRL_REG1_A.addr();
-
-    fn from_bits(bits: u8) -> Self {
-        Self::from_bits(bits)
-    }
-
-    fn to_bits(&self) -> u8 {
-        self.into_bits()
-    }
-}
-
-writable_register!(ControlRegister1A);
+writable_register!(ControlRegister1A, RegisterAddress::CTRL_REG1_A);
 
 /// [`CTRL_REG2_A`](RegisterAddress::CTRL_REG2_A) (21h)
 #[bitfield(u8, order = Msb)]
@@ -161,20 +153,7 @@ pub struct ControlRegister2A {
     pub hpis1: bool,
 }
 
-impl Register for ControlRegister2A {
-    const DEV_ADDRESS: u8 = DEFAULT_DEVICE_ADDRESS;
-    const REG_ADDRESS: u8 = RegisterAddress::CTRL_REG2_A.addr();
-
-    fn from_bits(bits: u8) -> Self {
-        Self::from_bits(bits)
-    }
-
-    fn to_bits(&self) -> u8 {
-        self.into_bits()
-    }
-}
-
-writable_register!(ControlRegister2A);
+writable_register!(ControlRegister2A, RegisterAddress::CTRL_REG2_A);
 
 /// [`CTRL_REG3_A`](RegisterAddress::CTRL_REG3_A) (22h)
 #[bitfield(u8, order = Msb)]
@@ -213,20 +192,7 @@ pub struct ControlRegister3A {
     __: bool,
 }
 
-impl Register for ControlRegister3A {
-    const DEV_ADDRESS: u8 = DEFAULT_DEVICE_ADDRESS;
-    const REG_ADDRESS: u8 = RegisterAddress::CTRL_REG3_A.addr();
-
-    fn from_bits(bits: u8) -> Self {
-        Self::from_bits(bits)
-    }
-
-    fn to_bits(&self) -> u8 {
-        self.into_bits()
-    }
-}
-
-writable_register!(ControlRegister3A);
+writable_register!(ControlRegister3A, RegisterAddress::CTRL_REG3_A);
 
 /// [`CTRL_REG4_A`](RegisterAddress::CTRL_REG4_A) (23h)
 #[bitfield(u8, order = Msb)]
@@ -267,20 +233,7 @@ pub struct ControlRegister4A {
     pub spi_serial_3wire: bool,
 }
 
-impl Register for ControlRegister4A {
-    const DEV_ADDRESS: u8 = DEFAULT_DEVICE_ADDRESS;
-    const REG_ADDRESS: u8 = RegisterAddress::CTRL_REG4_A.addr();
-
-    fn from_bits(bits: u8) -> Self {
-        Self::from_bits(bits)
-    }
-
-    fn to_bits(&self) -> u8 {
-        self.into_bits()
-    }
-}
-
-writable_register!(ControlRegister4A);
+writable_register!(ControlRegister4A, RegisterAddress::CTRL_REG4_A);
 
 /// [`CTRL_REG5_A`](RegisterAddress::CTRL_REG5_A) (24h)
 #[bitfield(u8, order = Msb)]
@@ -323,20 +276,7 @@ pub struct ControlRegister5A {
     pub d4d_int2: bool,
 }
 
-impl Register for ControlRegister5A {
-    const DEV_ADDRESS: u8 = DEFAULT_DEVICE_ADDRESS;
-    const REG_ADDRESS: u8 = RegisterAddress::CTRL_REG5_A.addr();
-
-    fn from_bits(bits: u8) -> Self {
-        Self::from_bits(bits)
-    }
-
-    fn to_bits(&self) -> u8 {
-        self.into_bits()
-    }
-}
-
-writable_register!(ControlRegister5A);
+writable_register!(ControlRegister5A, RegisterAddress::CTRL_REG5_A);
 
 /// [`CTRL_REG6_A`](RegisterAddress::CTRL_REG6_A) (25h)
 #[bitfield(u8, order = Msb)]
@@ -383,20 +323,7 @@ pub struct ControlRegister6A {
     __: u8,
 }
 
-impl Register for ControlRegister6A {
-    const DEV_ADDRESS: u8 = DEFAULT_DEVICE_ADDRESS;
-    const REG_ADDRESS: u8 = RegisterAddress::CTRL_REG6_A.addr();
-
-    fn from_bits(bits: u8) -> Self {
-        Self::from_bits(bits)
-    }
-
-    fn to_bits(&self) -> u8 {
-        self.into_bits()
-    }
-}
-
-writable_register!(ControlRegister6A);
+writable_register!(ControlRegister6A, RegisterAddress::CTRL_REG6_A);
 
 /// [`REFERENCE_A`](RegisterAddress::REFERENCE_A)(27h)
 #[bitfield(u8, order = Msb)]
@@ -408,20 +335,7 @@ pub struct ReferenceRegisterA {
     pub reference: u8,
 }
 
-impl Register for ReferenceRegisterA {
-    const DEV_ADDRESS: u8 = DEFAULT_DEVICE_ADDRESS;
-    const REG_ADDRESS: u8 = RegisterAddress::REFERENCE_A.addr();
-
-    fn from_bits(bits: u8) -> Self {
-        Self::from_bits(bits)
-    }
-
-    fn to_bits(&self) -> u8 {
-        self.into_bits()
-    }
-}
-
-writable_register!(ReferenceRegisterA);
+writable_register!(ReferenceRegisterA, RegisterAddress::REFERENCE_A);
 
 /// [`STATUS_REG_A`](RegisterAddress::STATUS_REG_A) (27h)
 #[bitfield(u8, order = Msb)]
@@ -477,20 +391,7 @@ pub struct StatusRegisterA {
     pub x_data_available: bool,
 }
 
-impl Register for StatusRegisterA {
-    const DEV_ADDRESS: u8 = DEFAULT_DEVICE_ADDRESS;
-    const REG_ADDRESS: u8 = RegisterAddress::STATUS_REG_A.addr();
-
-    fn from_bits(bits: u8) -> Self {
-        Self::from_bits(bits)
-    }
-
-    fn to_bits(&self) -> u8 {
-        self.into_bits()
-    }
-}
-
-readable_register!(StatusRegisterA);
+readable_register!(StatusRegisterA, RegisterAddress::STATUS_REG_A);
 
 /// [`FIFO_CTRL_REG_A`](RegisterAddress::FIFO_CTRL_REG_A) (2Eh)
 #[bitfield(u8, order = Msb)]
@@ -513,20 +414,7 @@ pub struct FifoControlRegisterA {
     pub fth: u8,
 }
 
-impl Register for FifoControlRegisterA {
-    const DEV_ADDRESS: u8 = DEFAULT_DEVICE_ADDRESS;
-    const REG_ADDRESS: u8 = RegisterAddress::FIFO_CTRL_REG_A.addr();
-
-    fn from_bits(bits: u8) -> Self {
-        Self::from_bits(bits)
-    }
-
-    fn to_bits(&self) -> u8 {
-        self.into_bits()
-    }
-}
-
-writable_register!(FifoControlRegisterA);
+writable_register!(FifoControlRegisterA, RegisterAddress::FIFO_CTRL_REG_A);
 
 /// [`FIFO_CTRL_REG_A`](RegisterAddress::FIFO_SRC_REG_A) (2Fh)
 #[bitfield(u8, order = Msb)]
@@ -546,20 +434,7 @@ pub struct FifoSourceRegisterA {
     pub fss: u8,
 }
 
-impl Register for FifoSourceRegisterA {
-    const DEV_ADDRESS: u8 = DEFAULT_DEVICE_ADDRESS;
-    const REG_ADDRESS: u8 = RegisterAddress::FIFO_SRC_REG_A.addr();
-
-    fn from_bits(bits: u8) -> Self {
-        Self::from_bits(bits)
-    }
-
-    fn to_bits(&self) -> u8 {
-        self.into_bits()
-    }
-}
-
-readable_register!(FifoSourceRegisterA);
+readable_register!(FifoSourceRegisterA, RegisterAddress::FIFO_SRC_REG_A);
 
 /// [`INT1_CFG_A`](RegisterAddress::INT1_CFG_A) (2Fh)
 #[bitfield(u8, order = Msb)]
@@ -599,20 +474,7 @@ pub struct Int1ConfigurationRegisterA {
     pub xlie_xdowne: bool,
 }
 
-impl Register for Int1ConfigurationRegisterA {
-    const DEV_ADDRESS: u8 = DEFAULT_DEVICE_ADDRESS;
-    const REG_ADDRESS: u8 = RegisterAddress::INT1_CFG_A.addr();
-
-    fn from_bits(bits: u8) -> Self {
-        Self::from_bits(bits)
-    }
-
-    fn to_bits(&self) -> u8 {
-        self.into_bits()
-    }
-}
-
-writable_register!(Int1ConfigurationRegisterA);
+writable_register!(Int1ConfigurationRegisterA, RegisterAddress::INT1_CFG_A);
 
 /// [`INT1_SRC_A`](RegisterAddress::INT1_SRC_A) (31h)
 #[bitfield(u8, order = Msb)]
@@ -651,20 +513,7 @@ pub struct Int1SourceRegisterA {
     pub x_low: bool,
 }
 
-impl Register for Int1SourceRegisterA {
-    const DEV_ADDRESS: u8 = DEFAULT_DEVICE_ADDRESS;
-    const REG_ADDRESS: u8 = RegisterAddress::INT1_SRC_A.addr();
-
-    fn from_bits(bits: u8) -> Self {
-        Self::from_bits(bits)
-    }
-
-    fn to_bits(&self) -> u8 {
-        self.into_bits()
-    }
-}
-
-readable_register!(Int1SourceRegisterA);
+readable_register!(Int1SourceRegisterA, RegisterAddress::INT1_SRC_A);
 
 /// [`INT1_SRC_A`](RegisterAddress::INT1_THS_A) (32h)
 #[bitfield(u8, order = Msb)]
@@ -679,20 +528,7 @@ pub struct Int1ThresholdRegisterA {
     pub threshold: u8,
 }
 
-impl Register for Int1ThresholdRegisterA {
-    const DEV_ADDRESS: u8 = DEFAULT_DEVICE_ADDRESS;
-    const REG_ADDRESS: u8 = RegisterAddress::INT1_THS_A.addr();
-
-    fn from_bits(bits: u8) -> Self {
-        Self::from_bits(bits)
-    }
-
-    fn to_bits(&self) -> u8 {
-        self.into_bits()
-    }
-}
-
-writable_register!(Int1ThresholdRegisterA);
+writable_register!(Int1ThresholdRegisterA, RegisterAddress::INT1_THS_A);
 
 /// [`INT1_DURATION_A`](RegisterAddress::INT1_DURATION_A) (33h)
 #[bitfield(u8, order = Msb)]
@@ -708,20 +544,7 @@ pub struct Int1DurationRegisterA {
     pub duration: u8,
 }
 
-impl Register for Int1DurationRegisterA {
-    const DEV_ADDRESS: u8 = DEFAULT_DEVICE_ADDRESS;
-    const REG_ADDRESS: u8 = RegisterAddress::INT1_DURATION_A.addr();
-
-    fn from_bits(bits: u8) -> Self {
-        Self::from_bits(bits)
-    }
-
-    fn to_bits(&self) -> u8 {
-        self.into_bits()
-    }
-}
-
-writable_register!(Int1DurationRegisterA);
+writable_register!(Int1DurationRegisterA, RegisterAddress::INT1_DURATION_A);
 
 /// [`INT2_CFG_A`](RegisterAddress::INT2_CFG_A) (34h)
 #[bitfield(u8, order = Msb)]
@@ -779,20 +602,7 @@ pub struct Int2ConfigurationRegisterA {
     pub xlie: bool,
 }
 
-impl Register for Int2ConfigurationRegisterA {
-    const DEV_ADDRESS: u8 = DEFAULT_DEVICE_ADDRESS;
-    const REG_ADDRESS: u8 = RegisterAddress::INT2_CFG_A.addr();
-
-    fn from_bits(bits: u8) -> Self {
-        Self::from_bits(bits)
-    }
-
-    fn to_bits(&self) -> u8 {
-        self.into_bits()
-    }
-}
-
-writable_register!(Int2ConfigurationRegisterA);
+writable_register!(Int2ConfigurationRegisterA, RegisterAddress::INT2_CFG_A);
 
 /// [`INT2_SRC_A`](RegisterAddress::INT2_SRC_A) (35h)
 #[bitfield(u8, order = Msb)]
@@ -831,20 +641,7 @@ pub struct Int2SourceRegisterA {
     pub x_low: bool,
 }
 
-impl Register for Int2SourceRegisterA {
-    const DEV_ADDRESS: u8 = DEFAULT_DEVICE_ADDRESS;
-    const REG_ADDRESS: u8 = RegisterAddress::INT2_SRC_A.addr();
-
-    fn from_bits(bits: u8) -> Self {
-        Self::from_bits(bits)
-    }
-
-    fn to_bits(&self) -> u8 {
-        self.into_bits()
-    }
-}
-
-readable_register!(Int2SourceRegisterA);
+readable_register!(Int2SourceRegisterA, RegisterAddress::INT2_SRC_A);
 
 /// [`INT2_SRC_A`](RegisterAddress::INT2_THS_A) (36h)
 #[bitfield(u8, order = Msb)]
@@ -859,20 +656,7 @@ pub struct Int2ThresholdRegisterA {
     pub threshold: u8,
 }
 
-impl Register for Int2ThresholdRegisterA {
-    const DEV_ADDRESS: u8 = DEFAULT_DEVICE_ADDRESS;
-    const REG_ADDRESS: u8 = RegisterAddress::INT2_THS_A.addr();
-
-    fn from_bits(bits: u8) -> Self {
-        Self::from_bits(bits)
-    }
-
-    fn to_bits(&self) -> u8 {
-        self.into_bits()
-    }
-}
-
-writable_register!(Int2ThresholdRegisterA);
+writable_register!(Int2ThresholdRegisterA, RegisterAddress::INT2_THS_A);
 
 /// [`INT2_DURATION_A`](RegisterAddress::INT2_DURATION_A) (37h)
 #[bitfield(u8, order = Msb)]
@@ -888,20 +672,7 @@ pub struct Int2DurationRegisterA {
     pub duration: u8,
 }
 
-impl Register for Int2DurationRegisterA {
-    const DEV_ADDRESS: u8 = DEFAULT_DEVICE_ADDRESS;
-    const REG_ADDRESS: u8 = RegisterAddress::INT2_DURATION_A.addr();
-
-    fn from_bits(bits: u8) -> Self {
-        Self::from_bits(bits)
-    }
-
-    fn to_bits(&self) -> u8 {
-        self.into_bits()
-    }
-}
-
-writable_register!(Int2DurationRegisterA);
+writable_register!(Int2DurationRegisterA, RegisterAddress::INT2_DURATION_A);
 
 /// [`CLICK_CFG_A`](RegisterAddress::CLICK_CFG_A) (38h)
 #[bitfield(u8, order = Msb)]
@@ -954,20 +725,7 @@ pub struct ClickConfigurationRegisterA {
     pub xs: bool,
 }
 
-impl Register for ClickConfigurationRegisterA {
-    const DEV_ADDRESS: u8 = DEFAULT_DEVICE_ADDRESS;
-    const REG_ADDRESS: u8 = RegisterAddress::CLICK_CFG_A.addr();
-
-    fn from_bits(bits: u8) -> Self {
-        Self::from_bits(bits)
-    }
-
-    fn to_bits(&self) -> u8 {
-        self.into_bits()
-    }
-}
-
-writable_register!(ClickConfigurationRegisterA);
+writable_register!(ClickConfigurationRegisterA, RegisterAddress::CLICK_CFG_A);
 
 /// [`CLICK_SRC_A`](RegisterAddress::CLICK_SRC_A) (39h)
 #[bitfield(u8, order = Msb)]
@@ -1021,20 +779,7 @@ pub struct ClickSourceRegisterA {
     pub x: bool,
 }
 
-impl Register for ClickSourceRegisterA {
-    const DEV_ADDRESS: u8 = DEFAULT_DEVICE_ADDRESS;
-    const REG_ADDRESS: u8 = RegisterAddress::CLICK_SRC_A.addr();
-
-    fn from_bits(bits: u8) -> Self {
-        Self::from_bits(bits)
-    }
-
-    fn to_bits(&self) -> u8 {
-        self.into_bits()
-    }
-}
-
-readable_register!(ClickSourceRegisterA);
+readable_register!(ClickSourceRegisterA, RegisterAddress::CLICK_SRC_A);
 
 /// [`CLICK_THS_A`](RegisterAddress::CLICK_THS_A) (3Ah)
 #[bitfield(u8, order = Msb)]
@@ -1054,20 +799,7 @@ pub struct ClickThresholdRegisterA {
     pub threshold: u8,
 }
 
-impl Register for ClickThresholdRegisterA {
-    const DEV_ADDRESS: u8 = DEFAULT_DEVICE_ADDRESS;
-    const REG_ADDRESS: u8 = RegisterAddress::CLICK_THS_A.addr();
-
-    fn from_bits(bits: u8) -> Self {
-        Self::from_bits(bits)
-    }
-
-    fn to_bits(&self) -> u8 {
-        self.into_bits()
-    }
-}
-
-writable_register!(ClickThresholdRegisterA);
+writable_register!(ClickThresholdRegisterA, RegisterAddress::CLICK_THS_A);
 
 /// [`TIME_LIMIT_A`](RegisterAddress::TIME_LIMIT_A) (3Bh)
 #[bitfield(u8, order = Msb)]
@@ -1086,20 +818,7 @@ pub struct ClickTimeLimitRegisterA {
     pub time_limit: u8,
 }
 
-impl Register for ClickTimeLimitRegisterA {
-    const DEV_ADDRESS: u8 = DEFAULT_DEVICE_ADDRESS;
-    const REG_ADDRESS: u8 = RegisterAddress::TIME_LIMIT_A.addr();
-
-    fn from_bits(bits: u8) -> Self {
-        Self::from_bits(bits)
-    }
-
-    fn to_bits(&self) -> u8 {
-        self.into_bits()
-    }
-}
-
-writable_register!(ClickTimeLimitRegisterA);
+writable_register!(ClickTimeLimitRegisterA, RegisterAddress::TIME_LIMIT_A);
 
 /// [`TIME_LATENCY_A`](RegisterAddress::TIME_LATENCY_A) (3Ch)
 #[bitfield(u8, order = Msb)]
@@ -1115,20 +834,7 @@ pub struct ClickTimeLatencyRegisterA {
     pub time_latency: u8,
 }
 
-impl Register for ClickTimeLatencyRegisterA {
-    const DEV_ADDRESS: u8 = DEFAULT_DEVICE_ADDRESS;
-    const REG_ADDRESS: u8 = RegisterAddress::TIME_LATENCY_A.addr();
-
-    fn from_bits(bits: u8) -> Self {
-        Self::from_bits(bits)
-    }
-
-    fn to_bits(&self) -> u8 {
-        self.into_bits()
-    }
-}
-
-writable_register!(ClickTimeLatencyRegisterA);
+writable_register!(ClickTimeLatencyRegisterA, RegisterAddress::TIME_LATENCY_A);
 
 /// [`TIME_WINDOW_A`](RegisterAddress::TIME_WINDOW_A) (3Dh)
 #[bitfield(u8, order = Msb)]
@@ -1144,20 +850,7 @@ pub struct ClickTimeWindowRegisterA {
     pub time_window: u8,
 }
 
-impl Register for ClickTimeWindowRegisterA {
-    const DEV_ADDRESS: u8 = DEFAULT_DEVICE_ADDRESS;
-    const REG_ADDRESS: u8 = RegisterAddress::TIME_WINDOW_A.addr();
-
-    fn from_bits(bits: u8) -> Self {
-        Self::from_bits(bits)
-    }
-
-    fn to_bits(&self) -> u8 {
-        self.into_bits()
-    }
-}
-
-writable_register!(ClickTimeWindowRegisterA);
+writable_register!(ClickTimeWindowRegisterA, RegisterAddress::TIME_WINDOW_A);
 
 #[cfg(test)]
 mod tests {

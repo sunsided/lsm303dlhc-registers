@@ -2,7 +2,6 @@
 
 mod types;
 
-use crate::Register;
 use bitfield_struct::bitfield;
 pub use types::*;
 
@@ -55,6 +54,12 @@ impl RegisterAddress {
     }
 }
 
+impl Into<u8> for RegisterAddress {
+    fn into(self) -> u8 {
+        self.addr()
+    }
+}
+
 /// [`CRA_REG_M`](RegisterAddress::CRA_REG_M) (00h)
 #[bitfield(u8, order = Msb)]
 #[derive(PartialEq, Eq)]
@@ -78,20 +83,7 @@ pub struct CraRegisterM {
     zeros_01: u8,
 }
 
-impl Register for CraRegisterM {
-    const DEV_ADDRESS: u8 = DEFAULT_DEVICE_ADDRESS;
-    const REG_ADDRESS: u8 = RegisterAddress::CRA_REG_M.addr();
-
-    fn from_bits(bits: u8) -> Self {
-        Self::from_bits(bits)
-    }
-
-    fn to_bits(&self) -> u8 {
-        self.into_bits()
-    }
-}
-
-writable_register!(CraRegisterM);
+writable_register!(CraRegisterM, RegisterAddress::CRA_REG_M);
 
 /// Magnetometer gain configuration.
 ///
@@ -109,20 +101,7 @@ pub struct CrbRegisterM {
     zeros_04: u8,
 }
 
-impl Register for CrbRegisterM {
-    const DEV_ADDRESS: u8 = DEFAULT_DEVICE_ADDRESS;
-    const REG_ADDRESS: u8 = RegisterAddress::CRB_REG_M.addr();
-
-    fn from_bits(bits: u8) -> Self {
-        Self::from_bits(bits)
-    }
-
-    fn to_bits(&self) -> u8 {
-        self.into_bits()
-    }
-}
-
-writable_register!(CrbRegisterM);
+writable_register!(CrbRegisterM, RegisterAddress::CRB_REG_M);
 
 /// Magnetometer mode select.
 ///
@@ -147,20 +126,7 @@ pub struct ModeRegisterM {
     pub single_conversion: bool,
 }
 
-impl Register for ModeRegisterM {
-    const DEV_ADDRESS: u8 = DEFAULT_DEVICE_ADDRESS;
-    const REG_ADDRESS: u8 = RegisterAddress::MR_REG_M.addr();
-
-    fn from_bits(bits: u8) -> Self {
-        Self::from_bits(bits)
-    }
-
-    fn to_bits(&self) -> u8 {
-        self.into_bits()
-    }
-}
-
-writable_register!(ModeRegisterM);
+writable_register!(ModeRegisterM, RegisterAddress::MR_REG_M);
 
 /// [`SR_REG_M`](RegisterAddress::SR_REG_M) (09h)
 #[bitfield(u8, order = Msb)]
@@ -180,20 +146,7 @@ pub struct StatusRegisterM {
     pub data_ready: bool,
 }
 
-impl Register for StatusRegisterM {
-    const DEV_ADDRESS: u8 = DEFAULT_DEVICE_ADDRESS;
-    const REG_ADDRESS: u8 = RegisterAddress::SR_REG_M.addr();
-
-    fn from_bits(bits: u8) -> Self {
-        Self::from_bits(bits)
-    }
-
-    fn to_bits(&self) -> u8 {
-        self.into_bits()
-    }
-}
-
-readable_register!(StatusRegisterM);
+readable_register!(StatusRegisterM, RegisterAddress::SR_REG_M);
 
 /// [`IRA_REG_M`](RegisterAddress::IRA_REG_M) (0Ah)
 #[bitfield(u8, order = Msb)]
@@ -204,20 +157,7 @@ pub struct IRARegisterM {
     pub value: u8,
 }
 
-impl Register for IRARegisterM {
-    const DEV_ADDRESS: u8 = DEFAULT_DEVICE_ADDRESS;
-    const REG_ADDRESS: u8 = RegisterAddress::IRA_REG_M.addr();
-
-    fn from_bits(bits: u8) -> Self {
-        Self::from_bits(bits)
-    }
-
-    fn to_bits(&self) -> u8 {
-        self.into_bits()
-    }
-}
-
-readable_register!(IRARegisterM);
+readable_register!(IRARegisterM, RegisterAddress::IRA_REG_M);
 
 /// [`IRB_REG_M`](RegisterAddress::IRB_REG_M) (0Bh)
 #[bitfield(u8, order = Msb)]
@@ -228,20 +168,7 @@ pub struct IRBRegisterM {
     pub value: u8,
 }
 
-impl Register for IRBRegisterM {
-    const DEV_ADDRESS: u8 = DEFAULT_DEVICE_ADDRESS;
-    const REG_ADDRESS: u8 = RegisterAddress::IRB_REG_M.addr();
-
-    fn from_bits(bits: u8) -> Self {
-        Self::from_bits(bits)
-    }
-
-    fn to_bits(&self) -> u8 {
-        self.into_bits()
-    }
-}
-
-readable_register!(IRBRegisterM);
+readable_register!(IRBRegisterM, RegisterAddress::IRB_REG_M);
 
 /// [`IRC_REG_M`](RegisterAddress::IRC_REG_M) (0Ch)
 #[bitfield(u8, order = Msb)]
@@ -252,17 +179,4 @@ pub struct IRCRegisterM {
     pub value: u8,
 }
 
-impl Register for IRCRegisterM {
-    const DEV_ADDRESS: u8 = DEFAULT_DEVICE_ADDRESS;
-    const REG_ADDRESS: u8 = RegisterAddress::IRC_REG_M.addr();
-
-    fn from_bits(bits: u8) -> Self {
-        Self::from_bits(bits)
-    }
-
-    fn to_bits(&self) -> u8 {
-        self.into_bits()
-    }
-}
-
-readable_register!(IRCRegisterM);
+readable_register!(IRCRegisterM, RegisterAddress::IRC_REG_M);
