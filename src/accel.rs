@@ -402,6 +402,13 @@ readable_register!(StatusRegisterA, RegisterAddress::STATUS_REG_A);
 /// [`OUT_X_L_A`](RegisterAddress::OUT_X_L_A) (28h)
 ///
 /// Low byte of the 16-bit acceleration value. See [`OutXHighA`] for the high byte.
+///
+/// ## Little Endian Data Order
+///
+/// Note that the registers are provided in little endian order, i.e. the low byte
+/// has the lower register address and will be read first.
+/// While the temperature readings follow the same principle, the magnetometer readings
+/// have a different order.
 #[bitfield(u8, order = Msb)]
 #[derive(PartialEq, Eq)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
@@ -418,6 +425,13 @@ readable_register!(OutXLowA, RegisterAddress::OUT_X_L_A);
 /// [`OUT_X_H_A`](RegisterAddress::OUT_X_H_A) (29h)
 ///
 /// High byte of the 16-bit acceleration value. See [`OutXLowA`] for the low byte.
+///
+/// ## Little Endian Data Order
+///
+/// Note that the registers are provided in little endian order, i.e. the low byte
+/// has the lower register address and will be read first.
+/// While the temperature readings follow the same principle, the magnetometer readings
+/// have a different order.
 #[bitfield(u8, order = Msb)]
 #[derive(PartialEq, Eq)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
@@ -434,13 +448,20 @@ readable_register!(OutXHighA, RegisterAddress::OUT_X_H_A);
 /// [`OUT_Y_L_A`](RegisterAddress::OUT_Y_L_A) (2Ah)
 ///
 /// Low byte of the 16-bit acceleration value. See [`OutYHighA`] for the high byte.
+///
+/// ## Little Endian Data Order
+///
+/// Note that the registers are provided in little endian order, i.e. the low byte
+/// has the lower register address and will be read first.
+/// While the temperature readings follow the same principle, the magnetometer readings
+/// have a different order.
 #[bitfield(u8, order = Msb)]
 #[derive(PartialEq, Eq)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub struct OutYLowA {
     /// Low byte of the Y-axis acceleration value.
     ///
-    /// Together with [`crate::accel::OutYHighA`] this forms a reading expressed in two's complement.
+    /// Together with [`OutYHighA`] this forms a reading expressed in two's complement.
     #[bits(8, access = RO)]
     pub bits: u8,
 }
@@ -450,13 +471,20 @@ readable_register!(OutYLowA, RegisterAddress::OUT_Y_L_A);
 /// [`OUT_Y_H_A`](RegisterAddress::OUT_Y_H_A) (2Bh)
 ///
 /// High byte of the 16-bit acceleration value. See [`OutYLowA`] for the low byte.
+///
+/// ## Little Endian Data Order
+///
+/// Note that the registers are provided in little endian order, i.e. the low byte
+/// has the lower register address and will be read first.
+/// While the temperature readings follow the same principle, the magnetometer readings
+/// have a different order.
 #[bitfield(u8, order = Msb)]
 #[derive(PartialEq, Eq)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub struct OutYHighA {
     /// High byte of the Y-axis acceleration value.
     ///
-    /// Together with [`crate::accel::OutYLowA`] this forms a reading expressed in two's complement.
+    /// Together with [`OutYLowA`] this forms a reading expressed in two's complement.
     #[bits(8, access = RO)]
     pub bits: u8,
 }
@@ -465,14 +493,21 @@ readable_register!(OutYHighA, RegisterAddress::OUT_Y_H_A);
 
 /// [`OUT_Z_L_A`](RegisterAddress::OUT_Z_L_A) (2Ch)
 ///
-/// High byte of the 16-bit acceleration value. See [`OutZLowA`] for the low byte.
+/// Low byte of the 16-bit acceleration value. See [`OutZHighA`] for the high byte.
+///
+/// ## Little Endian Data Order
+///
+/// Note that the registers are provided in little endian order, i.e. the low byte
+/// has the lower register address and will be read first.
+/// While the temperature readings follow the same principle, the magnetometer readings
+/// have a different order.
 #[bitfield(u8, order = Msb)]
 #[derive(PartialEq, Eq)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub struct OutZLowA {
     /// Low byte of the Z-axis acceleration value.
     ///
-    /// Together with [`crate::accel::OutZHighA`] this forms a reading expressed in two's complement.
+    /// Together with [`OutZHighA`] this forms a reading expressed in two's complement.
     #[bits(8, access = RO)]
     pub bits: u8,
 }
@@ -480,13 +515,22 @@ pub struct OutZLowA {
 readable_register!(OutZLowA, RegisterAddress::OUT_Z_L_A);
 
 /// [`OUT_Z_H_A`](RegisterAddress::OUT_Z_H_A) (2Dh)
+///
+/// High byte of the 16-bit acceleration value. See [`OutZLowA`] for the low byte.
+///
+/// ## Little Endian Data Order
+///
+/// Note that the registers are provided in little endian order, i.e. the low byte
+/// has the lower register address and will be read first.
+/// While the temperature readings follow the same principle, the magnetometer readings
+/// have a different order.
 #[bitfield(u8, order = Msb)]
 #[derive(PartialEq, Eq)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub struct OutZHighA {
     /// High byte of the Z-axis acceleration value.
     ///
-    /// Together with [`crate::accel::OutZLowA`] this forms a reading expressed in two's complement.
+    /// Together with [`OutZLowA`] this forms a reading expressed in two's complement.
     #[bits(8, access = RO)]
     pub bits: u8,
 }
