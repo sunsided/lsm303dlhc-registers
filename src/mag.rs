@@ -37,7 +37,7 @@ pub enum RegisterAddress {
     OUT_Z_H_M = 0x05,
     /// See [`OutZLowM`].
     OUT_Z_L_M = 0x06,
-    /// See [`OutYLowM`].
+    /// See [`OutYHighM`].
     OUT_Y_H_M = 0x07,
     /// See [`OutYLowM`].
     OUT_Y_L_M = 0x08,
