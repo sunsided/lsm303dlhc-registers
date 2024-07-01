@@ -1,16 +1,92 @@
-//! Contains register mappings.
+//! Accelerometer registers.
 
-use super::{AccelOdr, Sensitivity};
+mod types;
+
+pub use types::*;
+
 use bitfield_struct::bitfield;
-use registers::accel::AccelerometerRegister;
-use registers::mag::MagnetometerRegister;
-pub use registers::register::{Register, WritableRegister};
-use {FifoMode, MagOdr};
-use {HighpassFilterMode, MagGain};
+use crate::{Register, WritableRegister};
 
-pub mod accel;
-pub mod mag;
-mod register;
+/// The I2C bus address.
+///
+/// For linear acceleration the default (factory) 7-bit slave address is `0011001b`.
+///
+/// The slave address is completed with a Read/Write bit. If the bit is `1` (read), a repeated
+/// `START` (`SR`) condition must be issued after the two sub-address bytes; if the bit is `0` (write)
+/// the master transmits to the slave with the direction unchanged.
+///
+/// When the MSB is set to `1`, multiple bytes can be read.
+pub const DEFAULT_DEVICE_ADDRESS: u8 = 0b0011001;
+
+/// Accelerometer specific register addresses.
+#[allow(dead_code)]
+#[allow(non_camel_case_types)]
+#[allow(missing_docs)]
+#[derive(Copy, Clone, PartialEq, Eq)]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
+pub enum AccelerometerRegister {
+    /// See [`ControlRegister1A`](super::ControlRegister1A).
+    CTRL_REG1_A = 0x20,
+    /// See [`ControlRegister2A`](super::ControlRegister2A).
+    CTRL_REG2_A = 0x21,
+    /// See [`ControlRegister3A`](super::ControlRegister3A).
+    CTRL_REG3_A = 0x22,
+    /// See [`ControlRegister4A`](super::ControlRegister4A).
+    CTRL_REG4_A = 0x23,
+    /// See [`ControlRegister5A`](super::ControlRegister5A).
+    CTRL_REG5_A = 0x24,
+    /// See [`ControlRegister6A`](super::ControlRegister6A).
+    CTRL_REG6_A = 0x25,
+    /// See [`ReferenceRegisterA`](super::ReferenceRegisterA).
+    REFERENCE_A = 0x26,
+    /// See [`StatusRegisterA`](super::StatusRegisterA).
+    STATUS_REG_A = 0x27,
+    OUT_X_L_A = 0x28,
+    OUT_X_H_A = 0x29,
+    OUT_Y_L_A = 0x2A,
+    OUT_Y_H_A = 0x2B,
+    OUT_Z_L_A = 0x2C,
+    OUT_Z_H_A = 0x2D,
+    /// See [`FifoControlRegisterA`](super::FifoControlRegisterA).
+    FIFO_CTRL_REG_A = 0x2E,
+    /// See [`FifoSourceRegisterA`](super::FifoSourceRegisterA).
+    FIFO_SRC_REG_A = 0x2F,
+    /// See [`Int1ConfigurationRegisterA`](super::Int1ConfigurationRegisterA).
+    INT1_CFG_A = 0x30,
+    /// See [`Int1SourceRegisterA`](super::Int1SourceRegisterA).
+    INT1_SRC_A = 0x31,
+    /// See [`Int1ThresholdRegisterA`](super::Int1ThresholdRegisterA).
+    INT1_THS_A = 0x32,
+    /// See [`Int1DurationRegisterA`](super::Int1DurationRegisterA).
+    INT1_DURATION_A = 0x33,
+    /// See [`Int1ConfigurationRegisterA`](super::Int1ConfigurationRegisterA).
+    INT2_CFG_A = 0x34,
+    /// See [`Int2SourceRegisterA`](super::Int2SourceRegisterA).
+    INT2_SRC_A = 0x35,
+    /// See [`Int2ThresholdRegisterA`](super::Int2ThresholdRegisterA).
+    INT2_THS_A = 0x36,
+    /// See [`Int2DurationRegisterA`](super::Int2DurationRegisterA).
+    INT2_DURATION_A = 0x37,
+    /// See [`ClickConfigurationRegisterA`](super::ClickConfigurationRegisterA).
+    CLICK_CFG_A = 0x38,
+    /// See [`ClickSourceRegisterA`](super::ClickSourceRegisterA).
+    CLICK_SRC_A = 0x39,
+    /// See [`ClickThresholdRegisterA`](super::ClickThresholdRegisterA).
+    CLICK_THS_A = 0x3A,
+    /// See [`TimeLimitRegisterA`](super::ClickTimeLimitRegisterA).
+    TIME_LIMIT_A = 0x3B,
+    /// See [`ClickTimeLatencyRegisterA`](super::ClickTimeLatencyRegisterA).
+    TIME_LATENCY_A = 0x3C,
+    /// See [`ClickTimeWindowRegisterA`](super::ClickTimeWindowRegisterA).
+    TIME_WINDOW_A = 0x3D,
+}
+
+impl AccelerometerRegister {
+    /// Returns the address of a register.
+    pub const fn addr(&self) -> u8 {
+        *self as u8
+    }
+}
 
 /// [`CTRL_REG1_A`](accel::AccelerometerRegister::CTRL_REG1_A) (20h)
 #[bitfield(u8, order = Msb)]
@@ -39,7 +115,7 @@ pub struct ControlRegister1A {
 }
 
 impl Register for ControlRegister1A {
-    const DEV_ADDRESS: u8 = accel::ADDRESS;
+    const DEV_ADDRESS: u8 = DEFAULT_DEVICE_ADDRESS;
     const REG_ADDRESS: u8 = AccelerometerRegister::CTRL_REG1_A.addr();
 
     fn from_bits(bits: u8) -> Self {
@@ -84,7 +160,7 @@ pub struct ControlRegister2A {
 }
 
 impl Register for ControlRegister2A {
-    const DEV_ADDRESS: u8 = accel::ADDRESS;
+    const DEV_ADDRESS: u8 = DEFAULT_DEVICE_ADDRESS;
     const REG_ADDRESS: u8 = AccelerometerRegister::CTRL_REG2_A.addr();
 
     fn from_bits(bits: u8) -> Self {
@@ -136,7 +212,7 @@ pub struct ControlRegister3A {
 }
 
 impl Register for ControlRegister3A {
-    const DEV_ADDRESS: u8 = accel::ADDRESS;
+    const DEV_ADDRESS: u8 = DEFAULT_DEVICE_ADDRESS;
     const REG_ADDRESS: u8 = AccelerometerRegister::CTRL_REG3_A.addr();
 
     fn from_bits(bits: u8) -> Self {
@@ -190,7 +266,7 @@ pub struct ControlRegister4A {
 }
 
 impl Register for ControlRegister4A {
-    const DEV_ADDRESS: u8 = accel::ADDRESS;
+    const DEV_ADDRESS: u8 = DEFAULT_DEVICE_ADDRESS;
     const REG_ADDRESS: u8 = AccelerometerRegister::CTRL_REG4_A.addr();
 
     fn from_bits(bits: u8) -> Self {
@@ -246,7 +322,7 @@ pub struct ControlRegister5A {
 }
 
 impl Register for ControlRegister5A {
-    const DEV_ADDRESS: u8 = accel::ADDRESS;
+    const DEV_ADDRESS: u8 = DEFAULT_DEVICE_ADDRESS;
     const REG_ADDRESS: u8 = AccelerometerRegister::CTRL_REG5_A.addr();
 
     fn from_bits(bits: u8) -> Self {
@@ -306,7 +382,7 @@ pub struct ControlRegister6A {
 }
 
 impl Register for ControlRegister6A {
-    const DEV_ADDRESS: u8 = accel::ADDRESS;
+    const DEV_ADDRESS: u8 = DEFAULT_DEVICE_ADDRESS;
     const REG_ADDRESS: u8 = AccelerometerRegister::CTRL_REG6_A.addr();
 
     fn from_bits(bits: u8) -> Self {
@@ -331,7 +407,7 @@ pub struct ReferenceRegisterA {
 }
 
 impl Register for ReferenceRegisterA {
-    const DEV_ADDRESS: u8 = accel::ADDRESS;
+    const DEV_ADDRESS: u8 = DEFAULT_DEVICE_ADDRESS;
     const REG_ADDRESS: u8 = AccelerometerRegister::REFERENCE_A.addr();
 
     fn from_bits(bits: u8) -> Self {
@@ -400,7 +476,7 @@ pub struct StatusRegisterA {
 }
 
 impl Register for StatusRegisterA {
-    const DEV_ADDRESS: u8 = accel::ADDRESS;
+    const DEV_ADDRESS: u8 = DEFAULT_DEVICE_ADDRESS;
     const REG_ADDRESS: u8 = AccelerometerRegister::STATUS_REG_A.addr();
 
     fn from_bits(bits: u8) -> Self {
@@ -434,7 +510,7 @@ pub struct FifoControlRegisterA {
 }
 
 impl Register for FifoControlRegisterA {
-    const DEV_ADDRESS: u8 = accel::ADDRESS;
+    const DEV_ADDRESS: u8 = DEFAULT_DEVICE_ADDRESS;
     const REG_ADDRESS: u8 = AccelerometerRegister::FIFO_CTRL_REG_A.addr();
 
     fn from_bits(bits: u8) -> Self {
@@ -467,7 +543,7 @@ pub struct FifoSourceRegisterA {
 }
 
 impl Register for FifoSourceRegisterA {
-    const DEV_ADDRESS: u8 = accel::ADDRESS;
+    const DEV_ADDRESS: u8 = DEFAULT_DEVICE_ADDRESS;
     const REG_ADDRESS: u8 = AccelerometerRegister::FIFO_SRC_REG_A.addr();
 
     fn from_bits(bits: u8) -> Self {
@@ -518,7 +594,7 @@ pub struct Int1ConfigurationRegisterA {
 }
 
 impl Register for Int1ConfigurationRegisterA {
-    const DEV_ADDRESS: u8 = accel::ADDRESS;
+    const DEV_ADDRESS: u8 = DEFAULT_DEVICE_ADDRESS;
     const REG_ADDRESS: u8 = AccelerometerRegister::INT1_CFG_A.addr();
 
     fn from_bits(bits: u8) -> Self {
@@ -570,7 +646,7 @@ pub struct Int1SourceRegisterA {
 }
 
 impl Register for Int1SourceRegisterA {
-    const DEV_ADDRESS: u8 = accel::ADDRESS;
+    const DEV_ADDRESS: u8 = DEFAULT_DEVICE_ADDRESS;
     const REG_ADDRESS: u8 = AccelerometerRegister::INT1_SRC_A.addr();
 
     fn from_bits(bits: u8) -> Self {
@@ -596,7 +672,7 @@ pub struct Int1ThresholdRegisterA {
 }
 
 impl Register for Int1ThresholdRegisterA {
-    const DEV_ADDRESS: u8 = accel::ADDRESS;
+    const DEV_ADDRESS: u8 = DEFAULT_DEVICE_ADDRESS;
     const REG_ADDRESS: u8 = AccelerometerRegister::INT1_THS_A.addr();
 
     fn from_bits(bits: u8) -> Self {
@@ -625,7 +701,7 @@ pub struct Int1DurationRegisterA {
 }
 
 impl Register for Int1DurationRegisterA {
-    const DEV_ADDRESS: u8 = accel::ADDRESS;
+    const DEV_ADDRESS: u8 = DEFAULT_DEVICE_ADDRESS;
     const REG_ADDRESS: u8 = AccelerometerRegister::INT1_DURATION_A.addr();
 
     fn from_bits(bits: u8) -> Self {
@@ -696,7 +772,7 @@ pub struct Int2ConfigurationRegisterA {
 }
 
 impl Register for Int2ConfigurationRegisterA {
-    const DEV_ADDRESS: u8 = accel::ADDRESS;
+    const DEV_ADDRESS: u8 = DEFAULT_DEVICE_ADDRESS;
     const REG_ADDRESS: u8 = AccelerometerRegister::INT2_CFG_A.addr();
 
     fn from_bits(bits: u8) -> Self {
@@ -748,7 +824,7 @@ pub struct Int2SourceRegisterA {
 }
 
 impl Register for Int2SourceRegisterA {
-    const DEV_ADDRESS: u8 = accel::ADDRESS;
+    const DEV_ADDRESS: u8 = DEFAULT_DEVICE_ADDRESS;
     const REG_ADDRESS: u8 = AccelerometerRegister::INT2_SRC_A.addr();
 
     fn from_bits(bits: u8) -> Self {
@@ -774,7 +850,7 @@ pub struct Int2ThresholdRegisterA {
 }
 
 impl Register for Int2ThresholdRegisterA {
-    const DEV_ADDRESS: u8 = accel::ADDRESS;
+    const DEV_ADDRESS: u8 = DEFAULT_DEVICE_ADDRESS;
     const REG_ADDRESS: u8 = AccelerometerRegister::INT2_THS_A.addr();
 
     fn from_bits(bits: u8) -> Self {
@@ -803,7 +879,7 @@ pub struct Int2DurationRegisterA {
 }
 
 impl Register for Int2DurationRegisterA {
-    const DEV_ADDRESS: u8 = accel::ADDRESS;
+    const DEV_ADDRESS: u8 = DEFAULT_DEVICE_ADDRESS;
     const REG_ADDRESS: u8 = AccelerometerRegister::INT2_DURATION_A.addr();
 
     fn from_bits(bits: u8) -> Self {
@@ -869,7 +945,7 @@ pub struct ClickConfigurationRegisterA {
 }
 
 impl Register for ClickConfigurationRegisterA {
-    const DEV_ADDRESS: u8 = accel::ADDRESS;
+    const DEV_ADDRESS: u8 = DEFAULT_DEVICE_ADDRESS;
     const REG_ADDRESS: u8 = AccelerometerRegister::CLICK_CFG_A.addr();
 
     fn from_bits(bits: u8) -> Self {
@@ -936,7 +1012,7 @@ pub struct ClickSourceRegisterA {
 }
 
 impl Register for ClickSourceRegisterA {
-    const DEV_ADDRESS: u8 = accel::ADDRESS;
+    const DEV_ADDRESS: u8 = DEFAULT_DEVICE_ADDRESS;
     const REG_ADDRESS: u8 = AccelerometerRegister::CLICK_SRC_A.addr();
 
     fn from_bits(bits: u8) -> Self {
@@ -967,7 +1043,7 @@ pub struct ClickThresholdRegisterA {
 }
 
 impl Register for ClickThresholdRegisterA {
-    const DEV_ADDRESS: u8 = accel::ADDRESS;
+    const DEV_ADDRESS: u8 = DEFAULT_DEVICE_ADDRESS;
     const REG_ADDRESS: u8 = AccelerometerRegister::CLICK_THS_A.addr();
 
     fn from_bits(bits: u8) -> Self {
@@ -999,7 +1075,7 @@ pub struct ClickTimeLimitRegisterA {
 }
 
 impl Register for ClickTimeLimitRegisterA {
-    const DEV_ADDRESS: u8 = accel::ADDRESS;
+    const DEV_ADDRESS: u8 = DEFAULT_DEVICE_ADDRESS;
     const REG_ADDRESS: u8 = AccelerometerRegister::TIME_LIMIT_A.addr();
 
     fn from_bits(bits: u8) -> Self {
@@ -1028,7 +1104,7 @@ pub struct ClickTimeLatencyRegisterA {
 }
 
 impl Register for ClickTimeLatencyRegisterA {
-    const DEV_ADDRESS: u8 = accel::ADDRESS;
+    const DEV_ADDRESS: u8 = DEFAULT_DEVICE_ADDRESS;
     const REG_ADDRESS: u8 = AccelerometerRegister::TIME_LATENCY_A.addr();
 
     fn from_bits(bits: u8) -> Self {
@@ -1057,7 +1133,7 @@ pub struct ClickTimeWindowRegisterA {
 }
 
 impl Register for ClickTimeWindowRegisterA {
-    const DEV_ADDRESS: u8 = accel::ADDRESS;
+    const DEV_ADDRESS: u8 = DEFAULT_DEVICE_ADDRESS;
     const REG_ADDRESS: u8 = AccelerometerRegister::TIME_WINDOW_A.addr();
 
     fn from_bits(bits: u8) -> Self {
@@ -1070,210 +1146,6 @@ impl Register for ClickTimeWindowRegisterA {
 }
 
 impl WritableRegister for ClickTimeWindowRegisterA {}
-
-/// [`CRA_REG_M`](mag::MagnetometerRegister::CRA_REG_M) (00h)
-#[bitfield(u8, order = Msb)]
-#[derive(PartialEq, Eq)]
-#[cfg_attr(feature = "defmt", derive(defmt::Format))]
-pub struct CraRegisterM {
-    /// Temperature sensor enabled.
-    #[bits(1, access = RW)]
-    pub temp_en: bool,
-
-    /// Must be zero for correct operation of the device.
-    #[bits(2, default = 0)]
-    zeros_56: u8,
-
-    /// Data output rate bits. These bits set the rate at which data is written to all three data
-    /// output registers.
-    #[bits(3, access = RW, default = MagOdr::Hz75)]
-    pub data_output_rate: MagOdr,
-
-    /// Must be zero for correct operation of the device.
-    #[bits(2, default = 0)]
-    zeros_01: u8,
-}
-
-impl Register for CraRegisterM {
-    const DEV_ADDRESS: u8 = mag::ADDRESS;
-    const REG_ADDRESS: u8 = MagnetometerRegister::CRA_REG_M.addr();
-
-    fn from_bits(bits: u8) -> Self {
-        Self::from_bits(bits)
-    }
-
-    fn to_bits(&self) -> u8 {
-        self.into_bits()
-    }
-}
-
-impl WritableRegister for CraRegisterM {}
-
-/// Magnetometer gain configuration.
-///
-/// [`CRB_REG_M`](mag::MagnetometerRegister::CRB_REG_M) (01h)
-#[bitfield(u8, order = Msb)]
-#[derive(PartialEq, Eq)]
-#[cfg_attr(feature = "defmt", derive(defmt::Format))]
-pub struct CrbRegisterM {
-    /// Gain configuration.
-    #[bits(3, access = RW)]
-    pub gain: MagGain,
-
-    /// Must be zero for correct operation of the device.
-    #[bits(5, default = 0)]
-    zeros_04: u8,
-}
-
-impl Register for CrbRegisterM {
-    const DEV_ADDRESS: u8 = mag::ADDRESS;
-    const REG_ADDRESS: u8 = MagnetometerRegister::CRB_REG_M.addr();
-
-    fn from_bits(bits: u8) -> Self {
-        Self::from_bits(bits)
-    }
-
-    fn to_bits(&self) -> u8 {
-        self.into_bits()
-    }
-}
-
-impl WritableRegister for CrbRegisterM {}
-
-/// Magnetometer mode select.
-///
-/// [`MR_REG_M`](mag::MagnetometerRegister::MR_REG_M) (09h)
-#[bitfield(u8, order = Msb)]
-#[derive(PartialEq, Eq)]
-#[cfg_attr(feature = "defmt", derive(defmt::Format))]
-pub struct ModeRegisterM {
-    /// Must be zero for correct operation of the device.
-    #[bits(6, default = 0)]
-    zeros_27: u8,
-
-    /// Device is placed in sleep mode.
-    #[bits(1, access = RW)]
-    pub sleep_mode: bool,
-
-    /// Enables single conversion mode.
-    ///
-    /// * `false` - Continuous conversion mode.
-    /// * `true` - Single conversion mode.
-    #[bits(1, access = RW, default = false)]
-    pub single_conversion: bool,
-}
-
-impl Register for ModeRegisterM {
-    const DEV_ADDRESS: u8 = mag::ADDRESS;
-    const REG_ADDRESS: u8 = MagnetometerRegister::MR_REG_M.addr();
-
-    fn from_bits(bits: u8) -> Self {
-        Self::from_bits(bits)
-    }
-
-    fn to_bits(&self) -> u8 {
-        self.into_bits()
-    }
-}
-
-impl WritableRegister for ModeRegisterM {}
-
-/// [`SR_REG_M`](mag::MagnetometerRegister::SR_REG_M) (09h)
-#[bitfield(u8, order = Msb)]
-#[derive(PartialEq, Eq)]
-#[cfg_attr(feature = "defmt", derive(defmt::Format))]
-pub struct StatusRegisterM {
-    #[bits(6)]
-    __: u8,
-
-    /// Data output register lock. Once a new set of measurements is available, this bit is
-    /// set when the first magnetic file data register has been read.
-    #[bits(1, access = RO)]
-    pub do_lock: bool,
-
-    /// Data-ready bit. This bit is when a new set of measurements is available.
-    #[bits(1, access = RO)]
-    pub data_ready: bool,
-}
-
-impl Register for StatusRegisterM {
-    const DEV_ADDRESS: u8 = mag::ADDRESS;
-    const REG_ADDRESS: u8 = MagnetometerRegister::SR_REG_M.addr();
-
-    fn from_bits(bits: u8) -> Self {
-        Self::from_bits(bits)
-    }
-
-    fn to_bits(&self) -> u8 {
-        self.into_bits()
-    }
-}
-
-/// [`IRA_REG_M`](mag::MagnetometerRegister::IRA_REG_M) (0Ah)
-#[bitfield(u8, order = Msb)]
-#[derive(PartialEq, Eq)]
-#[cfg_attr(feature = "defmt", derive(defmt::Format))]
-pub struct IRARegisterM {
-    #[bits(8, access = RO)]
-    pub value: u8,
-}
-
-impl Register for IRARegisterM {
-    const DEV_ADDRESS: u8 = mag::ADDRESS;
-    const REG_ADDRESS: u8 = MagnetometerRegister::IRA_REG_M.addr();
-
-    fn from_bits(bits: u8) -> Self {
-        Self::from_bits(bits)
-    }
-
-    fn to_bits(&self) -> u8 {
-        self.into_bits()
-    }
-}
-
-/// [`IRB_REG_M`](mag::MagnetometerRegister::IRB_REG_M) (0Bh)
-#[bitfield(u8, order = Msb)]
-#[derive(PartialEq, Eq)]
-#[cfg_attr(feature = "defmt", derive(defmt::Format))]
-pub struct IRBRegisterM {
-    #[bits(8, access = RO)]
-    pub value: u8,
-}
-
-impl Register for IRBRegisterM {
-    const DEV_ADDRESS: u8 = mag::ADDRESS;
-    const REG_ADDRESS: u8 = MagnetometerRegister::IRB_REG_M.addr();
-
-    fn from_bits(bits: u8) -> Self {
-        Self::from_bits(bits)
-    }
-
-    fn to_bits(&self) -> u8 {
-        self.into_bits()
-    }
-}
-
-/// [`IRC_REG_M`](mag::MagnetometerRegister::IRC_REG_M) (0Ch)
-#[bitfield(u8, order = Msb)]
-#[derive(PartialEq, Eq)]
-#[cfg_attr(feature = "defmt", derive(defmt::Format))]
-pub struct IRCRegisterM {
-    #[bits(8, access = RO)]
-    pub value: u8,
-}
-
-impl Register for IRCRegisterM {
-    const DEV_ADDRESS: u8 = mag::ADDRESS;
-    const REG_ADDRESS: u8 = MagnetometerRegister::IRC_REG_M.addr();
-
-    fn from_bits(bits: u8) -> Self {
-        Self::from_bits(bits)
-    }
-
-    fn to_bits(&self) -> u8 {
-        self.into_bits()
-    }
-}
 
 #[cfg(test)]
 mod tests {
