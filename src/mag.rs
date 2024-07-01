@@ -46,11 +46,11 @@ pub enum RegisterAddress {
     OUT_Y_L_M = 0x08,
     /// See [`StatusRegisterM`].
     SR_REG_M = 0x09,
-    /// See [`IRARegisterM`].
+    /// See [`IdentificationARegisterM`].
     IRA_REG_M = 0x0A,
-    /// See [`IRBRegisterM`].
+    /// See [`IdentificationBRegisterM`].
     IRB_REG_M = 0x0B,
-    /// See [`IRCRegisterM`].
+    /// See [`IdentificationCRegisterM`].
     IRC_REG_M = 0x0C,
     /// See [`TemperatureOutHighM`].
     TEMP_OUT_H_M = 0x31,
@@ -315,41 +315,50 @@ pub struct StatusRegisterM {
 
 readable_register!(StatusRegisterM, RegisterAddress::SR_REG_M);
 
+/// The identification registers (IR) are used to identify the device.
+/// (See Doc ID 16941 Rev 1. for the LSM303DLH, non -C version)
+///
 /// [`IRA_REG_M`](RegisterAddress::IRA_REG_M) (0Ah)
 #[bitfield(u8, order = Msb)]
 #[derive(PartialEq, Eq)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
-pub struct IRARegisterM {
-    /// Undocumented. Always `01001000`.
+pub struct IdentificationARegisterM {
+    /// Undocumented. Always `01001000`, ASCII `H`.
     #[bits(8, access = RO, default = 0b01001000_u8)]
     pub value: u8,
 }
 
-readable_register!(IRARegisterM, RegisterAddress::IRA_REG_M);
+readable_register!(IdentificationARegisterM, RegisterAddress::IRA_REG_M);
 
+/// The identification registers (IR) are used to identify the device.
+/// (See Doc ID 16941 Rev 1. for the LSM303DLH, non -C version)
+///
 /// [`IRB_REG_M`](RegisterAddress::IRB_REG_M) (0Bh)
 #[bitfield(u8, order = Msb)]
 #[derive(PartialEq, Eq)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
-pub struct IRBRegisterM {
-    /// Undocumented. Always `00110100`.
+pub struct IdentificationBRegisterM {
+    /// Undocumented. Always `00110100`, ASCII `4`.
     #[bits(8, access = RO, default = 0b000110100_u8)]
     pub value: u8,
 }
 
-readable_register!(IRBRegisterM, RegisterAddress::IRB_REG_M);
+readable_register!(IdentificationBRegisterM, RegisterAddress::IRB_REG_M);
 
+/// The identification registers (IR) are used to identify the device.
+/// (See Doc ID 16941 Rev 1. for the LSM303DLH, non -C version)
+///
 /// [`IRC_REG_M`](RegisterAddress::IRC_REG_M) (0Ch)
 #[bitfield(u8, order = Msb)]
 #[derive(PartialEq, Eq)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
-pub struct IRCRegisterM {
-    /// Undocumented. Always `00110011`.
+pub struct IdentificationCRegisterM {
+    /// Undocumented. Always `00110011`, ASCII `3`.
     #[bits(8, access = RO, default = 0b00110011_u8)]
     pub value: u8,
 }
 
-readable_register!(IRCRegisterM, RegisterAddress::IRC_REG_M);
+readable_register!(IdentificationCRegisterM, RegisterAddress::IRC_REG_M);
 
 /// [`TEMP_OUT_H_M`](RegisterAddress::TEMP_OUT_H_M) (0Ch)
 ///
