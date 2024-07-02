@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 This project uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.3] - 2024-07-02
+
+[0.1.3]: https://github.com/sunsided/lsm303dlhc-registers/releases/tag/v0.1.3
+
+### Internal
+
+- Improved documentation on the `ControlRegister3A::i1drdy1` field (accelerometer data ready interrupt).
+
 ## [0.1.2] - 2024-07-02
 
 [0.1.2]: https://github.com/sunsided/lsm303dlhc-registers/releases/tag/v0.1.2

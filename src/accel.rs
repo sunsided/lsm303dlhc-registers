@@ -178,11 +178,14 @@ pub struct ControlRegister3A {
     #[bits(1, access = RW)]
     pub i1aoi2: bool,
 
-    /// Enable DRDY1 interrupt on INT1
+    /// Enable the accelerometer data ready (`DRDY1`) interrupt on `INT1`.
+    ///
+    /// Enabling this on a vanilla sensor will raise an interrupt on `INT1` whenever the
+    /// accelerometer reads new data.
     #[bits(1, access = RW)]
     pub i1drdy1: bool,
 
-    /// Enable DRDY2 interrupt on INT1
+    /// Enable the accelerometer data ready (`DRDY2`) interrupt on `INT1`.
     #[bits(1, access = RW)]
     pub i1drdy2: bool,
 
