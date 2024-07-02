@@ -86,6 +86,10 @@ pub struct ConfigurationARegisterM {
 
     /// Data output rate bits. These bits set the rate at which data is written to all three data
     /// output registers.
+    ///
+    /// Note that the datasheet has inconsistent information about this field.
+    /// While section 7.2.1 reports default of `100`, i.e. 15 Hz, the register mapping
+    /// table 17 appears to be missing a zero.
     #[bits(3, access = RW, default = MagOdr::Hz15)]
     pub data_output_rate: MagOdr,
 
@@ -396,3 +400,14 @@ pub struct TemperatureOutLowM {
 }
 
 readable_register!(TemperatureOutLowM, RegisterAddress::TEMP_OUT_L_M);
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn cra_defaults() {
+        let value = ConfigurationARegisterM::new();
+        assert_eq!(value.into_bits(), 0b0010000);
+    }
+}
