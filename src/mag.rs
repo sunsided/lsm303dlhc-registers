@@ -86,7 +86,7 @@ pub struct ConfigurationARegisterM {
 
     /// Data output rate bits. These bits set the rate at which data is written to all three data
     /// output registers.
-    #[bits(3, access = RW, default = MagOdr::Hz75)]
+    #[bits(3, access = RW, default = MagOdr::Hz15)]
     pub data_output_rate: MagOdr,
 
     /// Must be zero for correct operation of the device.
@@ -104,7 +104,7 @@ writable_register!(ConfigurationARegisterM, RegisterAddress::CRA_REG_M);
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub struct ConfigurationBRegisterM {
     /// Gain configuration.
-    #[bits(3, access = RW)]
+    #[bits(3, access = RW, default = MagGain::Gauss1_3)]
     pub gain: MagGain,
 
     /// Must be zero for correct operation of the device.
@@ -126,14 +126,14 @@ pub struct ModeRegisterM {
     zeros_27: u8,
 
     /// Device is placed in sleep mode.
-    #[bits(1, access = RW)]
+    #[bits(1, access = RW, default = true)]
     pub sleep_mode: bool,
 
     /// Enables single conversion mode.
     ///
     /// * `false` - Continuous conversion mode.
     /// * `true` - Single conversion mode.
-    #[bits(1, access = RW, default = false)]
+    #[bits(1, access = RW, default = true)]
     pub single_conversion: bool,
 }
 
