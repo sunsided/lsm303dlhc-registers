@@ -350,7 +350,7 @@ writable_register!(ControlRegister6A, RegisterAddress::CTRL_REG6_A);
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub struct ReferenceRegisterA {
     /// Reference value for interrupt generation.
-    #[bits(8, access = RO)]
+    #[bits(8, access = RW)]
     pub reference: u8,
 }
 
