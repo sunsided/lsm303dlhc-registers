@@ -1,5 +1,6 @@
 //! Accelerometer registers.
 
+mod conversions;
 mod types;
 
 pub use types::*;

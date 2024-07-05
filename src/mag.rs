@@ -3,6 +3,7 @@
 // Resolves a code-generation issue with the bitfield macro.
 #![allow(clippy::unnecessary_cast)]
 
+mod conversions;
 mod types;
 
 use bitfield_struct::bitfield;
