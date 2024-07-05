@@ -48,6 +48,8 @@ fn configure_sensor(sensor: &mut LSM303DLHC) {
 }
 ```
 
+For use on the STM32F3 Discovery board, see also [`l3gd20-registers`](https://github.com/sunsided/l3gd20-registers).
+
 ## Code of Conduct
 
 We abide by the [Contributor Covenant][cc] and ask that you do as well.
