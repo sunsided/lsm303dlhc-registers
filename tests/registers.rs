@@ -52,3 +52,16 @@ fn infallible_registers_decode_every_pattern() {
         assert!(ControlRegister4A::try_from_bits(bits).is_ok());
     }
 }
+
+#[test]
+fn byte_pairs_combine_into_i16() {
+    use lsm303dlhc_registers::{accel, mag};
+
+    let (lo, hi) = (accel::OutXLowA::from(0x34), accel::OutXHighA::from(0xFE));
+    assert_eq!(lo + hi, -460);
+    assert_eq!(hi + lo, -460);
+
+    let (lo, hi) = (mag::OutZLowM::from(0x01), mag::OutZHighM::from(0x80));
+    assert_eq!(lo + hi, i16::MIN + 1);
+    assert_eq!(hi + lo, i16::MIN + 1);
+}

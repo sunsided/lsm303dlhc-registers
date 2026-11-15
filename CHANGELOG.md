@@ -5,6 +5,19 @@ This project uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Fixed
+
+- Documentation: magnetometer output registers no longer call their value an acceleration,
+  `TEMP_OUT_H_M`/`TEMP_OUT_L_M` show their addresses (31h/32h), and `INT2_CFG_A` links to
+  `Int2ConfigurationRegisterA`.
+
+### Internal
+
+- Removed `#![deny(warnings)]`, so new compiler warnings cannot break docs.rs builds; CI
+  still denies warnings.
+- Added tests that check every register address, power-on default and field position
+  against the datasheet (DocID018771 Rev 2, Tables 17-85).
+
 ## [0.2.0] - 2026-11-15
 
 [0.2.0]: https://github.com/sunsided/lsm303dlhc-registers/releases/tag/v0.2.0

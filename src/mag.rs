@@ -1,8 +1,5 @@
 //! Magnetometer and Temperature registers.
 
-// Resolves a code-generation issue with the bitfield macro.
-#![allow(clippy::unnecessary_cast)]
-
 mod conversions;
 mod types;
 
@@ -158,7 +155,7 @@ writable_register!(ModeRegisterM, RegisterAddress::MR_REG_M);
 
 /// [`OUT_X_H_M`](RegisterAddress::OUT_X_H_M) (03h)
 ///
-/// High byte of the 16-bit acceleration value. See [`OutXLowM`] for the low byte.
+/// High byte of the 16-bit magnetic field value. See [`OutXLowM`] for the low byte.
 ///
 /// ## X-Z-Y Order
 ///
@@ -168,7 +165,7 @@ writable_register!(ModeRegisterM, RegisterAddress::MR_REG_M);
 ///
 /// Note that the registers are provided in big endian order, i.e. the high byte
 /// has the lower register address and will be read first.
-/// This is different from the accelerometer and temperature reading registers.
+/// This is different from the accelerometer output registers.
 #[bitfield(u8, order = Msb)]
 #[derive(PartialEq, Eq)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
@@ -184,7 +181,7 @@ readable_register!(OutXHighM, RegisterAddress::OUT_X_H_M);
 
 /// [`OUT_X_L_M`](RegisterAddress::OUT_X_L_M) (04h)
 ///
-/// Low byte of the 16-bit acceleration value. See [`OutXHighM`] for the high byte.
+/// Low byte of the 16-bit magnetic field value. See [`OutXHighM`] for the high byte.
 ///
 /// ## X-Z-Y Order
 ///
@@ -194,7 +191,7 @@ readable_register!(OutXHighM, RegisterAddress::OUT_X_H_M);
 ///
 /// Note that the registers are provided in big endian order, i.e. the high byte
 /// has the lower register address and will be read first.
-/// This is different from the accelerometer and temperature reading registers.
+/// This is different from the accelerometer output registers.
 #[bitfield(u8, order = Msb)]
 #[derive(PartialEq, Eq)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
@@ -210,7 +207,7 @@ readable_register!(OutXLowM, RegisterAddress::OUT_X_L_M);
 
 /// [`OUT_Z_H_M`](RegisterAddress::OUT_Z_H_M) (05h)
 ///
-/// High byte of the 16-bit acceleration value. See [`OutZLowM`] for the low byte.
+/// High byte of the 16-bit magnetic field value. See [`OutZLowM`] for the low byte.
 ///
 /// ## X-Z-Y Order
 ///
@@ -220,7 +217,7 @@ readable_register!(OutXLowM, RegisterAddress::OUT_X_L_M);
 ///
 /// Note that the registers are provided in big endian order, i.e. the high byte
 /// has the lower register address and will be read first.
-/// This is different from the accelerometer and temperature reading registers.
+/// This is different from the accelerometer output registers.
 #[bitfield(u8, order = Msb)]
 #[derive(PartialEq, Eq)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
@@ -236,7 +233,7 @@ readable_register!(OutZHighM, RegisterAddress::OUT_Z_H_M);
 
 /// [`OUT_Z_L_M`](RegisterAddress::OUT_Z_L_M) (06h)
 ///
-/// Low byte of the 16-bit acceleration value. See [`OutZHighM`] for the high byte.
+/// Low byte of the 16-bit magnetic field value. See [`OutZHighM`] for the high byte.
 ///
 /// ## X-Z-Y Order
 ///
@@ -246,7 +243,7 @@ readable_register!(OutZHighM, RegisterAddress::OUT_Z_H_M);
 ///
 /// Note that the registers are provided in big endian order, i.e. the high byte
 /// has the lower register address and will be read first.
-/// This is different from the accelerometer and temperature reading registers.
+/// This is different from the accelerometer output registers.
 #[bitfield(u8, order = Msb)]
 #[derive(PartialEq, Eq)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
@@ -262,7 +259,7 @@ readable_register!(OutZLowM, RegisterAddress::OUT_Z_L_M);
 
 /// [`OUT_Y_H_M`](RegisterAddress::OUT_Y_H_M) (07h)
 ///
-/// High byte of the 16-bit acceleration value. See [`OutYLowM`] for the low byte.
+/// High byte of the 16-bit magnetic field value. See [`OutYLowM`] for the low byte.
 ///
 /// ## X-Z-Y Order
 ///
@@ -272,7 +269,7 @@ readable_register!(OutZLowM, RegisterAddress::OUT_Z_L_M);
 ///
 /// Note that the registers are provided in big endian order, i.e. the high byte
 /// has the lower register address and will be read first.
-/// This is different from the accelerometer and temperature reading registers.
+/// This is different from the accelerometer output registers.
 #[bitfield(u8, order = Msb)]
 #[derive(PartialEq, Eq)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
@@ -288,7 +285,7 @@ readable_register!(OutYHighM, RegisterAddress::OUT_Y_H_M);
 
 /// [`OUT_Y_L_M`](RegisterAddress::OUT_Y_L_M) (08h)
 ///
-/// Low byte of the 16-bit acceleration value. See [`OutYHighM`] for the high byte.
+/// Low byte of the 16-bit magnetic field value. See [`OutYHighM`] for the high byte.
 ///
 /// ## X-Z-Y Order
 ///
@@ -298,7 +295,7 @@ readable_register!(OutYHighM, RegisterAddress::OUT_Y_H_M);
 ///
 /// Note that the registers are provided in big endian order, i.e. the high byte
 /// has the lower register address and will be read first.
-/// This is different from the accelerometer and temperature reading registers.
+/// This is different from the accelerometer output registers.
 #[bitfield(u8, order = Msb)]
 #[derive(PartialEq, Eq)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
@@ -377,7 +374,7 @@ pub struct IdentificationCRegisterM {
 
 readable_register!(IdentificationCRegisterM, RegisterAddress::IRC_REG_M);
 
-/// [`TEMP_OUT_H_M`](RegisterAddress::TEMP_OUT_H_M) (0Ch)
+/// [`TEMP_OUT_H_M`](RegisterAddress::TEMP_OUT_H_M) (31h)
 ///
 /// High byte of the 12-bit temperature reading.
 ///
@@ -387,18 +384,18 @@ readable_register!(IdentificationCRegisterM, RegisterAddress::IRC_REG_M);
 #[derive(PartialEq, Eq)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub struct TemperatureOutHighM {
-    /// The upper
+    /// The upper eight bits of the temperature reading (`TEMP[11:4]`).
     #[bits(8, access = RO)]
     pub value: u8,
 }
 
 readable_register!(TemperatureOutHighM, RegisterAddress::TEMP_OUT_H_M);
 
-/// [`TEMP_OUT_L_M`](RegisterAddress::TEMP_OUT_L_M) (0Ch)
+/// [`TEMP_OUT_L_M`](RegisterAddress::TEMP_OUT_L_M) (32h)
 ///
 /// Low byte of the 12-bit temperature reading.
 ///
-/// Together with [`TemperatureOutLowM`], the value is expressed as two's complement with
+/// Together with [`TemperatureOutHighM`], the value is expressed as two's complement with
 /// 8 LSB/deg at 12-bit resolution.
 #[bitfield(u8, order = Msb)]
 #[derive(PartialEq, Eq)]

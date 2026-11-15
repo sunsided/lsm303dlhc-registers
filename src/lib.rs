@@ -3,7 +3,6 @@
 //! This crate provides a typed map of the LSM303DLHC's I²C registers.
 
 #![deny(missing_docs)]
-#![deny(warnings)]
 #![no_std]
 #![forbid(unsafe_code)]
 // Enables the `doc_cfg` feature when the `docsrs` configuration attribute is defined.
@@ -93,6 +92,29 @@ macro_rules! writable_register {
         readable_register!($type, $addr $(, valid = $valid)?);
         impl $crate::prelude::WritableHardwareRegister<$crate::prelude::R1> for $type {}
         impl $crate::WritableRegister for $type {}
+    };
+}
+
+/// Implements `Add` in both orders on a low/high byte register pair, yielding the `i16` value.
+macro_rules! byte_pair_add {
+    ($($low:ident + $high:ident),+ $(,)?) => {
+        $(
+            impl core::ops::Add<$high> for $low {
+                type Output = i16;
+
+                fn add(self, hi: $high) -> Self::Output {
+                    i16::from_be_bytes([hi.bits(), self.bits()])
+                }
+            }
+
+            impl core::ops::Add<$low> for $high {
+                type Output = i16;
+
+                fn add(self, lo: $low) -> Self::Output {
+                    lo + self
+                }
+            }
+        )+
     };
 }
 

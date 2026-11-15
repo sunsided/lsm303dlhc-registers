@@ -66,7 +66,7 @@ pub enum RegisterAddress {
     INT1_THS_A = 0x32,
     /// See [`Int1DurationRegisterA`].
     INT1_DURATION_A = 0x33,
-    /// See [`Int1ConfigurationRegisterA`].
+    /// See [`Int2ConfigurationRegisterA`].
     INT2_CFG_A = 0x34,
     /// See [`Int2SourceRegisterA`].
     INT2_SRC_A = 0x35,
@@ -226,7 +226,7 @@ pub struct ControlRegister4A {
     ///
     /// * `false` - continuous update
     /// * `true` - output registers not updated until MSB and LSB
-    // have been read
+    ///   have been read
     #[bits(1, access = RW)]
     pub block_data_update: bool,
 
@@ -264,12 +264,10 @@ writable_register!(ControlRegister4A, RegisterAddress::CTRL_REG4_A);
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub struct ControlRegister5A {
     /// Reboot memory content
-    // have been read
     #[bits(1, access = RW)]
     pub boot: bool,
 
     /// Enable FIFO
-    // have been read
     #[bits(1, access = RW)]
     pub fifo_enable: bool,
 
@@ -278,23 +276,19 @@ pub struct ControlRegister5A {
 
     /// Latch interrupt request on INT1_SRC register, with INT1_SRC register cleared
     /// by reading INT1_SRC itself.
-    // have been read
     #[bits(1, access = RW)]
     pub lir_int1: bool,
 
     /// 4D enable: 4D detection is enabled on INT1 when 6D bit on INT1_CFG is set to 1.
-    // have been read
     #[bits(1, access = RW)]
     pub d4d_int1: bool,
 
     /// Latch interrupt request on INT2_SRC register, with INT2_SRC register cleared
     /// by reading INT2_SRC itself.
-    // have been read
     #[bits(1, access = RW)]
     pub lir_int2: bool,
 
     /// 4D enable: 4D detection is enabled on INT2 when 6D bit on INT2_CFG is set to 1.
-    // have been read
     #[bits(1, access = RW)]
     pub d4d_int2: bool,
 }
@@ -307,27 +301,22 @@ writable_register!(ControlRegister5A, RegisterAddress::CTRL_REG5_A);
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub struct ControlRegister6A {
     /// CLICK interrupt enable on PAD2.
-    // have been read
     #[bits(1, access = RW)]
     pub i2click_en: bool,
 
     /// Interrupt 1 on PAD2
-    // have been read
     #[bits(1, access = RW)]
     pub i2int1: bool,
 
     /// Interrupt 2 on PAD2
-    // have been read
     #[bits(1, access = RW)]
     pub i2int2: bool,
 
     /// Reboot memory content on PAD2
-    // have been read
     #[bits(1, access = RW)]
     pub boot_i1: bool,
 
     /// Active functions status on PAD2
-    // have been read
     #[bits(1, access = RW)]
     pub p2_active: bool,
 
@@ -338,7 +327,6 @@ pub struct ControlRegister6A {
     ///
     /// * `false` - Interrupt is active high
     /// * `true` - Interrupt is active low
-    // have been read
     #[bits(1, access = RW)]
     pub active_low: bool,
 
