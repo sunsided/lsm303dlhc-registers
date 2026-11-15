@@ -79,6 +79,18 @@ impl Sensitivity {
         self as u8
     }
 
+    /// The sensitivity in milli-g per LSB of the 12-bit output value (datasheet Table 3, `LA_So`).
+    ///
+    /// The output registers hold this value left-justified; shift the 16-bit reading right by 4.
+    pub const fn milli_g_per_lsb(self) -> f32 {
+        match self {
+            Sensitivity::G1 => 1.0,
+            Sensitivity::G2 => 2.0,
+            Sensitivity::G4 => 4.0,
+            Sensitivity::G12 => 12.0,
+        }
+    }
+
     pub(crate) const fn from_bits(value: u8) -> Self {
         match value {
             0b00 => Sensitivity::G1,

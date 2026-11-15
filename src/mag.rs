@@ -18,6 +18,12 @@ pub use types::*;
 /// the master transmits to the slave with the direction unchanged.
 pub const DEFAULT_DEVICE_ADDRESS: u8 = 0b0011110;
 
+/// The temperature sensitivity of the 12-bit temperature value, in LSB per °C (datasheet Table 4).
+///
+/// The datasheet specifies no absolute offset, so readings are relative to an uncalibrated
+/// device-specific reference.
+pub const TEMPERATURE_LSB_PER_CELSIUS: f32 = 8.0;
+
 /// Register addresses specific to the magnetometer sensor.
 ///
 /// See also [`DEFAULT_DEVICE_ADDRESS`].
