@@ -92,6 +92,32 @@ impl MagGain {
         self as u8
     }
 
+    /// The gain of the X and Y axes in LSB per gauss (datasheet Table 75).
+    pub const fn lsb_per_gauss_xy(self) -> f32 {
+        match self {
+            MagGain::Gauss1_3 => 1100.0,
+            MagGain::Gauss1_9 => 855.0,
+            MagGain::Gauss2_5 => 670.0,
+            MagGain::Gauss4_0 => 450.0,
+            MagGain::Gauss4_7 => 400.0,
+            MagGain::Gauss5_6 => 330.0,
+            MagGain::Gauss8_1 => 230.0,
+        }
+    }
+
+    /// The gain of the Z axis in LSB per gauss (datasheet Table 75).
+    pub const fn lsb_per_gauss_z(self) -> f32 {
+        match self {
+            MagGain::Gauss1_3 => 980.0,
+            MagGain::Gauss1_9 => 760.0,
+            MagGain::Gauss2_5 => 600.0,
+            MagGain::Gauss4_0 => 400.0,
+            MagGain::Gauss4_7 => 355.0,
+            MagGain::Gauss5_6 => 295.0,
+            MagGain::Gauss8_1 => 205.0,
+        }
+    }
+
     /// Converts the three lowest bits of a register value; `None` for reserved patterns.
     pub const fn try_from_bits(value: u8) -> Option<Self> {
         Some(match value & 0b111 {

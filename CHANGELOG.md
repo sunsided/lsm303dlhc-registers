@@ -10,6 +10,8 @@ This project uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - `ReservedBitPattern` error type. `ControlRegister1A` and `ConfigurationBRegisterM` implement
   `TryFromBits<u8>` and reject reserved output data rate (`1010`–`1111`) and gain (`000`) patterns.
 - `AccelOdr::try_from_bits` and `MagGain::try_from_bits`.
+- `Sensitivity::milli_g_per_lsb`, `MagGain::lsb_per_gauss_xy`, `MagGain::lsb_per_gauss_z` and
+  `mag::TEMPERATURE_LSB_PER_CELSIUS` for conversion to physical units.
 - `Debug` for the `accel::RegisterAddress` and `mag::RegisterAddress` enums.
 
 ### Changed
