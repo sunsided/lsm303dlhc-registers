@@ -15,7 +15,8 @@ This project uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ### Changed
 
 - [**breaking**] Updated to `hardware-registers` 0.4. `Register` now requires
-  `ReadableI2CRegister8`, as 0.4 no longer implies readability.
+  `ReadableI2CRegister8` and `TryFromBits<u8>`, as 0.4 no longer implies readability.
+  The explicit `TryFromBits<u8>` bound lets generic drivers call `R::try_from_bits`.
 - [**breaking**] `ControlRegister1A` and `ConfigurationBRegisterM` no longer implement `FromBits<u8>`;
   use `TryFromBits<u8>`.
 - [**breaking**] Updated to `defmt` 1.0 and `bitfield-struct` 0.13.

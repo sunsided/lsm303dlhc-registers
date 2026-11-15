@@ -107,7 +107,10 @@ pub mod mag;
 /// implement [`TryFromBits<u8>`](prelude::TryFromBits) with [`ReservedBitPattern`] instead.
 /// Use [`TryFromBits`](prelude::TryFromBits) to decode any register generically.
 pub trait Register:
-    prelude::ReadableI2CRegister8<prelude::DeviceAddress7> + From<u8> + Into<u8>
+    prelude::ReadableI2CRegister8<prelude::DeviceAddress7>
+    + prelude::TryFromBits<u8>
+    + From<u8>
+    + Into<u8>
 {
 }
 
