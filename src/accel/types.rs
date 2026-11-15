@@ -23,8 +23,8 @@ pub enum AccelOdr {
     Hz400 = 0b0111,
     /// 1.620 kHz when in Low-Power mode (`0b1000`)
     LpHz1620 = 0b1000,
-    /// 5.376 kHz when in normal mode, 1.344 kHz when in normal mode (`0b1001`)
-    LpHz1620NormalHz5376 = 0b1001,
+    /// 1.344 kHz in normal mode, 5.376 kHz in low-power mode (`0b1001`)
+    LpHz5376NormalHz1344 = 0b1001,
 }
 
 impl AccelOdr {
@@ -33,8 +33,9 @@ impl AccelOdr {
         self as u8
     }
 
-    pub(crate) const fn from_bits(value: u8) -> Self {
-        match value {
+    /// Converts the four lowest bits of a register value; `None` for reserved patterns.
+    pub const fn try_from_bits(value: u8) -> Option<Self> {
+        Some(match value & 0b1111 {
             0b0000 => AccelOdr::Disabled,
             0b0001 => AccelOdr::Hz1,
             0b0010 => AccelOdr::Hz10,
@@ -44,8 +45,15 @@ impl AccelOdr {
             0b0110 => AccelOdr::Hz200,
             0b0111 => AccelOdr::Hz400,
             0b1000 => AccelOdr::LpHz1620,
-            0b1001 => AccelOdr::LpHz1620NormalHz5376,
-            _ => unreachable!(),
+            0b1001 => AccelOdr::LpHz5376NormalHz1344,
+            _ => return None,
+        })
+    }
+
+    pub(crate) const fn from_bits(value: u8) -> Self {
+        match Self::try_from_bits(value) {
+            Some(odr) => odr,
+            None => panic!("reserved accelerometer data rate"),
         }
     }
 }

@@ -92,8 +92,9 @@ impl MagGain {
         self as u8
     }
 
-    pub(crate) const fn from_bits(value: u8) -> Self {
-        match value {
+    /// Converts the three lowest bits of a register value; `None` for reserved patterns.
+    pub const fn try_from_bits(value: u8) -> Option<Self> {
+        Some(match value & 0b111 {
             0b001 => MagGain::Gauss1_3,
             0b010 => MagGain::Gauss1_9,
             0b011 => MagGain::Gauss2_5,
@@ -101,7 +102,14 @@ impl MagGain {
             0b101 => MagGain::Gauss4_7,
             0b110 => MagGain::Gauss5_6,
             0b111 => MagGain::Gauss8_1,
-            _ => unreachable!(),
+            _ => return None,
+        })
+    }
+
+    pub(crate) const fn from_bits(value: u8) -> Self {
+        match Self::try_from_bits(value) {
+            Some(gain) => gain,
+            None => panic!("reserved magnetometer gain"),
         }
     }
 }

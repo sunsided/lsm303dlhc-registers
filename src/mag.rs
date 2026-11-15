@@ -21,11 +21,10 @@ pub const DEFAULT_DEVICE_ADDRESS: u8 = 0b0011110;
 /// Register addresses specific to the magnetometer sensor.
 ///
 /// See also [`DEFAULT_DEVICE_ADDRESS`].
-#[allow(dead_code)]
 #[allow(non_camel_case_types)]
-#[allow(missing_docs)]
-#[derive(Copy, Clone, PartialEq, Eq)]
+#[derive(Debug, Copy, Clone, PartialEq, Eq)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
+#[repr(u8)]
 pub enum RegisterAddress {
     /// See [`ConfigurationARegisterM`].
     CRA_REG_M = 0x00,
@@ -109,6 +108,9 @@ writable_register!(ConfigurationARegisterM, RegisterAddress::CRA_REG_M);
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub struct ConfigurationBRegisterM {
     /// Gain configuration.
+    ///
+    /// Pattern `000` is reserved; the getter panics on it.
+    /// Decode raw values with [`TryFromBits`](crate::prelude::TryFromBits) to reject it.
     #[bits(3, access = RW, default = MagGain::Gauss1_3)]
     pub gain: MagGain,
 
@@ -117,7 +119,11 @@ pub struct ConfigurationBRegisterM {
     zeros_04: u8,
 }
 
-writable_register!(ConfigurationBRegisterM, RegisterAddress::CRB_REG_M);
+writable_register!(
+    ConfigurationBRegisterM,
+    RegisterAddress::CRB_REG_M,
+    valid = |bits| MagGain::try_from_bits(bits >> 5).is_some()
+);
 
 /// Magnetometer mode select.
 ///
