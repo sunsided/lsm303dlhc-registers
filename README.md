@@ -41,11 +41,22 @@ fn configure_sensor(sensor: &mut LSM303DLHC) {
 
     // Enable the temperature sensor.
     sensor.write_register(
-        CraRegisterM::new()
+        ConfigurationARegisterM::new()
             .with_temp_en(true)
             .with_data_output_rate(MagOdr::Hz75),
     )?;
 }
+```
+
+`ControlRegister1A` and `ConfigurationBRegisterM` have reserved bit patterns. Decode raw values
+read from the device with `TryFromBits`, which rejects them with `ReservedBitPattern`:
+
+```rust
+use lsm303dlhc_registers::accel::ControlRegister1A;
+use lsm303dlhc_registers::prelude::*;
+
+let reg = ControlRegister1A::try_from_bits(0x77).unwrap();
+assert!(ControlRegister1A::try_from_bits(0xA7).is_err());
 ```
 
 For use on the STM32F3 Discovery board, see also [`l3gd20-registers`](https://github.com/sunsided/l3gd20-registers).
@@ -85,7 +96,7 @@ made available under MIT and Apache 2.0 licenses.
 
 [safety-link]: https://github.com/rust-secure-code/safety-dance/
 
-[msrv-image]: https://img.shields.io/badge/rustc-1.64+-blue.svg
+[msrv-image]: https://img.shields.io/badge/rustc-1.85+-blue.svg
 
 [license-eupl-image]: https://img.shields.io/badge/license-EUPL_1.2-blue.svg
 
@@ -93,10 +104,10 @@ made available under MIT and Apache 2.0 licenses.
 
 [license-mit-image]: https://img.shields.io/badge/license-MIT-blue.svg
 
-[license-apache-link]: https://github.com/sunsided/lsm303dlhc-registers/blob/develop/LICENSE-APACHE
+[license-apache-link]: https://github.com/sunsided/lsm303dlhc-registers/blob/main/LICENSE-APACHE
 
-[license-mit-link]: https://github.com/sunsided/lsm303dlhc-registers/blob/develop/LICENSE-MIT
+[license-mit-link]: https://github.com/sunsided/lsm303dlhc-registers/blob/main/LICENSE-MIT
 
-[license-eupl-link]: https://github.com/sunsided/lsm303dlhc-registers/blob/develop/LICENSE-EUPL
+[license-eupl-link]: https://github.com/sunsided/lsm303dlhc-registers/blob/main/LICENSE-EUPL
 
 [cc]: https://contributor-covenant.org

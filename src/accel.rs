@@ -21,11 +21,10 @@ pub const DEFAULT_DEVICE_ADDRESS: u8 = 0b0011001;
 /// Register addresses specific to the accelerometer sensor.
 ///
 /// See also [`DEFAULT_DEVICE_ADDRESS`].
-#[allow(dead_code)]
 #[allow(non_camel_case_types)]
-#[allow(missing_docs)]
-#[derive(Copy, Clone, PartialEq, Eq)]
+#[derive(Debug, Copy, Clone, PartialEq, Eq)]
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
+#[repr(u8)]
 pub enum RegisterAddress {
     /// See [`ControlRegister1A`].
     CTRL_REG1_A = 0x20,
@@ -108,6 +107,9 @@ impl From<RegisterAddress> for u8 {
 #[cfg_attr(feature = "defmt", derive(defmt::Format))]
 pub struct ControlRegister1A {
     /// Data rate selection.
+    ///
+    /// Patterns `1010` to `1111` are reserved; the getter panics on them.
+    /// Decode raw values with [`TryFromBits`](crate::prelude::TryFromBits) to reject them.
     #[bits(4, access = RW)]
     pub output_data_rate: AccelOdr,
 
@@ -128,7 +130,11 @@ pub struct ControlRegister1A {
     pub x_enable: bool,
 }
 
-writable_register!(ControlRegister1A, RegisterAddress::CTRL_REG1_A);
+writable_register!(
+    ControlRegister1A,
+    RegisterAddress::CTRL_REG1_A,
+    valid = |bits| AccelOdr::try_from_bits(bits >> 4).is_some()
+);
 
 /// [`CTRL_REG2_A`](RegisterAddress::CTRL_REG2_A) (21h)
 #[bitfield(u8, order = Msb)]

@@ -14,10 +14,50 @@ pub mod prelude {
     pub use crate::{Register, WritableRegister};
     pub use hardware_registers::i2c::*;
     pub use hardware_registers::sizes::R1;
-    pub use hardware_registers::{FromBits, HardwareRegister, ToBits, WritableHardwareRegister};
+    pub use hardware_registers::{
+        FromBits, HardwareRegister, ToBits, TryFromBits, WritableHardwareRegister,
+    };
 }
 
 macro_rules! readable_register {
+    // Registers in which every bit pattern is valid.
+    ($type:ident, $addr:expr) => {
+        register_common!($type, $addr);
+
+        impl $crate::prelude::FromBits<u8> for $type {
+            #[inline]
+            fn from_bits(value: u8) -> Self {
+                value.into()
+            }
+
+            #[inline]
+            fn from_bits_ref(value: &u8) -> Self {
+                (*value).into()
+            }
+        }
+    };
+
+    // Registers with reserved bit patterns; `$valid` rejects them.
+    ($type:ident, $addr:expr, valid = $valid:expr) => {
+        register_common!($type, $addr);
+
+        impl $crate::prelude::TryFromBits<u8> for $type {
+            type Error = $crate::ReservedBitPattern;
+
+            #[inline]
+            fn try_from_bits_ref(value: &u8) -> Result<Self, Self::Error> {
+                let valid: fn(u8) -> bool = $valid;
+                if valid(*value) {
+                    Ok((*value).into())
+                } else {
+                    Err($crate::ReservedBitPattern(*value))
+                }
+            }
+        }
+    };
+}
+
+macro_rules! register_common {
     ($type:ident, $addr:expr) => {
         impl $crate::Register for $type {}
         impl $crate::prelude::HardwareRegister<$crate::prelude::R1> for $type {}
@@ -45,23 +85,12 @@ macro_rules! readable_register {
                 (*self).into()
             }
         }
-
-        impl $crate::prelude::FromBits<u8> for $type {
-            #[inline]
-            fn from_bits(value: u8) -> Self {
-                value.into()
-            }
-
-            fn from_bits_ref(value: &u8) -> Self {
-                (*value).into()
-            }
-        }
     };
 }
 
 macro_rules! writable_register {
-    ($type:ident, $addr:expr) => {
-        readable_register!($type, $addr);
+    ($type:ident, $addr:expr $(, valid = $valid:expr)?) => {
+        readable_register!($type, $addr $(, valid = $valid)?);
         impl $crate::prelude::WritableHardwareRegister<$crate::prelude::R1> for $type {}
         impl $crate::WritableRegister for $type {}
     };
@@ -70,11 +99,35 @@ macro_rules! writable_register {
 pub mod accel;
 pub mod mag;
 
-/// A sensor register.
-pub trait Register: prelude::I2CRegister8<prelude::DeviceAddress7> + From<u8> + Into<u8> {}
+/// A readable sensor register.
+///
+/// Most registers decode every bit pattern and implement [`FromBits<u8>`](prelude::FromBits).
+/// [`ControlRegister1A`](accel::ControlRegister1A) and
+/// [`ConfigurationBRegisterM`](mag::ConfigurationBRegisterM) have reserved bit patterns and
+/// implement [`TryFromBits<u8>`](prelude::TryFromBits) with [`ReservedBitPattern`] instead.
+/// Use [`TryFromBits`](prelude::TryFromBits) to decode any register generically.
+pub trait Register:
+    prelude::ReadableI2CRegister8<prelude::DeviceAddress7> + From<u8> + Into<u8>
+{
+}
 
 /// A writable sensor register.
 pub trait WritableRegister:
     prelude::WritableI2CRegister8<prelude::DeviceAddress7> + Register
 {
 }
+
+/// A register value holds a bit pattern that the datasheet marks as reserved.
+///
+/// Contains the raw register value.
+#[derive(Debug, Copy, Clone, PartialEq, Eq)]
+#[cfg_attr(feature = "defmt", derive(defmt::Format))]
+pub struct ReservedBitPattern(pub u8);
+
+impl core::fmt::Display for ReservedBitPattern {
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+        write!(f, "reserved register bit pattern {:#010b}", self.0)
+    }
+}
+
+impl core::error::Error for ReservedBitPattern {}
